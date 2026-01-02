@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Orders</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen text-gray-800">
+
+  <%- include('partials/header') %>
+
+  <header class="bg-white shadow sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-blue-700">🛒 Admin Panel - Orders</h1>
+      <div class="flex space-x-4 items-center">
+        <a href="/" class="text-sm text-gray-600 hover:text-blue-600">← Back to Site</a>
+        <form action="/adlogout" method="GET" class="inline">
+          <button type="submit" class="text-sm text-red-600 hover:underline">Logout</button>
+        </form>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-6 py-10">
+
+    <% if (orders.length === 0) { %>
+      <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-6 rounded-lg shadow-md">
+        <div class="flex items-center">
+          <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M12 20h.01" />
+          </svg>
+          <p class="font-medium">No orders found.</p>
+        </div>
+      </div>
+    <% } else { %>
+      <div class="grid gap-8">
+
+        <% orders.forEach(order => { %>
+          <div class="bg-white border border-gray-200 rounded-xl shadow-md hover:shadow-lg transition duration-300">
+            <div class="p-6">
+              <div class="flex items-center justify-between">
+                <h2 class="text-lg font-semibold text-blue-700">
+                  📦 Order #<%= order._id.toString().slice(-6) %>
+                </h2>
+                <div class="flex space-x-2 text-sm">
+                  <span class="px-3 py-1 rounded-full
+                    <%= order.orderStatus === 'delivered' ? 'bg-green-100 text-green-700' :
+                      order.orderStatus === 'pending' ? 'bg-yellow-100 text-yellow-700' :
+                      'bg-blue-100 text-blue-700' %>">
+                    <%= order.orderStatus %>
+                  </span>
+                  <span class="px-3 py-1 rounded-full
+                    <%= order.paymentStatus === 'completed' ? 'bg-green-100 text-green-700' :
+                      order.paymentStatus === 'pending' ? 'bg-yellow-100 text-yellow-700' :
+                      'bg-red-100 text-red-700' %>">
+                    <%= order.paymentStatus %>
+                  </span>
+                </div>
+              </div>
+
+              <p class="mt-2 text-sm text-gray-600">👤 <strong>User:</strong> <%= order.user?.email || 'Guest' %></p>
+              <p class="text-sm text-gray-600">💰 <strong>Total:</strong> ₹<%= order.totalAmount %></p>
+
+              <details class="mt-4 cursor-pointer group">
+                <summary class="font-medium text-blue-600 hover:underline">🛍 View Items</summary>
+                <ul class="ml-4 mt-2 list-disc text-sm text-gray-700 space-y-1">
+                  <% order.items.forEach(item => { %>
+                    <li>
+                      <%= item.product ? item.product.name : 'Product removed' %> — ₹<%= item.price %> × <%= item.quantity %>
+                    </li>
+                  <% }) %>
+                </ul>
+              </details>
+
+              <form action="/orders/<%= order._id %>/status?_method=PATCH" method="POST" class="mt-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label class="block text-sm font-medium mb-1">Order Status</label>
+                    <select name="orderStatus" class="w-full rounded border px-3 py-2">
+                      <option <%= order.orderStatus === 'pending' ? 'selected' : '' %>>pending</option>
+                      <option <%= order.orderStatus === 'processing' ? 'selected' : '' %>>processing</option>
+                      <option <%= order.orderStatus === 'shipped' ? 'selected' : '' %>>shipped</option>
+                      <option <%= order.orderStatus === 'delivered' ? 'selected' : '' %>>delivered</option>
+                      <option <%= order.orderStatus === 'cancelled' ? 'selected' : '' %>>cancelled</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-medium mb-1">Payment Status</label>
+                    <select name="paymentStatus" class="w-full rounded border px-3 py-2">
+                      <option <%= order.paymentStatus === 'pending' ? 'selected' : '' %>>pending</option>
+                      <option <%= order.paymentStatus === 'completed' ? 'selected' : '' %>>completed</option>
+                      <option <%= order.paymentStatus === 'failed' ? 'selected' : '' %>>failed</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-medium mb-1">Tracking Number</label>
+                    <input type="text" name="trackingNumber" value="<%= order.trackingNumber || '' %>" class="w-full rounded border px-3 py-2" />
+                  </div>
+                </div>
+
+                <div class="mt-4 flex justify-between items-center">
+                  <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 shadow">
+                    ✅ Update Order
+                  </button>
+
+                  <form action="/orders/<%= order._id %>?_method=DELETE" method="POST" onsubmit="return confirm('Are you sure?')">
+                    <button class="text-red-600 text-sm hover:underline">🗑️ Delete</button>
+                  </form>
+                </div>
+              </form>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+
+  </main>
+
+  <div class="max-w-7xl mx-auto px-6 py-10 flex justify-end">
+    <a href="/create-product" 
+       class="inline-block bg-green-600 text-white px-6 py-3 rounded shadow hover:bg-green-700 transition">
+      + Create Product
+    </a>
+  </div>
+
+  <footer class="text-center text-sm text-gray-500 py-8">
+    © <%= new Date().getFullYear() %> Grocery Admin Dashboard — All rights reserved.
+  </footer>
+
+</body>
+</html>

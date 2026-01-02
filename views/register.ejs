@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Register - MiniMart</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+
+    * { font-family: "Poppins", sans-serif; }
+
+    body {
+      height: 100vh;
+      width: 80vw;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      overflow: hidden;
+      position: relative;
+      background: #f0f5f2;
+    }
+
+    .sec {
+      background: #74d88b;
+      width: 35%;
+      position: absolute;
+      left: 65%;
+      height: 100%;
+      color: white;
+      text-align: center;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 2rem;
+    }
+
+    .sec h1 {
+      font-size: 2.2em;
+      margin-bottom: 1rem;
+      font-weight: 700;
+      color: #e7f0e3;
+    }
+
+    .sec p {
+      font-size: 1.2em;
+      width: 70%;
+      margin: 0 auto 1.5rem auto;
+      font-weight: 300;
+      color: #d3e4cd;
+    }
+
+    .sec button {
+      box-sizing: border-box;
+      border: 2px solid white;
+      color: white;
+      background: transparent;
+      padding: 0.9em 2em;
+      font-size: 1.2em;
+      border-radius: 40px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .sec button:hover {
+      background-color: rgba(255 255 255 / 0.2);
+    }
+
+    .register {
+      position: absolute;
+      width: 65%;
+      height: 100%;
+      left: 0;
+      background: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 3;
+      padding: 2rem 4rem;
+      box-sizing: border-box;
+    }
+
+    form {
+      width: 100%;
+      max-width: 350px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-weight: 700;
+      color: #3a7a32;
+    }
+
+    label {
+      font-weight: 600;
+      color: #3a7a32;
+      font-size: 1rem;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 1rem 1.2rem;
+      margin: 0.5rem 0 1.5rem 0;
+      border-radius: 6px;
+      border: 2px solid #74d88b;
+      background-color: #f7faf7;
+      font-size: 1.1rem;
+      transition: border-color 0.3s ease;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #3a7a32;
+      background-color: #eaf6ea;
+      box-shadow: 0 0 8px #3a7a32;
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      background: #74d88b;
+      border: none;
+      padding: 1.3rem 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: white;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #5da86a;
+    }
+
+    p.text-center {
+      margin-top: 1.5rem;
+      font-weight: 500;
+      color: #3a7a32;
+    }
+
+    p.text-center a {
+      color: #3a7a32;
+      font-weight: 700;
+      text-decoration: none;
+      border-bottom: 1px solid #3a7a32;
+      transition: color 0.3s ease;
+    }
+
+    p.text-center a:hover {
+      color: #2d5c2d;
+      border-bottom-color: #2d5c2d;
+    }
+
+    .alert-danger {
+      background-color: #f8d7da;
+      border-color: #f5c2c7;
+      color: #842029;
+      border-radius: 10px;
+      padding: 1rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+   
+  <div class="register">
+    <form action="/auth/register" method="POST" novalidate>
+      <h2>Register to MiniMart</h2>
+
+      <% if (typeof error !== 'undefined') { %>
+        <div class="alert alert-danger"><%= error %></div>
+      <% } %>
+
+      <label for="name">Full Name</label>
+      <input type="text" id="name" name="name" placeholder="Enter full name" required value="<%= typeof name !== 'undefined' ? name : '' %>" />
+
+      <label for="email">Email address</label>
+      <input type="email" id="email" name="email" placeholder="Enter email" required value="<%= typeof email !== 'undefined' ? email : '' %>" />
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="Enter password" required />
+
+      <label for="confirmPassword">Confirm Password</label>
+      <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm password" required />
+
+      <button type="submit">Register</button>
+
+      <p class="text-center">
+        Already have an account? <a href="/auth/login">Login here</a>
+      </p>
+    </form>
+  </div>
+
+  <div class="sec">
+    <h1>Welcome!</h1>
+    <p>To get started with MiniMart please register with your personal info</p>
+    <button onclick="location.href='/auth/login'">Login</button>
+  </div>
+</body>
+</html>

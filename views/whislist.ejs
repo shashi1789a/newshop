@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Wishlist</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-r from-purple-100 via-pink-100 to-yellow-100 font-sans text-gray-800">
+
+<%- include('partials/header') %>
+  <div class="max-w-6xl mx-auto px-6 py-12">
+    <h2 class="text-4xl font-extrabold mb-10 text-center text-purple-900 drop-shadow-lg">My Wishlist</h2>
+
+    <!-- Placeholder wishlist items -->
+    <div class="grid gap-10 md:grid-cols-2">
+      <div class="bg-white p-6 rounded-3xl shadow-xl flex gap-6 items-center hover:shadow-2xl transition">
+        <img 
+          src="/image/Pens.jpg" 
+          alt="Pens" 
+          class="w-36 h-36 object-cover rounded-xl border-4 border-purple-300"
+        />
+        <div class="flex-1 flex flex-col">
+          <h3 class="text-2xl font-bold text-purple-900 mb-2">Pens</h3>
+          <p class="text-purple-700 text-lg font-semibold">Price: ₹167</p>
+          <div class="flex gap-6 mt-auto">
+            <a href="#" class="text-red-600 hover:text-red-800 font-semibold transition">Remove</a>
+            <a href="#" class="ml-auto bg-green-600 text-white px-6 py-2 rounded-xl font-semibold hover:bg-green-700 transition shadow-md">
+              Move to Cart
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-3xl shadow-xl flex gap-6 items-center hover:shadow-2xl transition">
+        <img 
+          src="/image/images/pack1.png" 
+          alt="Pack" 
+          class="w-36 h-36 object-cover rounded-xl border-4 border-purple-300"
+        />
+        <div class="flex-1 flex flex-col">
+          <h3 class="text-2xl font-bold text-purple-900 mb-2">Lemon, Tomato, Potato,+4</h3>
+          <p class="text-purple-700 text-lg font-semibold">Price: ₹500</p>
+          <div class="flex gap-6 mt-auto">
+            <a href="#" class="text-red-600 hover:text-red-800 font-semibold transition">Remove</a>
+            <a href="#" class="ml-auto bg-green-600 text-white px-6 py-2 rounded-xl font-semibold hover:bg-green-700 transition shadow-md">
+              Move to Cart
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary box -->
+    <div class="mt-14 bg-white p-8 rounded-3xl shadow-2xl max-w-md mx-auto text-center">
+      <h3 class="text-3xl font-extrabold mb-6 text-purple-900">Wishlist Summary</h3>
+      <div class="space-y-4 text-lg font-semibold text-purple-800">
+        <div class="flex justify-between">
+          <span>Total Items</span>
+          <span>2</span>
+        </div>
+        <div class="flex justify-between">
+          <span>Total Price</span>
+          <span>₹ 667</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

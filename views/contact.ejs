@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Contact Us - MiniMart</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    .wrapper {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+    }
+    #error_message {
+      color: red;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <%-  include('./partials/header') %>
+  <div class="wrapper">
+    <h2 class="text-center mb-4">Contact Us</h2>
+
+    <div id="error_message"></div>
+
+    <form id="myform" action="/contact" method="POST" onsubmit="return validate();">
+
+    <!-- <form id="contactForm" action="/contact" method="POST" onsubmit="return validateForm()"> -->
+      <div class="mb-3">
+        <input type="text" class="form-control" id="name" name="name" placeholder="Name" />
+      </div>
+
+      <div class="mb-3">
+        <input type="text" class="form-control" id="subject" name="subject" placeholder="Subject" />
+      </div>
+
+      <div class="mb-3">
+        <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone" />
+      </div>
+
+      <div class="mb-3">
+        <input type="email" class="form-control" id="email" name="email" placeholder="Email" />
+      </div>
+
+      <div class="mb-3">
+        <textarea class="form-control" id="message" name="message" placeholder="Message" rows="5"></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100">Submit</button>
+    </form>
+  </div>
+
+  <script>
+    function validateForm() {
+      var name = document.getElementById("name").value.trim();
+      var phone = document.getElementById("phone").value.trim();
+      var email = document.getElementById("email").value.trim();
+      var error_message = document.getElementById("error_message");
+
+      error_message.innerHTML = "";
+      error_message.style.padding = "10px";
+
+      if (name.length < 3) {
+        error_message.innerHTML = "Please enter a valid name (at least 3 characters).";
+        return false;
+      }
+
+      if (phone.length !== 10 || isNaN(phone)) {
+        error_message.innerHTML = "Please enter a valid 10-digit phone number.";
+        return false;
+      }
+
+      if (email.indexOf("@") === -1 || email.length < 6) {
+        error_message.innerHTML = "Please enter a valid email address.";
+        return false;
+      }
+
+      return true; // allow form submission
+    }
+  </script>
+</body>
+</html>

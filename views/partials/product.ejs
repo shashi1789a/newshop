@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Gardening Essentials - Premium</title>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+/>
+<style>
+/* Body and container remain the same... */
+
+.product-box {
+  background: linear-gradient(145deg, #f9fff3, #e6f4cb);
+  border-radius: 20px;
+  box-shadow: inset 0 4px 8px #b2d57f55, 0 12px 30px rgba(108, 156, 39, 0.18);
+  border: 1.8px solid #a3c53b88;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  cursor: default;
+  overflow: hidden;
+}
+
+.product-box:hover {
+  transform: translateY(-16px) scale(1.05);
+  box-shadow: inset 0 6px 12px #9ec430aa, 0 28px 60px rgba(108, 156, 39, 0.35);
+  border-color: #7fb52ecc;
+  background: linear-gradient(145deg, #f2fff1, #d5eba2);
+}
+
+/* Image Overlay Gradient on Hover */
+.product-box img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  transition: transform 0.4s ease, filter 0.4s ease;
+  box-shadow: inset 0 0 20px #a4c63944;
+  position: relative;
+  z-index: 1;
+}
+
+.product-box:hover img {
+  transform: scale(1.12) rotate(1deg);
+  filter: brightness(0.88);
+}
+
+/* Add subtle gradient overlay on image hover */
+.product-box img::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, #7fb52eaa 90%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  border-radius: 20px 20px 0 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.product-box:hover img::after {
+  opacity: 1;
+}
+
+/* Text enhancements */
+.product-box strong {
+  font-size: 26px;
+  color: #305a00;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-shadow: 1px 1px 5px #9ec530bb;
+  user-select: text;
+}
+
+.product-box p {
+  font-size: 16px;
+  color: #425b18;
+  line-height: 1.5;
+  user-select: text;
+  min-height: 68px;
+}
+
+/* Info spans */
+.product-box span {
+  font-size: 15px;
+  color: #47611a;
+  font-weight: 600;
+  user-select: none;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 3px #b7d777aa;
+}
+
+/* Rating */
+.rating {
+  color: #a4c639;
+  font-weight: 700;
+  font-size: 16px;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-shadow: 0 0 4px #d1ef63cc;
+}
+.rating i {
+  color: #f5d742;
+  text-shadow: 0 0 5px #f5d742cc;
+}
+
+/* Actions container */
+.actions {
+  margin-top: auto;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Buttons styling */
+.product-box a,
+.like-btn {
+  flex: 1;
+  padding: 14px 0;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(75, 109, 40, 0.3);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  border: none;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+}
+
+/* Add to Cart */
+.product-box a.add-cart {
+  background: linear-gradient(145deg, #4a7c27, #2f5412);
+  text-shadow: 0 1px 3px #225206cc;
+  box-shadow: 0 6px 22px #3f6d1a99;
+}
+.product-box a.add-cart::before {
+  content: "";
+  position: absolute;
+  left: -100%;
+  top: 0;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0) 60%
+  );
+  transform: skewX(-30deg);
+  transition: left 0.6s ease;
+  z-index: 1;
+}
+.product-box a.add-cart:hover {
+  background: linear-gradient(145deg, #3f6d1a, #25420b);
+  box-shadow: 0 10px 30px #a4c639dd;
+  transform: translateY(-5px) scale(1.07);
+}
+.product-box a.add-cart:hover::before {
+  left: 100%;
+}
+
+/* Buy Now Button */
+.product-box a.buy-now {
+  background: linear-gradient(145deg, #008CBA, #005f7a);
+  box-shadow: 0 6px 22px rgba(0, 140, 186, 0.5);
+  text-shadow: 0 1px 3px #003c52cc;
+}
+.product-box a.buy-now:hover {
+  background: linear-gradient(145deg, #007399, #004a63);
+  box-shadow: 0 10px 30px rgba(0, 140, 186, 0.6);
+  transform: translateY(-5px) scale(1.07);
+}
+
+/* Like button */
+.like-btn {
+  background: linear-gradient(145deg, #e94e1b, #c0350f);
+  box-shadow: 0 6px 22px #d44012cc;
+  font-size: 18px;
+  padding: 14px 0;
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+}
+.like-btn:hover {
+  background: linear-gradient(145deg, #c0350f, #a2280a);
+  box-shadow: 0 12px 40px #f16a3877;
+  transform: translateY(-5px) scale(1.2);
+}
+.like-btn i {
+  pointer-events: none;
+  transition: color 0.3s ease;
+}
+.like-btn.liked i {
+  color: #ff6b6b;
+  text-shadow: 0 0 10px #ff6b6bbb;
+}
+
+/* Bounce animation for like button */
+@keyframes bounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+}
+
+.like-btn.liked {
+  animation: bounce 0.4s ease forwards;
+}
+
+/* Ribbon Badge */
+.ribbon {
+  position: absolute;
+  top: 20px;
+  left: -15px;
+  background: #8bc34a;
+  color: #fff;
+  padding: 8px 28px;
+  transform: rotate(-45deg);
+  font-size: 14.5px;
+  font-weight: 700;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.18);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  user-select: none;
+  pointer-events: none;
+  z-index: 10;
+  filter: drop-shadow(0 2px 3px #627a2b99);
+  transition: transform 0.3s ease;
+}
+
+/* Shimmer animation on discount ribbon */
+.ribbon.discount {
+  background: linear-gradient(90deg, #4caf50 25%, #6ee86e 50%, #4caf50 75%);
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Responsive tweaks */
+@media screen and (max-width: 900px) {
+  .product-box strong { font-size: 22px; }
+  .product-box p { font-size: 15px; }
+  .product-box a, .like-btn {
+    font-size: 15px;
+    padding: 13px 0;
+    gap: 10px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .product-box { border-width: 1.2px; }
+  .product-box strong { font-size: 20px; }
+  .product-box p { font-size: 14px; }
+}
+</style>
+</head>
+<body>
+
+<section id="popular-bundle-pack" aria-label="Popular Gardening Bundle Pack">
+  <div class="product-heading">
+    <h3>Gardening Essentials</h3>
+  </div>
+  <div class="product-container">
+    <% products.forEach(product => { %>
+    <article class="product-box" aria-label="<%= product.name %> product card">
+      <% if (product.isFeatured) { %>
+        <div class="ribbon featured" aria-label="Featured Product">Featured</div>
+      <% } %>
+      <% if (product.discount && product.discount > 0) { %>
+        <div class="ribbon discount" aria-label="Discount Offer">-<%= product.discount %>%</div>
+      <% } %>
+      <img
+        src="data:image/jpeg;base64,<%= Buffer.from(product.image).toString('base64') %>"
+        alt="<%= product.name %> Image"
+        loading="lazy"
+      />
+      <div class="product-box-content">
+        <strong><%= product.name %></strong>
+        <p><%= product.description %></p>
+        <span>Category: <%= product.category %></span>
+        <span>Stock: <%= product.stock %></span>
+        <span>Price: ₹<%= product.price %></span>
+        <span class="rating" aria-label="Rating: <%= product.rating %> stars">
+          Rating: <%= product.rating %> <i class="fas fa-star"></i>
+        </span>
+        <div class="actions">
+          <a href="/addtocart/<%= product._id %>" class="add-cart" aria-label="Add <%= product.name %> to Cart">
+            <i class="fas fa-shopping-bag"></i> Add to Cart
+          </a>
+          <a href="/order?productid=<%= product._id %>" class="buy-now" aria-label="Buy <%= product.name %> Now">
+            <i class="fas fa-bolt"></i> Buy Now
+          </a>
+          <button
+            class="like-btn"
+            aria-label="Add <%= product.name %> to Wishlist"
+            title="Add to Wishlist"
+          >
+            <i class="far fa-heart"></i>
+          </button>
+        </div>
+      </div>
+    </article>
+    <% }); %>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll('.like-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.classList.add('liked');
+      setTimeout(() => btn.classList.remove('liked'), 600);
+    });
+  });
+</script>
+
+</body>
+</html>

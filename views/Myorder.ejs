@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Orders - MiniMart</title>
+    <link rel="stylesheet" href="/stylesheet/Myorder.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <%-  include('./partials/header') %>
+    <!-- Header Section -->
+    <header>
+      <nav class="navbar">
+        <div class="logo">
+          <a href="/">
+            <img src="/image/images/fav-ico.png" alt="MiniMart Logo" />
+          </a>
+        </div>
+        <div class="nav-links">
+          <a href="/">Home</a>
+          <a href="/aboutus">About Us</a>
+          <a href="/contact">Contact</a>
+          <a href="/profile">Profile</a>
+        </div>
+        <div class="nav-icons">
+          <a href="/whislist"><i class="fas fa-heart"></i></a>
+          <a href="/cart"
+            ><i class="fas fa-shopping-cart"></i
+          ></a>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="orders-container">
+      <h1>My Orders</h1>
+
+      <div class="orders-filter">
+        <select id="orderStatus">
+          <option value="all">All Orders</option>
+          <option value="pending">Pending</option>
+          <option value="delivered">Delivered</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+
+      <div class="orders-list">
+        <!-- Order items will be dynamically populated here -->
+        <div class="order-item">
+          <div class="order-image">
+            <img src="/image/Pens.jpg" alt="Pens Product" />
+          </div>
+          <div class="order-details">
+            <h3>Stationery Set</h3>
+            <p>Order #12345</p>
+            <p>Status: Delivered</p>
+          </div>
+        </div>
+        <div class="order-item">
+          <div class="order-image">
+            <img src="/image/images/pack1.png" alt="Pack 1 Product" />
+          </div>
+          <div class="order-details">
+            <h3>Gift Pack</h3>
+            <p>Order #12346</p>
+            <p>Status: Pending</p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer>
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="Home Page HTML.html">Home</a></li>
+            <li><a href="About Us HTML.html">About Us</a></li>
+            <li><a href="Contact Form HTML.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Contact Info</h3>
+          <p>Email: support@minimart.com</p>
+          <p>Phone: +1 234 567 890</p>
+        </div>
+        <div class="footer-section">
+          <h3>Follow Us</h3>
+          <div class="social-links">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 MiniMart. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script src="My Orders JS.js"></script>
+  </body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Register</title>
+  <style>
+    /* Global Reset & Font */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #e0e7ff, #fef3c7);
+    }
+
+    /* Card */
+    .register-card {
+      background-color: #fff;
+      padding: 45px 40px;
+      border-radius: 20px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+      width: 100%;
+      max-width: 420px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .register-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+
+    .register-card h1 {
+      text-align: center;
+      font-size: 2.25rem;
+      font-weight: 700;
+      color: #4f46e5;
+      margin-bottom: 35px;
+    }
+
+    /* Input Fields */
+    .register-card input {
+      width: 100%;
+      padding: 14px 16px;
+      margin-bottom: 22px;
+      border: 1.5px solid #d1d5db;
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+
+    .register-card input:focus {
+      outline: none;
+      border-color: #4f46e5;
+      box-shadow: 0 0 8px rgba(79,70,229,0.3);
+    }
+
+    /* Submit Button */
+    .register-card button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(90deg, #4f46e5, #6366f1);
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .register-card button:hover {
+      background: linear-gradient(90deg, #4338ca, #4f46e5);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(79,70,229,0.4);
+    }
+
+    /* Login Link */
+    .register-card .login-link {
+      display: block;
+      text-align: center;
+      margin-top: 18px;
+      font-size: 0.95rem;
+      color: #6b7280;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .register-card .login-link:hover {
+      color: #4f46e5;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+ 
+  <div class="register-card">
+    <h1>Admin Register</h1>
+    <form action="/adregister" method="POST" autocomplete="off" novalidate>
+      <input type="text" name="name" placeholder="Full Name" required>
+      <input type="email" name="email" placeholder="Email Address" required>
+      <input type="password" name="password" placeholder="Password" required>
+      <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
+      <button type="submit">Register</button>
+    </form>
+    <a href="/adlogin" class="login-link">Already have an account? Login</a>
+  </div>
+</body>
+</html>

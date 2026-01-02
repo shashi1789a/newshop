@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Medicines</title>
+  <script src="https://kit.fontawesome.com/5471644867.js" crossorigin="anonymous"></script>
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    /* Glassmorphism container */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: saturate(180%) blur(12px);
+      -webkit-backdrop-filter: saturate(180%) blur(12px);
+      border-radius: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow:
+        0 8px 32px 0 rgba(31, 38, 135, 0.37);
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+    }
+    .glass-card:hover {
+      transform: translateY(-10px) scale(1.05);
+      box-shadow:
+        0 12px 48px 0 rgba(31, 38, 135, 0.6);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* Animated shadow for price */
+    .price-glow {
+      text-shadow:
+        0 0 8px #3b82f6,
+        0 0 20px #2563eb;
+      transition: text-shadow 0.3s ease;
+    }
+    .price-glow:hover {
+      text-shadow:
+        0 0 12px #2563eb,
+        0 0 28px #1d4ed8,
+        0 0 40px #1e40af;
+    }
+
+    /* Floating action buttons */
+    .action-btn {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      will-change: transform;
+    }
+    .action-btn:hover {
+      transform: translateY(-4px) scale(1.1);
+      box-shadow: 0 8px 24px rgba(59, 130, 246, 0.6);
+    }
+
+    /* Bounce animation for wishlist heart */
+    @keyframes bounceHeart {
+      0%, 100% {
+        transform: scale(1);
+        color: #ef4444;
+      }
+      50% {
+        transform: scale(1.3);
+        color: #b91c1c;
+      }
+    }
+    .wishlist-btn.active i {
+      animation: bounceHeart 0.6s ease forwards;
+    }
+
+    /* Tooltip styling */
+    .tooltip {
+      position: relative;
+      cursor: pointer;
+    }
+    .tooltip:hover::after {
+      content: attr(data-tip);
+      position: absolute;
+      top: -1.75rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #111827;
+      color: white;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.375rem;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+      z-index: 10;
+    }
+    .tooltip::after {
+      opacity: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+
+<body class="bg-gradient-to-br from-indigo-50 via-white to-blue-50 min-h-screen font-sans text-gray-900">
+  <%-  include('./partials/header') %>
+  <div class="max-w-7xl mx-auto px-6 py-12">
+    <h1 class="text-5xl font-extrabold mb-16 text-center tracking-tight text-indigo-800 drop-shadow-lg">
+      Explore Our Medicine Range
+    </h1>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-14">
+      <% products.forEach(product => { %>
+      <div class="glass-card relative flex flex-col overflow-hidden shadow-lg">
+        <% if (product.isFeatured) { %>
+          <div class="absolute top-4 left-4 bg-indigo-700 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg z-10 tooltip" data-tip="Featured Product">
+            🌟 Featured
+          </div>
+        <% } %>
+        <% if (product.discount > 0) { %>
+          <div class="absolute top-4 right-4 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg animate-pulse z-10 tooltip" data-tip="Discount">
+            -<%= product.discount %>% OFF
+          </div>
+        <% } %>
+
+        <img
+          src="data:image/jpeg;base64,<%= Buffer.from(product.image).toString('base64') %>"
+          alt="<%= product.name %>"
+          class="h-40 w-full object-cover rounded-t-3xl border-b border-white/30 shadow-inner"
+          loading="lazy"
+        />
+
+        <div class="p-4 flex flex-col flex-grow">
+          <h2 class="text-2xl font-extrabold text-indigo-900 truncate mb-1" title="<%= product.name %>"><%= product.name %></h2>
+          <p class="text-gray-700 text-sm line-clamp-3 mb-3" title="<%= product.description %>"><%= product.description %></p>
+
+          <div class="text-gray-800 space-y-1 text-sm mb-5">
+            <p><i class="fas fa-tag mr-2 text-indigo-600"></i><span class="font-semibold">Category:</span> <%= product.category %></p>
+            <p><i class="fas fa-boxes mr-2 text-green-600"></i><span class="font-semibold">Stock:</span> <%= product.stock %> units</p>
+            <p><i class="fas fa-star mr-2 text-yellow-400"></i><span class="font-semibold">Rating:</span> <%= product.rating %> / 5</p>
+          </div>
+
+          <div class="text-4xl font-extrabold text-indigo-700 price-glow mb-5 select-none">₹ <%= product.price %></div>
+
+          <div class="flex flex-col gap-3 mt-auto">
+            <a
+              href="/addtocart/<%= product._id %>"
+              class="action-btn bg-indigo-700 text-white py-3 rounded-2xl font-semibold text-center shadow-lg hover:bg-indigo-800 flex items-center justify-center gap-3"
+            >
+              <i class="fas fa-cart-plus text-xl"></i> Add to Cart
+            </a>
+            <a
+              href="/order?productid=<%= product._id %>"
+              class="action-btn bg-green-700 text-white py-3 rounded-2xl font-semibold text-center shadow-lg hover:bg-green-800 flex items-center justify-center gap-3"
+            >
+              <i class="fas fa-bolt text-xl"></i> Order Now
+            </a>
+            <button
+              type="button"
+              class="wishlist-btn action-btn flex items-center justify-center gap-2 text-red-600 hover:text-red-700 transition text-lg select-none"
+              aria-label="Add to wishlist"
+              onclick="this.classList.toggle('active')"
+            >
+              <i class="far fa-heart"></i> Wishlist
+            </button>
+          </div>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+  </div>
+</body>
+</html>

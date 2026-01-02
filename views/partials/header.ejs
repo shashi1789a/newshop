@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!--==Title==================================-->
+  <title>MINIMART GROCERY</title>
+
+  <!--==Stylesheet=============================-->
+  <link rel="stylesheet" type="text/css" href="Home Page CSS.css">
+
+  <!--==Fav-icon===============================-->
+  <link rel="icon" type="image/png" href="images/favicon.png">
+
+  <!--==Using-Font-Awesome=====================-->
+  <script src="https://kit.fontawesome.com/5471644867.js" crossorigin="anonymous"></script>
+
+  <!--==API & JS Files=========================-->
+  <script src="api.js" defer></script>
+  <script src="Home Page JS.js" defer></script>
+  <script src="js/homepageaddcart.js" defer></script>
+
+  <!--==Fonts==================================-->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f8f9fa;
+    }
+
+    /* Navigation Styling */
+    .navigation {
+      width: 100%;
+      background: #fff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 40px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      text-decoration: none;
+      color: #4caf50;
+      letter-spacing: 1px;
+    }
+
+    .logo span {
+      color: #000;
+    }
+
+    .menu-btn {
+      display: none;
+    }
+
+    .menu-icon {
+      display: none;
+      cursor: pointer;
+    }
+
+    .menu-icon .nav-icon {
+      width: 25px;
+      height: 3px;
+      background-color: #333;
+      display: block;
+      position: relative;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .menu-icon .nav-icon::before,
+    .menu-icon .nav-icon::after {
+      content: '';
+      width: 25px;
+      height: 3px;
+      background-color: #333;
+      position: absolute;
+      left: 0;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .menu-icon .nav-icon::before {
+      top: -8px;
+    }
+
+    .menu-icon .nav-icon::after {
+      top: 8px;
+    }
+
+    .menu {
+      display: flex;
+      gap: 18px;
+      list-style: none;
+    }
+
+    .menu li a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      font-size: 15px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
+
+    .menu li a:hover,
+    .menu li a.active {
+      background-color: #4caf50;
+      color: white;
+    }
+
+    /* Right Navigation Icons */
+    .right-nav {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .right-nav a {
+      position: relative;
+      font-size: 18px;
+      color: #333;
+      transition: color 0.3s ease;
+    }
+
+    .right-nav a:hover {
+      color: #4caf50;
+    }
+
+    .right-nav a span {
+      position: absolute;
+      top: -8px;
+      right: -10px;
+      background: #f44336;
+      color: white;
+      font-size: 11px;
+      font-weight: bold;
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 17px;
+    }
+
+    /* Responsive Navigation */
+    @media screen and (max-width: 991px) {
+      .menu-icon {
+        display: block;
+      }
+
+      .menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        flex-direction: column;
+        background: #fff;
+        display: none;
+        border-top: 1px solid #ddd;
+      }
+
+      .menu li {
+        width: 100%;
+      }
+
+      .menu li a {
+        padding: 14px 20px;
+        border-bottom: 1px solid #eee;
+      }
+
+      .menu-btn:checked ~ .menu {
+        display: flex;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!--==Navigation================================-->
+  <nav class="navigation">
+
+    <!--logo-------->
+    <a href="/" class="logo"><span>MM</span>G</a>
+
+    <!--menu-btn---->
+    <input type="checkbox" class="menu-btn" id="menu-btn">
+    <label for="menu-btn" class="menu-icon">
+      <span class="nav-icon"></span>
+    </label>
+
+    <!--menu-------->
+    <ul class="menu">
+      <li><a href="/" class="active">Home</a></li>
+      <li><a href="/contact">Contact&nbsp;Us</a></li>
+      <li><a href="/feedback">Feedback</a></li>
+      <li><a href="/aboutus">About&nbsp;Us</a></li>
+      <li><a href="/auth/register">Sign&nbsp;Up</a></li>
+      <li><a href="/auth/login">Login</a></li>
+      <li><a href="/userOrders">My&nbsp;Order</a></li>
+      <li><a href="/adregister">Admin</a></li>
+    </ul>
+
+    <!--right-nav-(cart-like)-->
+
+    <div class="right-nav">
+      <a href="/whislist" class="like" aria-label="Wishlist">
+        <i class="fa-regular fa-heart"></i>
+        <span>2</span>
+      </a>
+
+      <a href="/cart" class="cart" aria-label="Cart">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span>2</span>
+      </a>
+
+      <a href="/profile" class="user-profile" aria-label="Profile">
+        <i class="fas fa-user"></i>
+        <span>1</span>
+      </a>
+    </div>
+
+  </nav>
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Shopping Cart</title>
+
+    <script
+      src="https://kit.fontawesome.com/9088cc6401.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <link
+      rel="shortcut icon"
+      type="image/jpg"
+      href="C:\Users\hp\Desktop\College\F S\Introduction To Web Technologies\Notepad ++ Files\Project\favicon.ico"
+    />
+  </head>
+
+  <body>
+    <%-  include('./partials/header') %>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+      *{
+      	font-family: 'Poppins', sans-serif;
+      	margin:0;
+      	padding:0;
+      	box-sizing: border-box;
+      }
+      body{
+      	background: #c8efd1;
+      	overflow:hidden;
+      }
+      .container{
+      	max-width:1200px;
+      	margin: 0 auto;
+      }
+      .container > h1{
+      	padding: 20px 0;
+      }
+      .cart{
+      	display: flex;
+      }
+      .products{
+      	flex: 0.75;
+      }
+      .product{
+      	display: flex;
+      	width: 100%;
+      	height: 200px;
+      	overflow: hidden;
+      	margin-bottom: 20px;
+      }
+      .product:hover{
+      	border: none;
+      	box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+      	transform: scale(1.01);
+          transition: 0.3s all ease;
+      }
+      .product > img{
+      	width: 200px;
+      	height: 200px;
+      	object-fit: contain;
+          padding: 10px;
+          background: white;
+          border-radius: 8px;
+      }
+      .product > img:hover{
+      	transform: scale(1.04);
+          transition: 0.3s all ease;
+      }
+      .product-info{
+      	padding: 20px;
+      	width: 100%;
+      	position: relative;
+          background: white;
+          border-radius: 8px;
+          margin-left: 10px;
+      }
+      .product-name{
+          font-size: 1.2em;
+          font-weight: 600;
+          color: #333;
+      }
+      .product-price{
+          color: #32b350;
+          font-weight: 600;
+          font-size: 1.1em;
+      }
+      .product-offer{
+      	margin-bottom: 20px;
+      }
+      .product-remove{
+      	position: absolute;
+      	bottom: 20px;
+      	right: 20px;
+      	padding: 10px 25px;
+      	background-color: red;
+      	color: white;
+      	cursor: pointer;
+      	border-radius: 5px;
+      }
+      .product-remove:hover{
+      	background-color: white;
+      	color: red;
+      	font-weight: 600;
+      	border: 1px solid red;
+      }
+      .product-quantity{
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin: 15px 0;
+      }
+      .product-quantity input{
+          width: 50px;
+          padding: 5px;
+          text-align: center;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+      }
+      .product-quantity button{
+          padding: 5px 12px;
+          background-color: #32b350;
+          color: white;
+          border: none;
+          cursor: pointer;
+          border-radius: 4px;
+          font-size: 1.1em;
+      }
+      .product-quantity button:hover{
+          background-color: #74d88b;
+      }
+      .fas{
+      	margin-right: 5px;
+      }
+      .cart-total{
+      	flex: 0.25;
+      	margin-left: 20px;
+      	padding:20px;
+      	height: 240px;
+      	border: 1.5px solid black;
+      	border-radius: 10px;
+          height: 270px;
+      }
+      .cart-total p{
+      	display: flex;
+      	justify-content: space-between;
+      	margin-bottom: 30px;
+      	font-size: 20px;
+      }
+      .cart-total a{
+      	display: block;
+      	text-align: center;
+      	height: 40px;
+      	line-height: 40px;
+      	background-color: #32b350;
+      	color: white;
+      	text-decoration: none;
+      }
+      .cart-total a:hover{
+      	background-color: #74d88b;
+      }
+      @media screen and (max-width: 700px){
+      	.remove{
+      		display: none;
+      	}
+      	.product{
+      		height: 150px;
+      	}
+      	.product > img{
+      		height: 150px;
+      		width: 200px;
+      	}
+      	.product-name, .product-price, .product-offer{
+      		margin-bottom: 10px;
+      	}
+      }
+      @media screen and (max-width: 900px){
+      	.cart{
+      		flex-direction: column;
+      	}
+      	.cart-total{
+      		margin-left: 0;
+      		margin-bottom: 20px;
+      	}
+      }
+      @media screen and (max-width: 12220px){
+      	.container{
+      		max-width: 95%;
+      	}
+      }
+    </style>
+
+    <div class="container">
+      <h1>Shopping Cart</h1>
+
+      <div class="cart">
+        <div class="products">
+          <!-- Cart items will be dynamically added here -->
+        </div>
+
+        <div class="cart-total">
+          <p>
+            <span>Total Price</span>
+            <span>Rs. 0</span>
+          </p>
+          <p>
+            <span>No. of Items</span>
+            <span>0</span>
+          </p>
+          <p>
+            <span>You Save</span>
+            <span>Rs. 0</span>
+          </p>
+          <a href="#">Proceed to Checkout</a>
+        </div>
+      </div>
+    </div>
+
+    <script src="cart.js"></script>
+  </body>
+</html>
