@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
     try {
-        const conn = await mongoose.connect(process.env.MONGODB_CONNECT_URI || 'mongodb://localhost:27017/minimart', {
+        const conn = await mongoose.connect(process.env.MONGODB_CONNECT_URI || 'mongodb:mongodb+srv://shashiprakash191_db_user:w79MWCoqGD6HAKm7@cluster0.c1rqz9y.mongodb.net/?appName=Cluster0', {
             useNewUrlParser: true,
             useUnifiedTopology: true
         });
