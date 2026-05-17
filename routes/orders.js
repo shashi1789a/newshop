@@ -118,51 +118,7 @@ function adminAuth(req, res, next) {
 }
 
 
-// GET /orders/admin - view all orders with details (admin only)
-// router.get('/adminOrders', auth, adminAuth, async (req, res) => {
-//   try {
-//     const orders = await Order.find()
-//       .populate('user', 'email')
-//       .populate('items.product');
-//     res.render('adminOrders', { orders });
-//   } catch (err) {
-//     console.error('Admin Orders Error:', err);
-//     res.status(500).send('Server error');
-//   }
-// });
 
-// // PATCH /orders/:id/status - update order (admin only)
-// router.patch('/:id/status', auth, adminAuth, async (req, res) => {
-//   try {
-//     const { orderStatus, paymentStatus, trackingNumber } = req.body;
-//     await Order.findByIdAndUpdate(req.params.id, {
-//       orderStatus,
-//       paymentStatus,
-//       trackingNumber,
-//     });
-//     res.redirect('/adminOrders');
-//   } catch (err) {
-//     console.error('Order Update Error:', err);
-//     res.status(500).send('Failed to update order');
-//   }
-// });
-
-// // DELETE /orders/:id - delete order (admin only)
-// router.delete('/:id', auth, adminAuth, async (req, res) => {
-//   try {
-//     await Order.findByIdAndDelete(req.params.id);
-//     res.redirect('/adminOrders');
-//   } catch (err) {
-//     console.error('Order Delete Error:', err);
-//     res.status(500).send('Failed to delete order');
-//   }
-// });
-
-// admin routs
-
-
-
-// GET /orders/adminOrders - view all orders (admin only)
 router.get('/adminOrders',authadmin,  async (req, res) => {
   try {
     const orders = await Order.find()
