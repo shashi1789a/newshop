@@ -88,7 +88,9 @@ router.get("/addtocart/:productid", auth, async function(req, res) {
 router.get('/Details', (req, res) => {
   res.render('Details'); 
 });
-
+router.get('/priceCal', (req, res) => {
+  res.render('priceCal'); 
+});
 
 router.get('/contact', (req, res) => {
   res.render('contact'); 

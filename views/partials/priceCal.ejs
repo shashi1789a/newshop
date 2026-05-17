@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Cloth Price Calculator | Style Studio</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(145deg, #e9eff5 0%, #dce3ec 100%);
+      padding: 24px 20px;
+      min-height: 100vh;
+    }
+
+    /* MAIN CONTAINER - FULL WIDTH RESPONSIVE */
+    .container {
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(0px);
+      border-radius: 2rem;
+      box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.25), 0 2px 8px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      transition: all 0.2s ease;
+    }
+
+    /* FORM SECTION & HEADER */
+    .form-panel {
+      background: #ffffff;
+      padding: 2rem 2rem 2rem 2rem;
+      border-bottom: 1px solid #eef2f8;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #1E2A3E, #2C3E50);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      letter-spacing: -0.3px;
+      display: inline-block;
+      margin-bottom: 0.25rem;
+    }
+
+    .subhead {
+      color: #5b6e8c;
+      font-weight: 500;
+      margin-bottom: 1.75rem;
+      border-left: 4px solid #e67e22;
+      padding-left: 1rem;
+      font-size: 0.95rem;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      align-items: flex-end;
+    }
+
+    .form-group {
+      flex: 1 1 200px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group.full-width {
+      flex: 1 1 100%;
+    }
+
+    label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #2c3e50;
+      opacity: 0.75;
+    }
+
+    input, select, button {
+      padding: 12px 16px;
+      font-size: 0.95rem;
+      border-radius: 20px;
+      border: 1px solid #e2e8f0;
+      background: #fefefe;
+      transition: all 0.2s ease;
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      border-color: #e67e22;
+      box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.2);
+      background: #ffffff;
+    }
+
+    /* file input custom style */
+    input[type="file"] {
+      padding: 10px 12px;
+      background: #f8fafc;
+    }
+
+    button {
+      background: linear-gradient(95deg, #1e2a3e 0%, #2c3e50 100%);
+      color: white;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(95deg, #e67e22, #f39c12);
+      box-shadow: 0 12px 20px -12px rgba(230, 126, 34, 0.4);
+    }
+
+    .calc-btn {
+      background: linear-gradient(95deg, #e67e22, #f39c12);
+      font-size: 1rem;
+      font-weight: 700;
+      margin-top: 8px;
+    }
+
+    /* SEARCH + HEADER SECTION */
+    .search-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 1.5rem 2rem 1rem 2rem;
+    }
+
+    h2 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #1f2c3e;
+      letter-spacing: -0.2px;
+      background: none;
+      background-clip: unset;
+      -webkit-background-clip: unset;
+      color: #1e2a3e;
+    }
+
+    #searchInput {
+      width: 280px;
+      border-radius: 40px;
+      padding: 12px 20px;
+      background: #ffffff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="%239aa9bb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>') no-repeat 16px center;
+      padding-left: 44px;
+      border: 1px solid #e2edf2;
+      font-size: 0.9rem;
+    }
+
+    #searchInput:focus {
+      width: 320px;
+      border-color: #e67e22;
+    }
+
+    /* CARD GRID - FULL WIDTH + MODERN */
+    .cloth-grid {
+      padding: 0.5rem 2rem 2.5rem 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 1.8rem;
+      background: #ffffff;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 28px;
+      overflow: hidden;
+      transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.02);
+      border: 1px solid rgba(230, 126, 34, 0.1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 25px 35px -15px rgba(0, 0, 0, 0.2);
+      border-color: rgba(230, 126, 34, 0.4);
+    }
+
+    .card-img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      background: #f4f7fb;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover .card-img {
+      transform: scale(1.02);
+    }
+
+    .card-content {
+      padding: 1.2rem 1.2rem 1.4rem;
+      background: white;
+    }
+
+    .brand-name {
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: #1f2c3e;
+      letter-spacing: -0.2px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .badge-type {
+      background: #fef3e8;
+      color: #e67e22;
+      padding: 4px 12px;
+      border-radius: 50px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-top: 12px;
+      border-bottom: 1px dashed #edf2f7;
+      padding-bottom: 8px;
+    }
+
+    .detail-label {
+      font-weight: 600;
+      color: #59748f;
+      font-size: 0.8rem;
+    }
+
+    .detail-value {
+      font-weight: 700;
+      color: #1f2c3e;
+    }
+
+    .price-tag {
+      background: linear-gradient(115deg, #e67e22, #f7b05e);
+      display: inline-block;
+      padding: 8px 16px;
+      border-radius: 60px;
+      font-weight: 800;
+      color: white;
+      font-size: 1.2rem;
+      margin-top: 12px;
+      text-align: center;
+      width: fit-content;
+      box-shadow: 0 5px 12px rgba(230, 126, 34, 0.3);
+    }
+
+    .deleteBtn {
+      background: #ff6b6b;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 40px;
+      font-weight: 700;
+      margin-top: 18px;
+      width: 100%;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.85rem;
+    }
+
+    .deleteBtn:hover {
+      background: #e03a3a;
+      transform: scale(0.98);
+      box-shadow: none;
+    }
+
+    .empty-message {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 3rem;
+      background: #fafcff;
+      border-radius: 40px;
+      font-size: 1.2rem;
+      color: #7f8c8d;
+      font-weight: 500;
+      border: 2px dashed #e2e8f0;
+    }
+
+    /* responsive touches */
+    @media (max-width: 680px) {
+      body {
+        padding: 16px;
+      }
+      .form-panel {
+        padding: 1.5rem;
+      }
+      .search-header {
+        flex-direction: column;
+        align-items: stretch;
+        margin: 1rem 1.5rem;
+      }
+      #searchInput {
+        width: 100%;
+      }
+      #searchInput:focus {
+        width: 100%;
+      }
+      .cloth-grid {
+        padding: 0.5rem 1.5rem 2rem 1.5rem;
+        gap: 1.2rem;
+      }
+      h1 {
+        font-size: 1.8rem;
+      }
+      .form-row {
+        flex-direction: column;
+        gap: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        border-radius: 1.5rem;
+      }
+      .card-img {
+        height: 180px;
+      }
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem 2rem;
+      font-size: 0.75rem;
+      color: #8e9eae;
+      border-top: 1px solid #eef2fa;
+      background: #ffffff;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="form-panel">
+    <h1>🧥 Cloth Price Calculator</h1>
+    <div class="subhead">Upload image · Add details · Auto-calculated price (base + ₹2/gm)</div>
+
+    <form id="clothForm">
+      <div class="form-row">
+        <div class="form-group full-width">
+          <label>📸 Upload Cloth Image</label>
+          <input type="file" id="image" accept="image/*" required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>🏷️ Brand Name</label>
+          <input type="text" id="brand" placeholder="e.g., Zara, Levi's, H&M" required>
+        </div>
+        <div class="form-group">
+          <label>🧵 Cloth Type</label>
+          <select id="type">
+            <option value="shirt">👔 Shirt</option>
+            <option value="jeans">👖 Jeans</option>
+            <option value="jacket">🧥 Jacket</option>
+            <option value="tshirt">👕 T-Shirt</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>⚖️ Weight (grams)</label>
+          <input type="number" id="weight" placeholder="e.g., 320" required>
+        </div>
+      </div>
+
+      <button type="submit" class="calc-btn">✨ Calculate & Save Cloth ✨</button>
+    </form>
+  </div>
+
+  <div class="search-header">
+    <h2>📋 My Collection</h2>
+    <input type="text" id="searchInput" placeholder="🔍 Search by brand or type...">
+  </div>
+
+  <div id="clothList" class="cloth-grid"></div>
+  <footer>💡 Price = Base price (Shirt:₹500, Jeans:₹1200, Jacket:₹2000, T-Shirt:₹400) + ₹2 × weight(gm)</footer>
+</div>
+
+<script>
+  // ---------- GLOBAL STATE ----------
+  const form = document.getElementById("clothForm");
+  const clothListContainer = document.getElementById("clothList");
+  const searchInput = document.getElementById("searchInput");
+
+  let cloths = JSON.parse(localStorage.getItem("cloths")) || [];
+
+  // Helper: Display function with modern cards and full width styling
+  function displayCloths(filteredArray = null) {
+    const dataToRender = filteredArray !== null ? filteredArray : cloths;
+    clothListContainer.innerHTML = "";
+
+    if (!dataToRender.length) {
+      const emptyDiv = document.createElement("div");
+      emptyDiv.className = "empty-message";
+      emptyDiv.innerHTML = "🧺 No cloth items found. Add your first stylish piece!";
+      clothListContainer.appendChild(emptyDiv);
+      return;
+    }
+
+    dataToRender.forEach((cloth, idx) => {
+      // we need global original index for delete (based on actual cloths array, not filtered)
+      // Find original index in master 'cloths' array by matching unique identifier? 
+      // Since images might duplicate but better to delete by reference: using cloth.image + brand as fallback? 
+      // But simpler: delete using filter on master array using index from master. We'll store unique id for robust deletion.
+      // To avoid mismatched delete due to search filter, we assign a unique id when creating.
+      // However current logic stores objects without id. To ensure correct deletion, we will patch on load: add 'uid' for each cloth if missing.
+      // Migration step: ensure each cloth has a unique id (timestamp + random). Let's do that on load.
+      if (!cloth.uid) {
+        cloth.uid = Date.now() + '-' + Math.random().toString(36).substr(2, 8);
+      }
+    });
+
+    // re-save unique ids to localStorage after migration
+    let needsUpdate = false;
+    cloths.forEach(c => {
+      if (!c.uid) {
+        c.uid = Date.now() + '-' + Math.random().toString(36).substr(2, 8);
+        needsUpdate = true;
+      }
+    });
+    if (needsUpdate) {
+      localStorage.setItem("cloths", JSON.stringify(cloths));
+      // re-run display if we changed IDs? but fresh dataToRender might be using old cloths reference without uid
+      // we'll re-fetch dataToRender if filteredArray is null? Since filtered uses cloths, and cloths now have uid, fine.
+      if (filteredArray === null) {
+        // re-display with fresh master
+        displayCloths();
+        return;
+      } else {
+        // but in search context, we need ensure filtered items have proper uid
+        const updatedFiltered = dataToRender.map(item => {
+          const freshMaster = cloths.find(c => c.uid === item.uid);
+          return freshMaster || item;
+        });
+        if (updatedFiltered !== dataToRender) {
+          displayCloths(updatedFiltered);
+          return;
+        }
+      }
+    }
+
+    // Actually render cards using current dataToRender (filtered or master)
+    dataToRender.forEach((cloth) => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      // image section
+      const img = document.createElement("img");
+      img.src = cloth.image;
+      img.alt = cloth.brand;
+      img.className = "card-img";
+      img.loading = "lazy";
+
+      const contentDiv = document.createElement("div");
+      contentDiv.className = "card-content";
+
+      // brand + type badge
+      const brandDiv = document.createElement("div");
+      brandDiv.className = "brand-name";
+      brandDiv.innerHTML = `${escapeHtml(cloth.brand)} <span class="badge-type">${escapeHtml(cloth.type)}</span>`;
+
+      // weight row
+      const weightRow = document.createElement("div");
+      weightRow.className = "detail-row";
+      weightRow.innerHTML = `<span class="detail-label">⚖️ Weight</span><span class="detail-value">${cloth.weight} g</span>`;
+
+      // price row with stylish tag
+      const priceWrapper = document.createElement("div");
+      priceWrapper.style.marginTop = "8px";
+      const priceSpan = document.createElement("div");
+      priceSpan.className = "price-tag";
+      priceSpan.textContent = `₹ ${cloth.price.toFixed(2)}`;
+      priceWrapper.appendChild(priceSpan);
+
+      // delete button
+      const deleteBtn = document.createElement("button");
+      deleteBtn.textContent = "🗑️ Delete Item";
+      deleteBtn.className = "deleteBtn";
+
+      // delete event using unique uid
+      deleteBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const newCloths = cloths.filter(c => c.uid !== cloth.uid);
+        cloths = newCloths;
+        localStorage.setItem("cloths", JSON.stringify(cloths));
+        // after deletion, refresh display according to current search keyword
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        if (searchTerm === "") {
+          displayCloths(cloths);
+        } else {
+          const filtered = cloths.filter(c => 
+            c.brand.toLowerCase().includes(searchTerm) || 
+            c.type.toLowerCase().includes(searchTerm)
+          );
+          displayCloths(filtered);
+        }
+      });
+
+      contentDiv.appendChild(brandDiv);
+      contentDiv.appendChild(weightRow);
+      contentDiv.appendChild(priceWrapper);
+      contentDiv.appendChild(deleteBtn);
+      card.appendChild(img);
+      card.appendChild(contentDiv);
+      clothListContainer.appendChild(card);
+    });
+  }
+
+  // simple XSS protection
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+      return c;
+    });
+  }
+
+  // Save new cloth item
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const imageFile = document.getElementById("image").files[0];
+    const brand = document.getElementById("brand").value.trim();
+    const type = document.getElementById("type").value;
+    const weight = Number(document.getElementById("weight").value);
+
+    if (!imageFile) {
+      alert("Please select an image.");
+      return;
+    }
+    if (!brand) {
+      alert("Please enter brand name.");
+      return;
+    }
+    if (isNaN(weight) || weight <= 0) {
+      alert("Please enter a valid weight in grams (>0).");
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function (evt) {
+      const imageBase64 = evt.target.result;
+
+      let basePrice = 0;
+      switch (type) {
+        case "shirt": basePrice = 500; break;
+        case "jeans": basePrice = 1200; break;
+        case "jacket": basePrice = 2000; break;
+        case "tshirt": basePrice = 400; break;
+        default: basePrice = 500;
+      }
+
+      const price = basePrice + (weight * 2);
+
+      // generate unique ID for each cloth item
+      const uid = Date.now() + '-' + Math.random().toString(36).substring(2, 10);
+
+      const newCloth = {
+        uid: uid,
+        image: imageBase64,
+        brand: brand,
+        type: type,
+        weight: weight,
+        price: price
+      };
+
+      cloths.push(newCloth);
+      localStorage.setItem("cloths", JSON.stringify(cloths));
+
+      // reset search input value to show full list after addition
+      searchInput.value = "";
+      displayCloths(cloths);
+      form.reset();
+    };
+
+    reader.onerror = function() {
+      alert("Failed to read image file.");
+    };
+
+    reader.readAsDataURL(imageFile);
+  });
+
+  // Search with realtime filtering
+  searchInput.addEventListener("keyup", function () {
+    const searchTerm = this.value.toLowerCase().trim();
+    if (searchTerm === "") {
+      displayCloths(cloths);
+    } else {
+      const filtered = cloths.filter(item => 
+        item.brand.toLowerCase().includes(searchTerm) || 
+        item.type.toLowerCase().includes(searchTerm)
+      );
+      displayCloths(filtered);
+    }
+  });
+
+  // initial display and ensure unique IDs for existing data (backward compatibility)
+  function migrateAndDisplay() {
+    let changed = false;
+    for (let item of cloths) {
+      if (!item.uid) {
+        item.uid = Date.now() + '-' + Math.random().toString(36).substr(2, 8);
+        changed = true;
+      }
+    }
+    if (changed) {
+      localStorage.setItem("cloths", JSON.stringify(cloths));
+    }
+    displayCloths(cloths);
+  }
+
+  migrateAndDisplay();
+</script>
+</body>
+</html>

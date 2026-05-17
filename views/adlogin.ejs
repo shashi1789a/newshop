@@ -3,112 +3,558 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Login</title>
+  <title>ThreadCycle — Admin Login | Circular Fashion</title>
+  
+  <!-- Google Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <script src="https://kit.fontawesome.com/5471644867.js" crossorigin="anonymous"></script>
+
   <style>
-    /* Global Reset & Font */
+    /* ========== GLOBAL RESET & THREADCYCLE DESIGN SYSTEM ========== */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Inter', sans-serif;
     }
 
     body {
+      font-family: 'Inter', sans-serif;
+      background: #faf9f7;
+      scroll-behavior: smooth;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ----- STICKY NAVIGATION (FASHION FORWARD) ----- */
+    .navigation {
+      width: 100%;
+      background: #ffffff;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 48px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      transition: all 0.3s ease;
+      border-bottom: 2px solid #f0ede8;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      font-family: 'Playfair Display', serif;
+      transition: transform 0.2s ease;
+    }
+    .logo:hover { transform: scale(1.02); }
+    .logo-icon {
+      background: #1e1e2a;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 14px rgba(0, 0, 0, 0.08);
+    }
+    .logo-icon i { font-size: 28px; color: #f5e7d9; }
+    .logo-text .main {
+      font-size: 1.7rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #1f1a2e, #3a2c2c);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .logo-text .sub {
+      font-size: 0.6rem;
+      letter-spacing: 2.2px;
+      font-weight: 600;
+      color: #b87333;
+      text-transform: uppercase;
+      margin-top: -4px;
+    }
+
+    .menu-btn { display: none; }
+    .menu-icon {
+      display: none;
+      cursor: pointer;
+      background: #f3f0eb;
+      width: 44px;
+      height: 44px;
+      border-radius: 30px;
+      align-items: center;
+      justify-content: center;
+    }
+    .menu-icon .nav-icon {
+      width: 22px;
+      height: 2.5px;
+      background-color: #2c2c2c;
+      display: block;
+      position: relative;
+      transition: all 0.3s ease-in-out;
+      border-radius: 4px;
+    }
+    .menu-icon .nav-icon::before,
+    .menu-icon .nav-icon::after {
+      content: '';
+      width: 22px;
+      height: 2.5px;
+      background-color: #2c2c2c;
+      position: absolute;
+      left: 0;
+      transition: all 0.3s ease-in-out;
+      border-radius: 4px;
+    }
+    .menu-icon .nav-icon::before { top: -8px; }
+    .menu-icon .nav-icon::after { top: 8px; }
+
+    .menu {
+      display: flex;
+      gap: 8px;
+      list-style: none;
+    }
+    .menu li a {
+      text-decoration: none;
+      color: #2d2a24;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 8px 20px;
+      border-radius: 40px;
+      transition: all 0.25s ease;
+      font-family: 'Inter', sans-serif;
+    }
+    .menu li a:hover,
+    .menu li a.active {
+      background: #d4af7a;
+      color: #1e1b16;
+      box-shadow: 0 4px 8px rgba(180, 130, 70, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .right-nav {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+    }
+    .right-nav a {
+      position: relative;
+      font-size: 1.25rem;
+      color: #2c2a27;
+      background: #f5f2ed;
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.25s ease;
+      text-decoration: none;
+    }
+    .right-nav a:hover {
+      background: #d4af7a;
+      color: #1e1b16;
+      transform: translateY(-3px);
+    }
+    .right-nav a span {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      background: #c45c2c;
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      min-width: 20px;
+      height: 20px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      padding: 0 4px;
+    }
+
+    /* ----- MAIN CONTAINER (CENTER ADMIN CARD) ----- */
+    .admin-page-wrapper {
+      flex: 1;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      background: linear-gradient(135deg, #e0e7ff, #fef3c7);
+      padding: 3rem 1.5rem;
+      background: linear-gradient(125deg, #f7f3ed 0%, #fffaf3 100%);
+      position: relative;
+    }
+    /* subtle organic pattern */
+    .admin-page-wrapper::before {
+      content: '';
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      background: rgba(184, 115, 51, 0.06);
+      border-radius: 50%;
+      top: 10%;
+      left: 5%;
+      filter: blur(70px);
+      z-index: 0;
+    }
+    .admin-page-wrapper::after {
+      content: '';
+      position: absolute;
+      width: 340px;
+      height: 340px;
+      background: rgba(79, 70, 229, 0.04);
+      border-radius: 50%;
+      bottom: 8%;
+      right: 3%;
+      filter: blur(80px);
+      z-index: 0;
     }
 
-    /* Card */
+    /* Premium Admin Card (Seamless blend with fashion branding) */
     .login-card {
-      background-color: #fff;
-      padding: 45px 40px;
-      border-radius: 20px;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(0px);
+      padding: 48px 42px;
+      border-radius: 2rem;
       width: 100%;
-      max-width: 420px;
-      transition: transform 0.3s, box-shadow 0.3s;
+      max-width: 480px;
+      box-shadow: 0 30px 50px -20px rgba(0, 0, 0, 0.25), 0 8px 20px rgba(0, 0, 0, 0.05);
+      transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      border: 1px solid rgba(212, 175, 122, 0.3);
+      position: relative;
+      z-index: 2;
     }
-
     .login-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      transform: translateY(-8px);
+      box-shadow: 0 35px 55px -18px rgba(79, 70, 229, 0.25);
+      border-color: rgba(184, 115, 51, 0.5);
+    }
+    /* decorative accent — threadcycle gold */
+    .login-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 2rem;
+      right: 2rem;
+      height: 5px;
+      background: linear-gradient(90deg, #b87333, #d4af7a, #b87333);
+      border-radius: 5px 5px 0 0;
     }
 
     .login-card h1 {
       text-align: center;
-      font-size: 2.25rem;
-      font-weight: 700;
-      color: #4f46e5;
-      margin-bottom: 35px;
+      font-size: 2.3rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #2b241c, #b87333);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      margin-bottom: 0.5rem;
+      font-family: 'Playfair Display', serif;
     }
 
-    /* Input Fields */
+    .admin-badge {
+      text-align: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #b87333;
+      background: #fef4e8;
+      display: inline-block;
+      width: auto;
+      margin: 0 auto 28px auto;
+      padding: 0.4rem 1.5rem;
+      border-radius: 40px;
+      backdrop-filter: blur(4px);
+      font-family: 'Inter', sans-serif;
+    }
+    .header-group { text-align: center; margin-bottom: 32px; }
+
+    /* modern input fields */
+    .input-group { margin-bottom: 24px; position: relative; }
     .login-card input {
       width: 100%;
-      padding: 14px 16px;
-      margin-bottom: 22px;
-      border: 1.5px solid #d1d5db;
-      border-radius: 12px;
+      padding: 15px 18px;
+      border: 1.8px solid #e9dfd3;
+      border-radius: 18px;
       font-size: 1rem;
-      transition: all 0.3s;
-    }
-
-    .login-card input:focus {
+      font-weight: 500;
+      background-color: #ffffff;
+      transition: all 0.25s ease;
+      color: #2b241c;
       outline: none;
-      border-color: #4f46e5;
-      box-shadow: 0 0 8px rgba(79,70,229,0.3);
+      font-family: 'Inter', sans-serif;
+    }
+    .login-card input:focus {
+      border-color: #b87333;
+      box-shadow: 0 6px 14px rgba(184, 115, 51, 0.12), 0 0 0 3px rgba(184, 115, 51, 0.2);
+      transform: scale(1.01);
+    }
+    .login-card input::placeholder {
+      color: #b4a08e;
+      font-weight: 400;
     }
 
-    /* Submit Button */
+    /* button — threadcycle warmth */
     .login-card button {
       width: 100%;
-      padding: 14px;
+      padding: 15px 20px;
       border: none;
-      border-radius: 12px;
-      background: linear-gradient(90deg, #4f46e5, #6366f1);
-      color: #fff;
+      border-radius: 40px;
+      background: linear-gradient(105deg, #2b241c 0%, #b87333 100%);
+      color: white;
       font-size: 1.05rem;
-      font-weight: 600;
+      font-weight: 700;
+      letter-spacing: 0.5px;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all 0.3s ease;
+      box-shadow: 0 12px 20px -12px rgba(184, 115, 51, 0.5);
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-family: 'Inter', sans-serif;
     }
-
+    .login-card button::after {
+      content: "→";
+      font-size: 1.2rem;
+      transition: transform 0.2s;
+      display: inline-block;
+    }
+    .login-card button:hover::after { transform: translateX(6px); }
     .login-card button:hover {
-      background: linear-gradient(90deg, #4338ca, #4f46e5);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(79,70,229,0.4);
+      background: linear-gradient(105deg, #3d2c1f, #c4813f);
+      transform: translateY(-3px);
+      box-shadow: 0 20px 28px -12px #b87333;
     }
+    .login-card button:active { transform: translateY(1px); }
 
-    /* Register Link */
-    .login-card .register-link {
+    .register-link {
       display: block;
       text-align: center;
-      margin-top: 18px;
+      margin-top: 28px;
       font-size: 0.95rem;
-      color: #6b7280;
+      font-weight: 600;
+      color: #6b5a4a;
       text-decoration: none;
-      transition: color 0.3s;
+      transition: all 0.2s;
+      padding: 8px 16px;
+      border-radius: 40px;
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .register-link:hover {
+      color: #b87333;
+      background: #fef0e4;
+      transform: scale(1.02);
     }
 
-    .login-card .register-link:hover {
-      color: #4f46e5;
-      text-decoration: underline;
+    .secure-badge {
+      text-align: center;
+      font-size: 0.7rem;
+      color: #8e7a66;
+      margin-top: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      border-top: 1px solid #f0e4d8;
+      padding-top: 20px;
     }
+    .secure-badge span {
+      background: #faf3ea;
+      padding: 5px 12px;
+      border-radius: 50px;
+      font-weight: 600;
+      color: #684f34;
+    }
+
+    /* footer unified */
+    footer {
+      background: #1e1b16;
+      color: #ccc6bd;
+      padding: 28px 48px;
+      text-align: center;
+      font-size: 0.85rem;
+      margin-top: auto;
+    }
+
+    /* responsiveness */
+    @media (max-width: 768px) {
+      .navigation { padding: 14px 24px; }
+      .menu-icon { display: flex; }
+      .menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        flex-direction: column;
+        background: #ffffff;
+        display: none;
+        border-top: 1px solid #e4d9cd;
+        padding: 16px 24px;
+        gap: 8px;
+        box-shadow: 0 20px 30px -12px rgba(0,0,0,0.08);
+      }
+      .menu li a { display: block; padding: 10px 16px; border-radius: 50px; }
+      .menu-btn:checked ~ .menu { display: flex; }
+      .login-card { padding: 38px 24px; margin: 16px; max-width: 90%; }
+      .login-card h1 { font-size: 1.9rem; }
+    }
+
+    @keyframes fadeSlideUp {
+      0% { opacity: 0; transform: translateY(18px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .login-card { animation: fadeSlideUp 0.5s ease-out; }
   </style>
 </head>
 <body>
-  
-  <div class="login-card">
-    <h1>Admin Login</h1>
-    <form action="/adlogin" method="POST" autocomplete="off" novalidate>
-      <input type="email" name="email" placeholder="Email Address" required>
-      <input type="password" name="password" placeholder="Password" required>
-      <button type="submit">Login</button>
-    </form>
-    <a href="/adregister" class="register-link">Don't have an account? Register</a>
-  </div>
+
+  <!-- ========== THREADCYCLE PREMIUM NAVIGATION (FULLY UNIFIED) ========== -->
+  <nav class="navigation">
+    <a href="/" class="logo">
+      <div class="logo-icon"><i class="fas fa-tshirt"></i></div>
+      <div class="logo-text">
+        <span class="main">THREADCYCLE</span>
+        <span class="sub">NEW & PRE-LOVED</span>
+      </div>
+    </a>
+
+    <input type="checkbox" class="menu-btn" id="menu-btn">
+    <label for="menu-btn" class="menu-icon"><span class="nav-icon"></span></label>
+
+    <ul class="menu">
+      <li><a href="/">Home</a></li>
+      <li><a href="/contact">Contact Us</a></li>
+      <li><a href="/shop">Sell Clothes</a></li>
+      <li><a href="/aboutus">About Us</a></li>
+      <li><a href="/auth/login">Login</a></li>
+      <li><a href="/userOrders">My Order</a></li>
+      <li><a href="/adregister" class="active">Admin</a></li>
+    </ul>
+
+    <div class="right-nav">
+      <a href="/whislist" class="like" aria-label="Wishlist">
+        <i class="fa-regular fa-heart"></i>
+        <span>4</span>
+      </a>
+      <a href="/cart" class="cart" aria-label="Cart">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span>2</span>
+      </a>
+      <a href="/profile" class="user-profile" aria-label="Profile">
+        <i class="fas fa-user"></i>
+        <span>1</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- ========== ADMIN LOGIN SECTION (CENTERED, STYLISH) ========== -->
+  <main class="admin-page-wrapper">
+    <div class="login-card">
+      <div class="header-group">
+        <h1>Admin Login</h1>
+        <div class="admin-badge">🔐 ThreadCycle Stewardship</div>
+      </div>
+
+      <form action="/adlogin" method="POST" autocomplete="off" novalidate>
+        <div class="input-group">
+          <input type="email" name="email" placeholder="📧 admin@threadcycle.com" required>
+        </div>
+        <div class="input-group">
+          <input type="password" name="password" placeholder="🔒 master password" required>
+        </div>
+        <button type="submit">Access Backstage</button>
+      </form>
+
+      <div class="register-wrapper">
+        <a href="/adregister" class="register-link">✨ Register as Admin — Join the circular movement</a>
+      </div>
+
+      <div class="secure-badge">
+        <span>♻️ Sustainable Commerce</span>
+        <span>🛡️ Role: Admin</span>
+        <span>🔒 SSL Secure</span>
+      </div>
+    </div>
+  </main>
+
+  <!-- ========== UNIFIED FOOTER ========== -->
+ <%- include('./partials/footer') %>
+
+  <!-- ========== ACTIVE LINK & MICRO INTERACTIONS ========== -->
+  <script>
+    (function() {
+      // highlight active nav based on current path
+      const currentPath = window.location.pathname;
+      const navLinks = document.querySelectorAll('.menu li a');
+      navLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === currentPath || (currentPath === '/adregister' && href === '/adregister')) {
+          link.classList.add('active');
+        } else if (href === '/adregister' && currentPath.includes('admin')) {
+          link.classList.add('active');
+        } else if (href === currentPath) {
+          link.classList.add('active');
+        }
+      });
+      
+      // elegant form validation feedback (non-intrusive, smooth)
+      const form = document.querySelector('form');
+      if (form) {
+        form.addEventListener('submit', function(e) {
+          const email = form.querySelector('input[name="email"]');
+          const password = form.querySelector('input[name="password"]');
+          let hasError = false;
+          if (email.value.trim() === '') {
+            email.style.borderColor = '#c45c2c';
+            email.style.boxShadow = '0 0 0 2px rgba(196,92,44,0.2)';
+            hasError = true;
+            setTimeout(() => {
+              email.style.borderColor = '';
+              email.style.boxShadow = '';
+            }, 1200);
+          }
+          if (password.value === '') {
+            password.style.borderColor = '#c45c2c';
+            password.style.boxShadow = '0 0 0 2px rgba(196,92,44,0.2)';
+            hasError = true;
+            setTimeout(() => {
+              password.style.borderColor = '';
+              password.style.boxShadow = '';
+            }, 1200);
+          }
+          if (hasError) {
+            e.preventDefault();
+          } else {
+            // allow actual POST to /adlogin; no interference
+            console.log('Submitting admin credentials to /adlogin');
+          }
+        });
+        const inputs = form.querySelectorAll('input');
+        inputs.forEach(input => {
+          input.addEventListener('input', function() {
+            this.style.borderColor = '';
+            this.style.boxShadow = '';
+          });
+        });
+      }
+
+      // demo console greeting (fashion vibe)
+      console.log('👔 THREADCYCLE Admin Portal | Sustainable fashion management');
+    })();
+  </script>
+  <!-- external scripts (if any) but we maintain all original functionality -->
 </body>
 </html>

@@ -3,32 +3,309 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>ThreadCycle - Shop New & Pre-Loved Fashion</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ===== RESET & GLOBAL ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #faf9f7 0%, #f5efe8 100%);
+            scroll-behavior: smooth;
+            min-height: 100vh;
+        }
+
+        /* ===== SHOP CONTAINER - PRODUCT GRID ===== */
+        .shop-container {
+            max-width: 1280px;
+            margin: 40px auto;
+            padding: 0 20px 60px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 32px;
+        }
+
+        /* ===== PRODUCT CARD ===== */
+        .product-box {
+            background: #ffffff;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            position: relative;
+            border: 1px solid #efe3d4;
+        }
+
+        .product-box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ===== PRODUCT IMAGE ===== */
+        .product-box img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+            background: #f0ebe4;
+        }
+
+        .product-box:hover img {
+            transform: scale(1.05);
+        }
+
+        /* ===== PRODUCT NAME ===== */
+        .product-box strong {
+            display: block;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #2b241c;
+            padding: 18px 18px 0 18px;
+            line-height: 1.4;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* ===== STOCK INFO ===== */
+        .quantity {
+            display: inline-block;
+            font-size: 0.7rem;
+            background: #f5f0ea;
+            padding: 4px 12px;
+            border-radius: 30px;
+            color: #6b5a4a;
+            margin: 10px 18px 0 18px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .quantity::before {
+            content: "📦 ";
+            font-size: 0.7rem;
+        }
+
+        /* ===== PRICE ===== */
+        .price {
+            display: inline-block;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #b87333;
+            margin: 8px 18px 0 18px;
+            letter-spacing: -0.3px;
+        }
+
+        .price::before {
+            content: "₹";
+            font-size: 1.1rem;
+            margin-right: 2px;
+            font-weight: 600;
+        }
+
+        /* ===== ACTION BUTTONS SECTION ===== */
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin: 16px 18px 18px 18px;
+            flex-wrap: wrap;
+        }
+
+        /* Common button styles */
+        .add-cart, .buy-now {
+            flex: 1;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 11px 12px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.25s ease;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        /* Add to Cart Button */
+        .add-cart {
+            background: #2b241c;
+            color: white;
+            border: none;
+        }
+
+        .add-cart i {
+            font-size: 0.85rem;
+        }
+
+        .add-cart:hover {
+            background: #b87333;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(184, 115, 51, 0.3);
+        }
+
+        /* Buy Now Button */
+        .buy-now {
+            background: transparent;
+            color: #b87333;
+            border: 1.5px solid #b87333;
+        }
+
+        .buy-now i {
+            font-size: 0.85rem;
+        }
+
+        .buy-now:hover {
+            background: #b87333;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(184, 115, 51, 0.2);
+        }
+
+        /* ===== LIKE BUTTON ===== */
+        .like-btn {
+            background: #fefaf5;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            color: #b87333;
+            text-decoration: none;
+            font-size: 1rem;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(4px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .like-btn:hover {
+            background: #b87333;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        /* ===== BADGE FOR NEW/PRELOVED (Optional - adds value) ===== */
+        .product-box {
+            position: relative;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .shop-container {
+                gap: 20px;
+                padding: 20px 16px 40px;
+                grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+                margin: 20px auto;
+            }
+            
+            .product-box img {
+                height: 240px;
+            }
+            
+            .price {
+                font-size: 1.25rem;
+            }
+            
+            .button-group {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .add-cart, .buy-now {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .shop-container {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            
+            .product-box strong {
+                font-size: 1rem;
+            }
+        }
+
+        /* Page Title Banner (subtle, doesn't affect functionality) */
+        .shop-container::before {
+            content: "✨ Shop New & Pre-Loved Fashion ✨";
+            display: block;
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            grid-column: 1 / -1;
+            margin-bottom: 10px;
+            letter-spacing: -0.3px;
+            background: linear-gradient(135deg, #2b241c, #b87333);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Decorative filter hint */
+        .shop-container::after {
+            content: "🔄 New Arrivals  |  ♻️ Pre-Loved  |  🌱 Sustainable Fashion";
+            display: block;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #a08d76;
+            grid-column: 1 / -1;
+            margin-top: 20px;
+            padding: 10px 16px;
+            background: #fff9f2;
+            border-radius: 60px;
+            letter-spacing: 0.4px;
+            border: 1px solid #efe3d4;
+        }
+    </style>
 </head>
 <body>
-    <h1>hello</h1>
-   <div class="shop-container">
-  <% products.forEach(product => { %>
-    <div class="product-box">
-    <img src="data:image/jpeg;base64,<%= Buffer.from(product.image).toString('base64') %>" alt="<%= product.name %>">
+    <%- include('./partials/header') %>
+    <%- include('./partials/priceCal') %>
+    <div class="shop-container">
+        <% products.forEach(product => { %>
+            <div class="product-box">
+                <img src="data:image/jpeg;base64,<%= Buffer.from(product.image).toString('base64') %>" alt="<%= product.name %>">
+                <strong><%= product.name %></strong>
+                <span class="quantity">Stock: <%= product.stock %></span>
+                <span class="price">Rs. <%= product.price %></span>
 
-      <strong><%= product.name %></strong>
-      <span class="quantity">Stock: <%= product.stock %></span>
-      <span class="price">Rs. <%= product.price %></span>
+                <!-- Button Group -->
+                <div class="button-group">
+                    <a href="/addtocart/<%= product._id %>" class="add-cart" aria-label="Add <%= product.name %> to Cart">
+                        <i class="fas fa-shopping-bag"></i> Add to Cart
+                    </a>
+                    <a href="/order?productid=<%= product._id %>" class="buy-now" aria-label="Buy <%= product.name %> Now">
+                        <i class="fas fa-bolt"></i> Buy Now
+                    </a>
+                </div>
 
-      <!-- Add to Cart button -->
-      <button class="cart-btn">
-        <i class="fas fa-shopping-bag"></i> Add to Cart
-      </button>
-
-      <!-- Like button -->
-      <a class="like-btn">
-        <i class="far fa-heart"></i>
-      </a>
+                <!-- Like button -->
+                <a class="like-btn" aria-label="Add to Wishlist">
+                    <i class="far fa-heart"></i>
+                </a>
+            </div>
+        <% }); %>
     </div>
-  <% }); %>
-</div>
-
-
+    
+    <%- include('./partials/footer') %>
 </body>
 </html>

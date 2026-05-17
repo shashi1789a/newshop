@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+        <!-- ======================================== -->
+    <!-- ========== FOOTER SECTION ============= -->
+    <!-- ======================================== -->
+    <footer class="ecommerce-footer">
+      <div class="footer-container">
+        <!-- Column 1: Brand & Mission -->
+        <div class="footer-col brand-col">
+          <div class="footer-logo">
+            <i class="fas fa-tshirt"></i>
+            <span>THREADCYCLE</span>
+          </div>
+          <p class="footer-tagline">Where new fashion meets pre-loved treasures. Circular style for a better tomorrow.</p>
+          <div class="social-links">
+            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest-p"></i></a>
+          </div>
+        </div>
+
+        <!-- Column 2: Shop Categories (New + Old) -->
+        <div class="footer-col">
+          <h4>Shop Collections</h4>
+          <ul>
+            <li><a href="#">✨ New Arrivals</a></li>
+            <li><a href="#">♻️ Pre-Loved Gems</a></li>
+            <li><a href="#">👕 Men's Style</a></li>
+            <li><a href="#">👗 Women's Edit</a></li>
+            <li><a href="#">🧸 Kid's Corner</a></li>
+            <li><a href="#">🏷️ Sale & Offers</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 3: Sell & Support -->
+        <div class="footer-col">
+          <h4>Sell With Us</h4>
+          <ul>
+            <li><a href="#">📦 How to Sell Clothes</a></li>
+            <li><a href="#">📸 Listing Guidelines</a></li>
+            <li><a href="#">💰 Payout & Pricing</a></li>
+            <li><a href="#">🛡️ Seller Protection</a></li>
+          </ul>
+          <h4 style="margin-top: 1.2rem;">Support</h4>
+          <ul>
+            <li><a href="#">📞 Contact Us</a></li>
+            <li><a href="#">📧 shipping@threadcycle.com</a></li>
+            <li><a href="#">📖 FAQ / Returns</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 4: Newsletter & Sustainability Pledge -->
+        <div class="footer-col newsletter-col">
+          <h4>Join The Circle</h4>
+          <p>Get 10% off your first order + updates on new & vintage drops.</p>
+          <form class="newsletter-form" action="#" method="post">
+            <input type="email" placeholder="Your email address" required>
+            <button type="submit"><i class="fas fa-paper-plane"></i></button>
+          </form>
+          <div class="sustainability-badge">
+            <i class="fas fa-leaf"></i>
+            <span>One top sold = one tree planted</span>
+          </div>
+          <div class="payment-icons">
+            <i class="fab fa-cc-visa"></i>
+            <i class="fab fa-cc-mastercard"></i>
+            <i class="fab fa-cc-paypal"></i>
+            <i class="fab fa-cc-amex"></i>
+            <i class="fas fa-lock"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Bar: Copyright + Legal Links -->
+      <div class="footer-bottom">
+        <div class="bottom-left">
+          <p>© 2025 ThreadCycle — Circular fashion for every closet.</p>
+        </div>
+        <div class="bottom-right">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Accessibility</a>
+        </div>
+      </div>
+    </footer>
+
+    <style>
+      /* ========== EXTENDED FOOTER STYLES ========== */
+      .ecommerce-footer {
+        background: #0f0e0c;
+        color: #d6cdbc;
+        font-family: 'Inter', sans-serif;
+        margin-top: 4rem;
+        border-top: 1px solid #2e2a24;
+      }
+
+      .footer-container {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 3rem 2rem 2rem 2rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 2rem;
+      }
+
+      /* brand column */
+      .brand-col .footer-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 1rem;
+      }
+
+      .brand-col .footer-logo i {
+        font-size: 2rem;
+        color: #c28a4e;
+        background: #25221c;
+        padding: 8px;
+        border-radius: 50%;
+      }
+
+      .brand-col .footer-logo span {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.6rem;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        background: linear-gradient(135deg, #f5e2c6, #dbb57c);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .footer-tagline {
+        font-size: 0.85rem;
+        line-height: 1.5;
+        color: #b8ab99;
+        margin: 0.8rem 0 1.2rem;
+      }
+
+      .social-links {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .social-links a {
+        background: #26221c;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #dfcfb5;
+        transition: all 0.2s ease;
+        font-size: 1rem;
+        text-decoration: none;
+      }
+
+      .social-links a:hover {
+        background: #c28a4e;
+        color: #0f0e0c;
+        transform: translateY(-3px);
+      }
+
+      /* footer headings & lists */
+      .footer-col h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        margin-bottom: 1.2rem;
+        color: #eedbba;
+        position: relative;
+        display: inline-block;
+      }
+
+      .footer-col h4:after {
+        content: '';
+        position: absolute;
+        bottom: -6px;
+        left: 0;
+        width: 32px;
+        height: 2px;
+        background: #c28a4e;
+        border-radius: 4px;
+      }
+
+      .footer-col ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .footer-col ul li {
+        margin-bottom: 0.7rem;
+      }
+
+      .footer-col ul li a {
+        color: #c7bbaa;
+        text-decoration: none;
+        font-size: 0.85rem;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .footer-col ul li a:hover {
+        color: #e9cfa7;
+        transform: translateX(4px);
+      }
+
+      /* newsletter */
+      .newsletter-form {
+        display: flex;
+        margin: 1rem 0 1.2rem;
+        border-bottom: 1px solid #3f3a32;
+      }
+
+      .newsletter-form input {
+        flex: 1;
+        background: transparent;
+        border: none;
+        padding: 0.7rem 0;
+        font-size: 0.85rem;
+        color: #f2e5d4;
+        outline: none;
+      }
+
+      .newsletter-form input::placeholder {
+        color: #8d8271;
+      }
+
+      .newsletter-form button {
+        background: none;
+        border: none;
+        color: #e0c394;
+        cursor: pointer;
+        font-size: 1.1rem;
+        padding: 0 6px;
+        transition: transform 0.2s;
+      }
+
+      .newsletter-form button:hover {
+        transform: translateX(4px);
+        color: #f5d99b;
+      }
+
+      .sustainability-badge {
+        background: #1e1b17;
+        border-radius: 40px;
+        padding: 8px 14px;
+        font-size: 0.75rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0.8rem 0;
+        border: 1px solid #3b352d;
+      }
+
+      .sustainability-badge i {
+        color: #9fbc78;
+        font-size: 0.9rem;
+      }
+
+      .payment-icons {
+        display: flex;
+        gap: 12px;
+        font-size: 1.3rem;
+        color: #b29e82;
+        margin-top: 0.6rem;
+      }
+
+      /* bottom bar */
+      .footer-bottom {
+        border-top: 1px solid #26221e;
+        padding: 1.2rem 2rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        font-size: 0.75rem;
+        color: #9f927f;
+        max-width: 1280px;
+        margin: 0 auto;
+      }
+
+      .bottom-right a {
+        color: #b6a68b;
+        text-decoration: none;
+        margin-left: 1.5rem;
+        transition: color 0.2s;
+      }
+
+      .bottom-right a:hover {
+        color: #e9cfaa;
+        text-decoration: underline;
+      }
+
+      @media (max-width: 750px) {
+        .footer-container {
+          grid-template-columns: 1fr;
+          gap: 2rem;
+          padding: 2rem 1.5rem;
+        }
+        .footer-bottom {
+          flex-direction: column;
+          text-align: center;
+        }
+        .bottom-right a {
+          margin: 0 0.8rem;
+        }
+        .social-links {
+          justify-content: center;
+        }
+        .brand-col .footer-logo {
+          justify-content: center;
+        }
+        .footer-tagline {
+          text-align: center;
+        }
+      }
+    </style>
+  </body>
+  </html>
+    
+</body>
+</html>

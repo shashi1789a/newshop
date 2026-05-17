@@ -2,97 +2,559 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Create Product</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Product | Elegant Commerce</title>
   <style>
+    /* ============================================
+       COMPLETELY REDESIGNED - PREMIUM MODERN STYLE
+       ============================================ */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f3f4f6;
-      padding: 40px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: linear-gradient(145deg, #f5f7fc 0%, #eef2f8 100%);
+      min-height: 100vh;
+      padding: 2rem 1.5rem;
+      position: relative;
     }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 30px;
-      color: #2c3e50;
+    /* Decorative background elements */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 400px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      clip-path: polygon(0 0, 100% 0, 100% 60%, 0 85%);
+      z-index: 0;
     }
 
-    form {
-      max-width: 500px;
-      margin: auto;
+    body::after {
+      content: '✦';
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      font-size: 80px;
+      opacity: 0.03;
+      pointer-events: none;
+      font-family: monospace;
+    }
+
+    /* Main container */
+    .page-wrapper {
+      max-width: 620px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* ========== MODERN HEADER (replaces partials/header) ========== */
+    .premium-header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      padding: 1rem 1.8rem;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 6px 12px rgba(102, 126, 234, 0.25);
+    }
+
+    .brand-name {
+      font-size: 1.6rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #1e293b, #334155);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.3px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.8rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #475569;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: #667eea;
+    }
+
+    .nav-links .active-link {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      color: white;
+    }
+
+    .nav-links .active-link:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+      color: white;
+    }
+
+    /* ========== MAIN FORM CARD ========== */
+    .form-card {
       background: white;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+      border-radius: 32px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .form-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 30px 55px -12px rgba(0, 0, 0, 0.25);
+    }
+
+    /* Card header with gradient accent */
+    .card-accent {
+      background: linear-gradient(120deg, #1e293b 0%, #0f172a 100%);
+      padding: 1.8rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-accent::before {
+      content: '✨';
+      position: absolute;
+      right: -20px;
+      top: -20px;
+      font-size: 100px;
+      opacity: 0.08;
+      pointer-events: none;
+    }
+
+    .card-accent h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(120deg, #ffffff, #c084fc, #a78bfa);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-accent p {
+      color: #94a3b8;
+      font-size: 0.85rem;
+      font-weight: 400;
+    }
+
+    /* Form body */
+    .form-body {
+      padding: 2rem 2rem 2.2rem;
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 1.4rem;
     }
 
-    input[type="text"],
-    input[type="number"],
-    input[type="file"],
-    textarea,
-    select {
-      padding: 10px 14px;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      font-size: 14px;
+    /* Field group styling */
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .field-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #334155;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .field-label span {
+      background: #e2e8f0;
+      font-size: 0.6rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      font-weight: 500;
+      color: #475569;
+    }
+
+    input, textarea, select {
+      font-family: 'Inter', system-ui, sans-serif;
       width: 100%;
-      box-sizing: border-box;
+      padding: 0.9rem 1.2rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 18px;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+      background: #ffffff;
+      outline: none;
+      font-weight: 500;
+      color: #1e293b;
     }
 
     textarea {
       resize: vertical;
-      min-height: 80px;
+      min-height: 100px;
     }
 
-    button {
-      background-color: #10b981;
-      color: white;
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background 0.3s ease;
+    input:focus, textarea:focus, select:focus {
+      border-color: #8b5cf6;
+      box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
     }
 
-    button:hover {
-      background-color: #059669;
+    /* Two column layout */
+    .two-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
     }
 
+    /* Custom select styling */
     select {
-      background-color: #fff;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+      background-repeat: no-repeat;
+      background-position: right 1.2rem center;
+      background-size: 1rem;
+    }
+
+    /* Modern file upload */
+    .file-zone {
+      border: 2px dashed #cbd5e1;
+      border-radius: 18px;
+      padding: 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: #fafcff;
+    }
+
+    .file-zone:hover {
+      border-color: #8b5cf6;
+      background: #f5f3ff;
+    }
+
+    .file-zone .upload-icon {
+      font-size: 28px;
+      margin-bottom: 6px;
+    }
+
+    .file-zone .upload-text {
+      font-weight: 600;
+      color: #475569;
+      font-size: 0.85rem;
+    }
+
+    .file-zone .upload-hint {
+      font-size: 0.7rem;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .file-status {
+      font-size: 0.7rem;
+      color: #64748b;
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    /* Submit button - premium gradient */
+    .submit-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 1rem 1.8rem;
+      border-radius: 40px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.25s;
+      margin-top: 0.5rem;
+      letter-spacing: 0.3px;
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 28px -8px rgba(102, 126, 234, 0.5);
+      background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    }
+
+    .submit-btn:active {
+      transform: translateY(1px);
+    }
+
+    /* Helper text */
+    .helper-text {
+      font-size: 0.7rem;
+      color: #94a3b8;
+      margin-top: 0.25rem;
+      margin-left: 0.5rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 560px) {
+      body {
+        padding: 1rem;
+      }
+      .form-body {
+        padding: 1.5rem;
+      }
+      .two-columns {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      .premium-header {
+        flex-direction: column;
+        text-align: center;
+        padding: 1rem;
+      }
+      .card-accent h1 {
+        font-size: 1.5rem;
+      }
+      .nav-links {
+        gap: 1rem;
+      }
+    }
+
+    /* Placeholder styling */
+    ::placeholder {
+      color: #a0aec0;
+      font-weight: 400;
+    }
+
+    /* Rating input specific */
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+    input[type="number"]::-webkit-inner-spin-button, 
+    input[type="number"]::-webkit-outer-spin-button {
+      opacity: 0.5;
     }
   </style>
 </head>
 <body>
-    <%-  include('./partials/header') %>
+  <%-  include('./partials/header') %>
+<!-- <div class="page-wrapper"> -->
+  <!-- Modern header replacement (elegant, fresh design) -->
+  <!-- <div class="premium-header"> -->
+    <!-- <div class="brand">
+      <div class="brand-icon">🛍️</div>
+      <span class="brand-name">Artisan Market</span>
+    </div>
+    <div class="nav-links">
+      <a href="#">Explore</a>
+      <a href="#">Collection</a>
+      <a href="#">Studio</a>
+      <a href="#" class="active-link">+ Create</a>
+    </div>
+  </div> -->
 
-  <h1>Create a New Product</h1>
+  <!-- Main form card -->
+  <div class="form-card">
+    <div class="card-accent">
+      <h1>✨ List a New Product</h1>
+      <p>Showcase your item with stunning details</p>
+    </div>
 
-  <form action="/products/create" method="POST" enctype="multipart/form-data">
-    <input type="text" name="name" placeholder="Product Name" required>
-    <textarea name="description" placeholder="Description" required></textarea>
-    <input type="number" name="price" placeholder="Price" required>
-    
-    <select name="category" required>
-      <option value="" disabled selected>Select Category</option>
-      <option value="fruits">Fruits</option>
-      <option value="beauty">Beauty</option>
-      <option value="medicine">Medicine</option>
-      <option value="baby-care">Baby Care</option>
-      <option value="gardening">Gardening</option>
-      <option value="office">Office</option>
-    </select>
+    <form action="/products/create" method="POST" enctype="multipart/form-data" class="form-body">
+      <!-- Product Name -->
+      <div class="field">
+        <div class="field-label">
+          📦 Product Name <span>required</span>
+        </div>
+        <input type="text" name="name" placeholder="e.g. Handwoven Cashmere Scarf, Vintage Denim Jacket" required>
+      </div>
 
-    <input type="number" name="stock" placeholder="Stock" required>
-    <input type="number" step="0.1" name="rating" placeholder="Rating (optional)">
-    <input type="number" name="discount" placeholder="Discount (optional)">
-    <input type="file" name="image" accept="image/*">
-    
-    <button type="submit">Create Product</button>
-  </form>
+      <!-- Description -->
+      <div class="field">
+        <div class="field-label">
+          ✍️ Description <span>required</span>
+        </div>
+        <textarea name="description" placeholder="Describe materials, condition, craftsmanship, sizing, or unique story..." required></textarea>
+      </div>
 
+      <!-- Price -->
+      <div class="field">
+        <div class="field-label">
+          💰 Price <span>required</span>
+        </div>
+        <input type="number" name="price" step="any" placeholder="0.00 USD" required>
+      </div>
+
+      <!-- Category select -->
+      <div class="field">
+        <div class="field-label">
+          🏷️ Category <span>required</span>
+        </div>
+        <select name="category" required>
+          <option value="" disabled selected>— Select a category —</option>
+          <option value="New Cloths">✨ New Cloths</option>
+          <option value="old-cloths">🕰️ Old Cloths</option>
+          <option value="second-hand">🔄 Second-hand</option>
+          <option value="reused">♻️ Reused</option>
+          <option value="premium">💎 Premium</option>
+          <option value="export-quality">🌍 Export Quality</option>
+        </select>
+      </div>
+
+      <!-- Stock + Rating (two columns) -->
+      <div class="two-columns">
+        <div class="field">
+          <div class="field-label">
+            📊 Stock <span>required</span>
+          </div>
+          <input type="number" name="stock" placeholder="Quantity available" required>
+        </div>
+        <div class="field">
+          <div class="field-label">
+            ⭐ Rating <span>optional</span>
+          </div>
+          <input type="number" step="0.1" name="rating" placeholder="0.0 – 5.0" min="0" max="5">
+          <div class="helper-text">Average customer rating</div>
+        </div>
+      </div>
+
+      <!-- Discount -->
+      <div class="field">
+        <div class="field-label">
+          🎯 Discount (%) <span>optional</span>
+        </div>
+        <input type="number" name="discount" placeholder="e.g., 15 for 15% off" min="0" max="100">
+        <div class="helper-text">Offer a special sale price</div>
+      </div>
+
+      <!-- Modern File Upload -->
+      <div class="field">
+        <div class="field-label">
+          🖼️ Product Image <span>recommended</span>
+        </div>
+        <div class="file-zone" id="fileZone">
+          <div class="upload-icon">📸</div>
+          <div class="upload-text">Click to upload image</div>
+          <div class="upload-hint">PNG, JPG, WEBP up to 5MB</div>
+        </div>
+        <input type="file" name="image" id="productImageInput" accept="image/*">
+        <div class="file-status" id="fileStatusMsg">No file chosen</div>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="submit-btn">
+        <span>🚀</span> Publish Product
+      </button>
+    </form>
+  </div>
+</div>
+<%- include('./partials/footer') %>
+<!-- Smart file upload interaction (pure UX enhancement) -->
+<script>
+  (function() {
+    const fileInput = document.getElementById('productImageInput');
+    const fileZone = document.getElementById('fileZone');
+    const statusMsg = document.getElementById('fileStatusMsg');
+
+    if (fileInput && fileZone) {
+      // Click on file zone triggers file input
+      fileZone.addEventListener('click', function(e) {
+        e.preventDefault();
+        fileInput.click();
+      });
+
+      // Update status when file selected
+      fileInput.addEventListener('change', function() {
+        if (fileInput.files && fileInput.files.length > 0) {
+          const fileName = fileInput.files[0].name;
+          const fileSize = (fileInput.files[0].size / 1024).toFixed(1);
+          statusMsg.innerHTML = `✅ ${fileName} (${fileSize} KB) - ready to upload`;
+          statusMsg.style.color = '#059669';
+          fileZone.style.borderColor = '#8b5cf6';
+          fileZone.style.background = '#f5f3ff';
+        } else {
+          statusMsg.innerHTML = '📁 No file chosen';
+          statusMsg.style.color = '#64748b';
+          fileZone.style.borderColor = '#cbd5e1';
+          fileZone.style.background = '#fafcff';
+        }
+      });
+
+      // Drag & drop enhancement
+      fileZone.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        fileZone.style.borderColor = '#667eea';
+        fileZone.style.background = '#ede9fe';
+      });
+
+      fileZone.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        if (!fileInput.files.length) {
+          fileZone.style.borderColor = '#cbd5e1';
+          fileZone.style.background = '#fafcff';
+        } else {
+          fileZone.style.borderColor = '#8b5cf6';
+          fileZone.style.background = '#f5f3ff';
+        }
+      });
+
+      fileZone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+          fileInput.files = files;
+          const fileName = files[0].name;
+          const fileSize = (files[0].size / 1024).toFixed(1);
+          statusMsg.innerHTML = `✅ ${fileName} (${fileSize} KB) - ready to upload`;
+          statusMsg.style.color = '#059669';
+          fileZone.style.borderColor = '#8b5cf6';
+          fileZone.style.background = '#f5f3ff';
+        }
+      });
+    }
+  })();
+</script>
 </body>
 </html>

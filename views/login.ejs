@@ -2,32 +2,259 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Login - MiniMart</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - ThreadCycle | New & Pre-Loved Fashion</title>
+  
+  <!-- Bootstrap CSS (keeping minimal) -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  
   <style>
-    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
-
     * {
-      font-family: "Poppins", sans-serif;
-    }
-
-    body {
-      height: 100vh;
-      width: 80vw;
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      overflow-y: hidden;
-      overflow-x: hidden;
-      position: relative;
-      background: #f0f5f2;
     }
 
-    .sec {
-      background: #74d88b;
-      width: 35%;
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #faf9f7 0%, #f0ebe3 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Hide Bootstrap's default navbar if needed */
+    .navbar {
+      display: none !important;
+    }
+
+    /* ===== LOGIN FORM SECTION (Left Side) ===== */
+    .login {
       position: absolute;
-      left: 65%;
+      width: 58%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      background: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 3;
+      padding: 2rem 3rem;
+      box-sizing: border-box;
+      box-shadow: 4px 0 30px rgba(0, 0, 0, 0.06);
+      overflow-y: auto;
+    }
+
+    form {
+      width: 100%;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    /* Logo inside form */
+    .form-logo {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .form-logo i {
+      font-size: 3rem;
+      color: #b87333;
+      background: #f5f0ea;
+      padding: 15px;
+      border-radius: 60px;
+      margin-bottom: 12px;
+    }
+
+    .form-logo h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #2b241c, #b87333);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 6px;
+    }
+
+    .form-logo p {
+      font-size: 0.8rem;
+      color: #8a7a66;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      color: #2b241c;
+    }
+
+    .form-subtitle {
+      text-align: center;
+      font-size: 0.85rem;
+      color: #8a7a66;
+      margin-bottom: 1.8rem;
+    }
+
+    label {
+      font-weight: 600;
+      color: #2b241c;
+      font-size: 0.85rem;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+
+    .input-group i {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #b87333;
+      font-size: 1rem;
+      z-index: 1;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 0.9rem 1rem 0.9rem 2.8rem;
+      border-radius: 50px;
+      border: 1.5px solid #e8dccc;
+      background-color: #fefcf9;
+      font-size: 0.9rem;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.3s ease;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #b87333;
+      background-color: #fffaf5;
+      box-shadow: 0 0 0 3px rgba(184, 115, 51, 0.1);
+    }
+
+    /* Forgot password link */
+    .forgot-link {
+      text-align: right;
+      margin-top: -8px;
+      margin-bottom: 1.2rem;
+    }
+
+    .forgot-link a {
+      font-size: 0.7rem;
+      color: #a08d76;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .forgot-link a:hover {
+      color: #b87333;
+    }
+
+    /* Alert styling */
+    .alert-danger {
+      background: #fee2e2;
+      border-left: 4px solid #c45c2c;
+      color: #8b3a1a;
+      border-radius: 12px;
+      padding: 0.9rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .alert-danger i {
+      font-size: 1.1rem;
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      background: linear-gradient(135deg, #2b241c, #4a3a2a);
+      border: none;
+      padding: 1rem 0;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: white;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 0.5rem;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    button[type="submit"] i {
+      font-size: 1rem;
+    }
+
+    button[type="submit"]:hover {
+      background: linear-gradient(135deg, #b87333, #c98a4a);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(184, 115, 51, 0.3);
+    }
+
+    .register-link {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #6b5a4a;
+    }
+
+    .register-link a {
+      color: #b87333;
+      font-weight: 700;
+      text-decoration: none;
+      border-bottom: 1px solid #b87333;
+      transition: all 0.2s;
+    }
+
+    .register-link a:hover {
+      color: #8b5a2a;
+      border-bottom-color: #8b5a2a;
+    }
+
+    /* Demo credentials hint */
+    .demo-hint {
+      background: #f5f0ea;
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-top: 1.5rem;
+      font-size: 0.7rem;
+      color: #8a7a66;
+      text-align: center;
+    }
+
+    .demo-hint i {
+      margin-right: 6px;
+      color: #b87333;
+    }
+
+    /* ===== RIGHT SIDE - BRAND SECTION ===== */
+    .sec {
+      background: linear-gradient(135deg, #2b241c 0%, #5a4a38 100%);
+      width: 42%;
+      position: absolute;
+      right: 0;
+      top: 0;
       height: 100%;
       color: white;
       text-align: center;
@@ -35,181 +262,222 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 0 2rem;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .brand-icon {
+      font-size: 4rem;
+      background: rgba(255, 255, 255, 0.15);
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      backdrop-filter: blur(8px);
+    }
+
+    .brand-icon i {
+      font-size: 3rem;
+      color: #e8d5bc;
     }
 
     .sec h1 {
-      font-size: 2.2em;
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
       margin-bottom: 1rem;
-      font-weight: 700;
-      color: #e7f0e3;
+      font-weight: 800;
+      letter-spacing: -0.5px;
     }
 
     .sec p {
-      font-size: 1.2em;
+      font-size: 0.95rem;
+      width: 80%;
+      margin: 0 auto 1.8rem auto;
+      font-weight: 400;
+      color: #e2d4c4;
+      line-height: 1.6;
+    }
+
+    .feature-list {
+      text-align: left;
       width: 70%;
-      margin: 0 auto 1.5rem auto;
-      font-weight: 300;
-      color: #d3e4cd;
+      margin: 1.5rem auto;
+    }
+
+    .feature-list li {
+      list-style: none;
+      margin: 12px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.85rem;
+    }
+
+    .feature-list li i {
+      color: #e8c99e;
+      width: 24px;
     }
 
     .sec button {
       box-sizing: border-box;
-      border: 2px solid white;
+      border: 2px solid rgba(255, 255, 255, 0.5);
       color: white;
       background: transparent;
-      padding: 0.9em 2em;
-      font-size: 1.2em;
-      border-radius: 40px;
-      font-weight: 700;
+      padding: 0.8rem 2.2rem;
+      font-size: 0.95rem;
+      border-radius: 50px;
+      font-weight: 600;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: all 0.3s ease;
+      margin-top: 0.5rem;
     }
 
     .sec button:hover {
-      background-color: rgba(255 255 255 / 0.2);
+      background-color: rgba(255, 255, 255, 0.15);
+      border-color: white;
+      transform: translateY(-2px);
     }
 
-    .login {
-      position: absolute;
-      width: 65%;
-      height: 100%;
-      left: 0;
-      background: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 3;
-      padding: 2rem 4rem;
-      box-sizing: border-box;
+    /* Responsive Design */
+    @media (max-width: 992px) {
+      .login {
+        width: 55%;
+        padding: 2rem;
+      }
+      .sec {
+        width: 45%;
+      }
+      .feature-list {
+        width: 85%;
+      }
     }
 
-    form {
-      width: 100%;
-      max-width: 350px;
+    @media (max-width: 768px) {
+      body {
+        overflow-y: auto;
+      }
+      .login {
+        position: relative;
+        width: 100%;
+        height: auto;
+        min-height: 100vh;
+        padding: 3rem 1.5rem;
+      }
+      .sec {
+        display: none;
+      }
+      form {
+        max-width: 100%;
+      }
+      .form-logo i {
+        font-size: 2.5rem;
+      }
     }
 
-    h2 {
-      text-align: center;
-      margin-bottom: 2rem;
-      font-weight: 700;
-      color: #3a7a32;
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 6px;
     }
-
-    label {
-      font-weight: 600;
-      color: #3a7a32;
-      font-size: 1rem;
+    ::-webkit-scrollbar-track {
+      background: #f0ebe4;
     }
-
-    input[type="email"],
-    input[type="password"] {
-      width: 100%;
-      padding: 1rem 1.2rem;
-      margin: 0.5rem 0 1.5rem 0;
-      border-radius: 6px;
-      border: 2px solid #74d88b;
-      background-color: #f7faf7;
-      font-size: 1.1rem;
-      transition: border-color 0.3s ease;
-    }
-
-    input[type="email"]:focus,
-    input[type="password"]:focus {
-      outline: none;
-      border-color: #3a7a32;
-      background-color: #eaf6ea;
-      box-shadow: 0 0 8px #3a7a32;
-    }
-
-    button[type="submit"] {
-      width: 100%;
-      background: #74d88b;
-      border: none;
-      padding: 1.3rem 0;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: white;
-      border-radius: 30px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    button[type="submit"]:hover {
-      background-color: #5da86a;
-    }
-
-    p.text-center {
-      margin-top: 1.5rem;
-      font-weight: 500;
-      color: #3a7a32;
-    }
-
-    p.text-center a {
-      color: #3a7a32;
-      font-weight: 700;
-      text-decoration: none;
-      border-bottom: 1px solid #3a7a32;
-      transition: color 0.3s ease;
-    }
-
-    p.text-center a:hover {
-      color: #2d5c2d;
-      border-bottom-color: #2d5c2d;
-    }
-
-    .alert-danger {
-      background-color: #f8d7da;
-      border-color: #f5c2c7;
-      color: #842029;
-      border-radius: 10px;
-      padding: 1rem;
-      font-weight: 600;
-      margin-bottom: 1.5rem;
+    ::-webkit-scrollbar-thumb {
+      background: #b87333;
+      border-radius: 4px;
     }
   </style>
 </head>
 <body>
-   
+  <!-- Header Partial -->
+  <%- include('./partials/header') %>
+
+  <!-- Login Form Section -->
   <div class="login">
     <form action="/auth/login" method="POST" novalidate>
-      <h2>Login to MiniMart</h2>
+      
+      <div class="form-logo">
+        <i class="fas fa-tshirt"></i>
+        <h2>THREADCYCLE</h2>
+        <p>New & Pre-Loved Fashion Marketplace</p>
+      </div>
 
-      <% if (typeof error !== 'undefined') { %>
-        <div class="alert alert-danger"><%= error %></div>
+      <div class="form-subtitle">
+        <i class="fas fa-sign-in-alt"></i> Welcome back! Login to your account
+      </div>
+
+      <% if (typeof error !== 'undefined' && error) { %>
+        <div class="alert-danger">
+          <i class="fas fa-exclamation-circle"></i>
+          <%= error %>
+        </div>
       <% } %>
 
-      <label for="email">Email address</label>
-      <input
-        type="email"
-        id="email"
-        name="email"
-        placeholder="Enter email"
-        required
-        value="<%= typeof email !== 'undefined' ? email : '' %>"
-      />
+      <div class="input-group">
+        <i class="fas fa-envelope"></i>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Email Address"
+          required
+          value="<%= typeof email !== 'undefined' ? email : '' %>"
+        />
+      </div>
 
-      <label for="password">Password</label>
-      <input
-        type="password"
-        id="password"
-        name="password"
-        placeholder="Enter password"
-        required
-      />
+      <div class="input-group">
+        <i class="fas fa-lock"></i>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Password"
+          required
+        />
+      </div>
 
-      <button type="submit">Login</button>
+      <div class="forgot-link">
+        <a href="/forgot-password"><i class="fas fa-question-circle"></i> Forgot password?</a>
+      </div>
 
-      <p class="text-center">
-        Don't have an account? <a href="/auth/register">Register here</a>
-      </p>
+      <button type="submit">
+        <i class="fas fa-arrow-right-to-bracket"></i> Login to Account
+      </button>
+
+      <div class="register-link">
+        Don't have an account? <a href="/auth/register">Join ThreadCycle →</a>
+      </div>
+      
+      <div class="demo-hint">
+        <i class="fas fa-leaf"></i> Sustainable fashion starts here. 
+        <span style="display: block; margin-top: 5px;">✨ New arrivals weekly | ♻️ 2000+ pre-loved items</span>
+      </div>
     </form>
   </div>
 
+  <!-- Right Side Brand Section -->
   <div class="sec">
-    <h1>Welcome Back!</h1>
-    <p>To keep connected with us please login with your personal info</p>
-    <button onclick="location.href='/auth/register'">Register</button>
+    <div class="brand-icon">
+      <i class="fas fa-tshirt"></i>
+    </div>
+    <h1>Welcome<br>Back!</h1>
+    <p>Continue your sustainable fashion journey with ThreadCycle.</p>
+    
+    <ul class="feature-list">
+      <li><i class="fas fa-check-circle"></i> 15,000+ happy customers</li>
+      <li><i class="fas fa-check-circle"></i> Curated vintage pieces</li>
+      <li><i class="fas fa-check-circle"></i> Eco-friendly packaging</li>
+      <li><i class="fas fa-check-circle"></i> 7-day easy returns</li>
+    </ul>
+    
+    <button onclick="location.href='/auth/register'">
+      <i class="fas fa-user-plus"></i> Create New Account
+    </button>
   </div>
+
+  <!-- Footer Partial -->
+  <%- include('./partials/footer') %>
 </body>
 </html>
