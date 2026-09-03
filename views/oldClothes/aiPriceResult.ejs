@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../partials/head') %>
+</head>
+<body>
+
+<%- include('../partials/navbar') %>
+
+<div class="ai-price-container">
+
+  <div class="price-card">
+
+    <h1>AI Price Estimation</h1>
+
+    <% if(cloth.images && cloth.images.length > 0){ %>
+      <img 
+        src="data:image/jpeg;base64,<%= cloth.images[0].data.toString('base64') %>" 
+        alt="cloth-image"
+        class="cloth-image"
+      >
+    <% } %>
+
+    <div class="cloth-details">
+
+      <h2><%= cloth.title %></h2>
+
+      <p>
+        <strong>Brand:</strong>
+        <%= cloth.brand %>
+      </p>
+
+      <p>
+        <strong>Fabric Type:</strong>
+        <%= cloth.fabricType %>
+      </p>
+
+      <p>
+        <strong>Condition:</strong>
+        <%= cloth.condition %>
+      </p>
+
+      <p>
+        <strong>Weight:</strong>
+        <%= cloth.weight %> kg
+      </p>
+
+      <p>
+        <strong>Age:</strong>
+        <%= cloth.ageOfCloth %> year
+      </p>
+
+      <p>
+        <strong>Damage Level:</strong>
+        <%= cloth.damageLevel %>/10
+      </p>
+
+    </div>
+
+    <div class="estimated-price">
+
+      <h1>
+        Estimated Selling Price
+      </h1>
+
+      <h2>
+        ₹ <%= cloth.estimatedPrice %>
+      </h2>
+
+    </div>
+
+    <div class="price-info">
+
+      <h3>Price Calculation Factors</h3>
+
+      <ul>
+        <li>Fabric Quality</li>
+        <li>Brand Value</li>
+        <li>Weight</li>
+        <li>Condition</li>
+        <li>Damage Level</li>
+        <li>Age Of Cloth</li>
+      </ul>
+
+    </div>
+
+    <div class="action-buttons">
+
+      <a href="/old-clothes/upload" class="btn">
+        Upload Another Cloth
+      </a>
+
+      <a href="/old-clothes" class="btn secondary-btn">
+        View All Old Clothes
+      </a>
+
+    </div>
+
+  </div>
+
+</div>
+
+<%- include('../partials/footer') %>
+
+</body>
+</html>

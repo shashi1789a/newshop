@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%- include('../partials/head') %>
+</head>
+<body>
+
+<form action="/adregister" method="POST" class="auth-container">
+
+  <h2>Admin Register</h2>
+
+  <input type="text" name="name" placeholder="Name" required>
+
+  <input type="email" name="email" placeholder="Email" required>
+
+  <input type="password" name="password" placeholder="Password" required>
+
+  <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
+
+  <button type="submit">Register</button>
+
+</form>
+
+</body>
+</html>

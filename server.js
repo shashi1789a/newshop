@@ -1,75 +1,234 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-const cookieParser = require('cookie-parser');
-const path = require('path');
-const session = require('express-session');
+const express = require("express");
+
+const mongoose = require("mongoose");
+
+const dotenv = require("dotenv");
+
+const cookieParser = require("cookie-parser");
+
+const path = require("path");
+
+const session = require("express-session");
+
+const methodOverride = require("method-override");
+
+const connectDB = require("./config/db");
+
+// ======================================================
+// CONFIG
+// ======================================================
 
 dotenv.config();
 
+// ======================================================
+// EXPRESS APP
+// ======================================================
+
 const app = express();
 
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'yoursecretkey', 
-  resave: false,
-  saveUninitialized: true,
-  cookie: { maxAge: 1000 * 60 * 60 * 24 } 
-}));
+// ======================================================
+// DATABASE CONNECTION
+// ======================================================
+connectDB();
 
+// ======================================================
+// MIDDLEWARES
+// ======================================================
 
+// BODY PARSER
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
 
-
-mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
-.then(() => console.log('MongoDB connected'))
-.catch(err => console.error('MongoDB connection error:', err));
-
-
-app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// COOKIE PARSER
 app.use(cookieParser());
 
+// METHOD OVERRIDE
+app.use(
+  methodOverride("_method")
+);
 
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-app.use(express.static(path.join(__dirname, 'public')));
+// SESSION
+app.use(
+  session({
 
+    secret:
+      process.env.SESSION_SECRET ||
+      "secretkey",
 
-const authRoutes = require('./routes/auth');
-const indexRoutes = require('./routes/index');          
-// const cartRoutes = require('./routes/cart');
-const orderRoutes = require('./routes/orders');
-const productRoutes = require('./routes/products');
-const wishlistRouter = require('./routes/wishlist');
-const adminAuthRoutes = require('./routes/adminAuth');
-// const wishlistRoutes = require("./routes/wishlistRoutes");
-// const User = require('./models/User');
-// const paymentRoutes = require('./routes/payment');
+    resave: false,
 
+    saveUninitialized: false,
 
-app.use('/', indexRoutes);           
-app.use('/auth', authRoutes);        
-// app.use('/cart', cartRoutes);       
-app.use('/', orderRoutes);      
-app.use('/products', productRoutes); 
-// app.use('/wishlist', wishlistRoutes);
-app.use('/',adminAuthRoutes);
-// app.use('/', wishlistRouter);
-const wishlistRoutes = require("./routes/wishlist");
+    cookie: {
+
+      maxAge:
+        1000 *
+        60 *
+        60 *
+        24,
+
+      httpOnly: true,
+
+      secure: false,
+    },
+  })
+);
+
+// ======================================================
+// GLOBAL USER
+// ======================================================
+
+app.use((req, res, next) => {
+
+  res.locals.user = req.user || null;
+
+  next();
+
+});
+
+// ======================================================
+// VIEW ENGINE
+// ======================================================
+
+app.set(
+  "view engine",
+  "ejs"
+);
+
+app.set(
+  "views",
+  path.join(
+    __dirname,
+    "views"
+  )
+);
+
+// ======================================================
+// STATIC FILES
+// ======================================================
+
+app.use(
+  express.static(
+    path.join(
+      __dirname,
+      "public"
+    )
+  )
+);
+
+// ======================================================
+// ROUTES IMPORT
+// ======================================================
+
+// AUTH ROUTES
+const authRoutes =
+  require("./routes/auth");
+
+// INDEX ROUTES
+const indexRoutes =
+  require("./routes/index");
+
+// ORDER ROUTES
+const orderRoutes =
+  require("./routes/orders");
+
+// PRODUCT ROUTES
+const productRoutes =
+  require("./routes/products");
+
+// WISHLIST ROUTES
+const wishlistRoutes =
+  require("./routes/wishlist");
+
+// ADMIN AUTH ROUTES
+const adminAuthRoutes =
+  require("./routes/adminAuth");
+
+// OLD CLOTH ROUTES
+const oldClothRoutes =
+  require("./routes/oldCloth.routes");
+
+// ======================================================
+// USE ROUTES
+// ======================================================
+
+app.use("/", indexRoutes);
+
+app.use("/auth", authRoutes);
+
+app.use("/orders", orderRoutes);
+
+app.use("/products", productRoutes);
+
 app.use("/wishlist", wishlistRoutes);
 
-// app.use('/payment', paymentRoutes);  
-// await User.findOneAndUpdate({ email: 'admin@example.com' }, { role: 'admin' });
+app.use("/", adminAuthRoutes);
 
-// 404 handler
-// app.use((req, res) => {
-//     res.status(404).render('404', { title: 'Page Not Found' });
-// });
+app.use(
+  "/old-clothes",
+  oldClothRoutes
+);
 
+// ======================================================
+// HOME TEST ROUTE
+// ======================================================
+
+app.get("/health", (req, res) => {
+
+  res.send(
+    "Server Working Fine"
+  );
+
+});
+
+// ======================================================
+// 404 PAGE
+// ======================================================
+
+app.use((req, res) => {
+
+  res.status(404).render(
+    "404",
+    {
+      title:
+        "Page Not Found",
+    }
+  );
+
+});
+
+// ======================================================
+// ERROR HANDLER
+// ======================================================
+
+app.use(
+  (
+    err,
+    req,
+    res,
+    next
+  ) => {
+
+    console.error(err.stack);
+
+    res.status(500).send(
+      "Something Went Wrong"
+    );
+
+  }
+);
+
+// ======================================================
+// SERVER
+// ======================================================
 
 const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => {
-    console.log(`Server started on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });

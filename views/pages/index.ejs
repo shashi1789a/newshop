@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%- include('../partials/head') %>
+</head>
+<body>
+
+<%- include('../partials/navbar') %>
+
+<section class="hero">
+  <h1>Welcome To Newn Shop</h1>
+  <p>Buy New Clothes & Sell Old Clothes</p>
+</section>
+
+<section class="products">
+  <h2>Latest Products</h2>
+
+  <div class="product-grid">
+    <% products.forEach(product => { %>
+
+      <div class="card">
+
+        <% if(product.image){ %>
+          <img src="data:image/jpeg;base64,<%= product.image.toString('base64') %>" alt="">
+        <% } %>
+
+        <h3><%= product.name %></h3>
+
+        <p>₹ <%= product.price %></p>
+
+        <a href="/addtocart/<%= product._id %>">
+          Add To Cart
+        </a>
+
+      </div>
+
+    <% }) %>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>
+
+</body>
+</html>

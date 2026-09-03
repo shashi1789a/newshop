@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <%- include('../partials/head') %>
+
+  <title>Register</title>
+
+</head>
+
+<body>
+
+  <%- include('../partials/navbar') %>
+
+  <div class="auth-container">
+
+    <form action="/auth/register" method="POST" class="auth-form">
+
+      <h2>Create Account</h2>
+
+      <!-- ERROR MESSAGES -->
+      <% if (errors && errors.length > 0) { %>
+
+        <div class="error-box">
+
+          <% errors.forEach(error => { %>
+            <p><%= error.msg %></p>
+          <% }) %>
+
+        </div>
+
+      <% } %>
+
+      <!-- NAME -->
+      <input
+        type="text"
+        name="name"
+        placeholder="Enter Name"
+        value="<%= oldInput?.name || '' %>"
+        required
+      >
+
+      <!-- EMAIL -->
+      <input
+        type="email"
+        name="email"
+        placeholder="Enter Email"
+        value="<%= oldInput?.email || '' %>"
+        required
+      >
+
+      <!-- PASSWORD -->
+      <input
+        type="password"
+        name="password"
+        placeholder="Enter Password"
+        required
+      >
+
+      <!-- CONFIRM PASSWORD -->
+      <input
+        type="password"
+        name="confirmPassword"
+        placeholder="Confirm Password"
+        required
+      >
+
+      <button type="submit">
+        Register
+      </button>
+
+      <p>
+        Already have account?
+        <a href="/auth/login">
+          Login
+        </a>
+      </p>
+
+    </form>
+
+  </div>
+
+</body>
+</html>

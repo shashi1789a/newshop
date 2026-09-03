@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../partials/head') %>
+</head>
+<body>
+
+<%- include('../partials/navbar') %>
+
+<div class="product-details-page">
+
+  <div class="product-details-container">
+
+    <div class="product-image-section">
+
+      <% if(product.image){ %>
+
+        <img
+          src="data:image/jpeg;base64,<%= product.image.toString('base64') %>"
+          alt="product-image"
+          class="main-product-image"
+        >
+
+      <% } %>
+
+    </div>
+
+    <div class="product-info-section">
+
+      <h1>
+        <%= product.name %>
+      </h1>
+
+      <p class="product-category">
+        Category:
+        <%= product.category %>
+      </p>
+
+      <h2 class="product-price">
+        ₹ <%= product.price %>
+      </h2>
+
+      <% if(product.discount > 0){ %>
+
+        <p class="discount">
+          Discount:
+          <%= product.discount %>% OFF
+        </p>
+
+      <% } %>
+
+      <p class="product-description">
+        <%= product.description %>
+      </p>
+
+      <div class="product-extra-info">
+
+        <p>
+          <strong>Stock:</strong>
+          <%= product.stock %>
+        </p>
+
+        <p>
+          <strong>Rating:</strong>
+          <%= product.rating %> ⭐
+        </p>
+
+      </div>
+
+      <div class="product-buttons">
+
+        <a
+          href="/addtocart/<%= product._id %>"
+          class="add-cart-btn"
+        >
+          Add To Cart
+        </a>
+
+        <a
+          href="/wishlist/add/<%= product._id %>"
+          class="wishlist-btn"
+        >
+          Add Wishlist
+        </a>
+
+        <a
+          href="/orders/order?productid=<%= product._id %>"
+          class="buy-btn"
+        >
+          Buy Now
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="reviews-section">
+
+    <h2>Customer Reviews</h2>
+
+    <% if(product.reviews.length === 0){ %>
+
+      <p>No Reviews Yet</p>
+
+    <% } %>
+
+    <% product.reviews.forEach(review => { %>
+
+      <div class="review-card">
+
+        <h4>
+          <%= review.user?.name || 'User' %>
+        </h4>
+
+        <p>
+          Rating:
+          <%= review.rating %> ⭐
+        </p>
+
+        <p>
+          <%= review.comment %>
+        </p>
+
+      </div>
+
+    <% }) %>
+
+  </div>
+
+</div>
+
+<%- include('../partials/footer') %>
+
+</body>
+</html>

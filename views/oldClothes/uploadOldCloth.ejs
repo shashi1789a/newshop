@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%- include('../partials/head') %>
+</head>
+<body>
+
+<%- include('../partials/navbar') %>
+
+<form action="/old-clothes/upload" method="POST" enctype="multipart/form-data" class="product-form">
+
+  <h2>Sell Old Cloth</h2>
+
+  <input type="text" name="title" placeholder="Title" required>
+
+  <textarea name="description" placeholder="Description"></textarea>
+
+  <input type="text" name="brand" placeholder="Brand">
+
+  <input type="number" step="0.1" name="weight" placeholder="Weight">
+
+  <input type="number" name="ageOfCloth" placeholder="Age">
+
+  <input type="number" name="damageLevel" placeholder="Damage Level">
+
+  <select name="fabricType">
+    <option value="cotton">Cotton</option>
+    <option value="denim">Denim</option>
+    <option value="silk">Silk</option>
+    <option value="wool">Wool</option>
+  </select>
+
+  <select name="condition">
+    <option value="like_new">Like New</option>
+    <option value="good">Good</option>
+    <option value="average">Average</option>
+    <option value="damaged">Damaged</option>
+  </select>
+
+  <input type="file" name="images" multiple required>
+
+  <button type="submit">Upload Cloth</button>
+
+</form>
+
+</body>
+</html>

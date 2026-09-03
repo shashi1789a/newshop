@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%- include('../partials/head') %>
+</head>
+<body>
+
+<h1>Payment</h1>
+
+<p>Total Amount: ₹ <%= totalAmount %></p>
+
+<form action="/orders/payment/<%= order._id %>" method="POST">
+
+  <select name="paymentMethod">
+    <option value="COD">Cash On Delivery</option>
+  </select>
+
+  <button type="submit">Confirm Payment</button>
+
+</form>
+
+</body>
+</html>

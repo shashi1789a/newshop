@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%- include('../partials/head') %>
+</head>
+<body>
+
+<%- include('../partials/navbar') %>
+
+<h1>Wishlist</h1>
+
+<% wishlist.forEach(product => { %>
+
+<div class="card">
+
+  <h3><%= product.name %></h3>
+
+  <p>₹ <%= product.price %></p>
+
+  <a href="/wishlist/move-to-cart/<%= product._id %>">
+    Move To Cart
+  </a>
+
+  <a href="/wishlist/remove/<%= product._id %>">
+    Remove
+  </a>
+
+</div>
+
+<% }) %>
+
+</body>
+</html>

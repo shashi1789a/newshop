@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../partials/head') %>
+</head>
+<body>
+
+<%- include('../partials/navbar') %>
+
+<div class="category-page">
+
+  <div class="category-header">
+    <h1>
+      <%= categoryName %> Collection
+    </h1>
+
+    <p>
+      Explore all products from this category
+    </p>
+  </div>
+
+  <% if(products.length === 0){ %>
+
+    <div class="empty-category">
+
+      <h2>No Products Found</h2>
+
+      <p>
+        Products are not available in this category right now.
+      </p>
+
+    </div>
+
+  <% } %>
+
+  <div class="category-grid">
+
+    <% products.forEach(product => { %>
+
+      <div class="product-card">
+
+        <% if(product.image){ %>
+
+          <img
+            src="data:image/jpeg;base64,<%= product.image.toString('base64') %>"
+            alt="product-image"
+          >
+
+        <% } %>
+
+        <div class="product-content">
+
+          <h2>
+            <%= product.name %>
+          </h2>
+
+          <p class="description">
+            <%= product.description %>
+          </p>
+
+          <h3 class="price">
+            ₹ <%= product.price %>
+          </h3>
+
+          <div class="product-info">
+
+            <span>
+              Stock:
+              <%= product.stock %>
+            </span>
+
+            <span>
+              Rating:
+              <%= product.rating %> ⭐
+            </span>
+
+          </div>
+
+          <div class="product-buttons">
+
+            <a
+              href="/addtocart/<%= product._id %>"
+              class="cart-btn"
+            >
+              Add To Cart
+            </a>
+
+            <a
+              href="/wishlist/add/<%= product._id %>"
+              class="wishlist-btn"
+            >
+              Wishlist
+            </a>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    <% }) %>
+
+  </div>
+
+</div>
+
+<%- include('../partials/footer') %>
+
+</body>
+</html>

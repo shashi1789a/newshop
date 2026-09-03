@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%- include('../partials/head') %>
+</head>
+<body>
+
+<h1>Place Order</h1>
+
+<form action="/orders/order" method="POST">
+
+  <input type="text" name="name" placeholder="Full Name" required>
+
+  <input type="text" name="street" placeholder="Street" required>
+
+  <input type="text" name="locality" placeholder="Locality" required>
+
+  <input type="text" name="zipCode" placeholder="Zip Code" required>
+
+  <input type="text" name="phone" placeholder="Phone" required>
+
+  <select name="paymentMethod">
+    <option value="COD">Cash On Delivery</option>
+  </select>
+
+  <button type="submit">Place Order</button>
+
+</form>
+
+</body>
+</html>

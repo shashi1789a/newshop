@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%- include('../partials/head') %>
+</head>
+<body>
+
+<%- include('../partials/navbar') %>
+
+<div class="admin-dashboard">
+
+  <h1>Admin Dashboard</h1>
+
+  <div class="dashboard-grid">
+
+    <div class="dashboard-card">
+      <h2>Total Products</h2>
+      <p><%= totalProducts || 0 %></p>
+    </div>
+
+    <div class="dashboard-card">
+      <h2>Total Orders</h2>
+      <p><%= totalOrders || 0 %></p>
+    </div>
+
+    <div class="dashboard-card">
+      <h2>Total Users</h2>
+      <p><%= totalUsers || 0 %></p>
+    </div>
+
+    <div class="dashboard-card">
+      <h2>Old Clothes</h2>
+      <p><%= totalOldClothes || 0 %></p>
+    </div>
+
+  </div>
+
+  <div class="admin-actions">
+
+    <a href="/create-product" class="admin-btn">
+      Create Product
+    </a>
+
+    <a href="/orders/adminOrders" class="admin-btn">
+      Manage Orders
+    </a>
+
+    <a href="/old-clothes" class="admin-btn">
+      View Old Clothes
+    </a>
+
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -8,7 +8,7 @@ const { auth } = require('../middleware/auth');
 router.get('/', async function(req, res) {
   try {
     const products = await Product.find();
-    res.render("index", { products });  
+    res.render("pages/index", { products });  
   } catch (error) {
     console.error(error);
     res.status(500).send("Server Error");

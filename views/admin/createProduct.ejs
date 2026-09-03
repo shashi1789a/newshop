@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%- include('../partials/head') %>
+</head>
+<body>
+
+<%- include('../partials/navbar') %>
+
+<form action="/products/create" method="POST" enctype="multipart/form-data" class="product-form">
+
+  <h2>Create Product</h2>
+
+  <input type="text" name="name" placeholder="Product Name" required>
+
+  <textarea name="description" placeholder="Description"></textarea>
+
+  <input type="number" name="price" placeholder="Price" required>
+
+  <input type="number" name="stock" placeholder="Stock">
+
+  <select name="category">
+    <option value="mens">Mens</option>
+    <option value="womens">Womens</option>
+    <option value="kids">Kids</option>
+  </select>
+
+  <input type="file" name="image" required>
+
+  <button type="submit">Create Product</button>
+
+</form>
+
+</body>
+</html>
