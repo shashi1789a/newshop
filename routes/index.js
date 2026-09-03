@@ -224,7 +224,7 @@ router.post('/contact', (req, res) => {
 router.get('/shop', async function(req, res) {
   try {
     const products = await Product.find();
-    res.render("shop", { products });  
+    res.render("products/shop", { products });  
   } catch (error) {
     console.error(error);
     res.status(500).send("Server Error");

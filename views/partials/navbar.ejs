@@ -1,25 +1,645 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!--==Title==================================-->
+  <title>ThreadCycle - Buy & Sell New & Pre-Loved Fashion</title>
+
+  <!--==Stylesheet=============================-->
+  <link rel="stylesheet" type="text/css" href="Home Page CSS.css">
+
+  <!--==Fav-icon===============================-->
+  <link rel="icon" type="image/png" href="images/favicon.png">
+
+  <!--==Using-Font-Awesome=====================-->
+  <script src="https://kit.fontawesome.com/5471644867.js" crossorigin="anonymous"></script>
+
+  <!--==API & JS Files=========================-->
+  <script src="api.js" defer></script>
+  <script src="Home Page JS.js" defer></script>
+  <script src="js/homepageaddcart.js" defer></script>
+
+  <!--==Fonts==================================-->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ===== RESET & GLOBAL ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #faf9f7;
+      scroll-behavior: smooth;
+    }
+
+    /* ===== CUSTOM NAVIGATION - FULLY RESPONSIVE (laptop, tab, mobile) ===== */
+    .navigation {
+      width: 100%;
+      background: #ffffff;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 48px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      transition: all 0.3s ease;
+      border-bottom: 2px solid #f0ede8;
+      flex-wrap: wrap;
+      gap: 12px 16px;
+      min-height: 76px;
+    }
+
+    /* ----- FULLY RESPONSIVE LOGO (ThreadCycle) ----- */
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      font-family: 'Playfair Display', serif;
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+      flex-wrap: nowrap;
+    }
+
+    .logo:hover {
+      transform: scale(1.02);
+    }
+
+    .logo-icon {
+      background: #1e1e2a;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 14px rgba(0, 0, 0, 0.08);
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+
+    .logo-icon i {
+      font-size: 28px;
+      color: #f5e7d9;
+      transition: font-size 0.2s ease;
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+      white-space: nowrap;
+    }
+
+    .logo-text .main {
+      font-size: 1.7rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #1f1a2e, #3a2c2c);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      transition: font-size 0.2s ease;
+    }
+
+    .logo-text .sub {
+      font-size: 0.6rem;
+      letter-spacing: 2.2px;
+      font-weight: 600;
+      color: #b87333;
+      text-transform: uppercase;
+      margin-top: -4px;
+      transition: font-size 0.2s ease, letter-spacing 0.2s ease;
+    }
+
+    /* menu button */
+    .menu-btn {
+      display: none;
+    }
+
+    .menu-icon {
+      display: none;
+      cursor: pointer;
+      background: #f3f0eb;
+      width: 44px;
+      height: 44px;
+      border-radius: 30px;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+
+    .menu-icon:hover {
+      background: #e6ddd2;
+    }
+
+    .menu-icon .nav-icon {
+      width: 22px;
+      height: 2.5px;
+      background-color: #2c2c2c;
+      display: block;
+      position: relative;
+      transition: all 0.3s ease-in-out;
+      border-radius: 4px;
+    }
+
+    .menu-icon .nav-icon::before,
+    .menu-icon .nav-icon::after {
+      content: '';
+      width: 22px;
+      height: 2.5px;
+      background-color: #2c2c2c;
+      position: absolute;
+      left: 0;
+      transition: all 0.3s ease-in-out;
+      border-radius: 4px;
+    }
+
+    .menu-icon .nav-icon::before {
+      top: -8px;
+    }
+
+    .menu-icon .nav-icon::after {
+      top: 8px;
+    }
+
+    /* menu list - clothing store style */
+    .menu {
+      display: flex;
+      gap: 8px;
+      list-style: none;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .menu li a {
+      text-decoration: none;
+      color: #2d2a24;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 8px 20px;
+      border-radius: 40px;
+      transition: all 0.25s ease;
+      font-family: 'Inter', sans-serif;
+      display: inline-block;
+    }
+
+    .menu li a:hover,
+    .menu li a.active {
+      background: #d4af7a;
+      color: #1e1b16;
+      box-shadow: 0 4px 8px rgba(180, 130, 70, 0.2);
+      transform: translateY(-2px);
+    }
+
+    /* Right Icons - refined */
+    .right-nav {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .right-nav a {
+      position: relative;
+      font-size: 1.25rem;
+      color: #2c2a27;
+      background: #f5f2ed;
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.25s ease;
+      text-decoration: none;
+    }
+
+    .right-nav a:hover {
+      background: #d4af7a;
+      color: #1e1b16;
+      transform: translateY(-3px);
+    }
+
+    .right-nav a span {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      background: #c45c2c;
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      min-width: 20px;
+      height: 20px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      padding: 0 4px;
+    }
+    /* ============================================================
+       RESPONSIVE BREAKPOINTS – LAPTOP, TAB, MOBILE (all devices)
+    ============================================================ */
+
+    /* --- LAPTOP (1025px – 1440px) --- */
+    @media screen and (max-width: 1280px) {
+      .navigation {
+        padding: 14px 32px;
+      }
+      .hero-banner {
+        padding: 40px 48px;
+      }
+      .logo-text .main {
+        font-size: 1.6rem;
+      }
+      .logo-text .sub {
+        font-size: 0.58rem;
+        letter-spacing: 2px;
+      }
+    }
+
+    /* --- TABLET (769px – 1024px) --- */
+    @media screen and (max-width: 1024px) {
+      .navigation {
+        padding: 14px 28px;
+        min-height: 70px;
+      }
+      .logo-text .main {
+        font-size: 1.5rem;
+      }
+      .logo-text .sub {
+        font-size: 0.55rem;
+        letter-spacing: 1.8px;
+      }
+      .logo-icon {
+        width: 42px;
+        height: 42px;
+      }
+      .logo-icon i {
+        font-size: 24px;
+      }
+      .hero-banner {
+        padding: 36px 40px;
+        gap: 32px;
+      }
+      .hero-text h1 {
+        font-size: 3rem;
+      }
+      .menu li a {
+        font-size: 0.9rem;
+        padding: 7px 16px;
+      }
+      .right-nav a {
+        width: 38px;
+        height: 38px;
+        font-size: 1.1rem;
+      }
+      .right-nav {
+        gap: 14px;
+      }
+    }
+
+    /* --- SMALL TABLET / LARGE MOBILE (600px – 768px) --- */
+    @media screen and (max-width: 820px) {
+      .navigation {
+        padding: 12px 20px;
+        gap: 10px;
+        min-height: 66px;
+      }
+
+      .menu-icon {
+        display: flex;
+        order: 3;
+      }
+
+      .menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        flex-direction: column;
+        background: #ffffff;
+        display: none;
+        border-top: 1px solid #e4d9cd;
+        padding: 16px 24px 24px;
+        gap: 6px;
+        box-shadow: 0 20px 30px -12px rgba(0,0,0,0.08);
+        order: 4;
+        flex: 0 0 100%;
+        margin-top: 6px;
+      }
+
+      .menu li a {
+        display: block;
+        padding: 12px 20px;
+        border-radius: 50px;
+        font-size: 1rem;
+        text-align: center;
+        width: 100%;
+      }
+
+      .menu-btn:checked ~ .menu {
+        display: flex;
+      }
+
+      .right-nav {
+        margin-left: auto;
+        order: 2;
+      }
+
+      .logo {
+        order: 1;
+        flex: 0 1 auto;
+      }
+
+      .logo-text .main {
+        font-size: 1.4rem;
+      }
+      .logo-text .sub {
+        font-size: 0.55rem;
+        letter-spacing: 1.6px;
+      }
+      .logo-icon {
+        width: 40px;
+        height: 40px;
+      }
+      .logo-icon i {
+        font-size: 22px;
+      }
+
+      .hero-banner {
+        padding: 30px 24px;
+        flex-direction: column;
+        text-align: center;
+        gap: 28px;
+      }
+      .hero-text h1 {
+        font-size: 2.6rem;
+      }
+      .hero-text p {
+        max-width: 100%;
+        margin: 16px auto;
+      }
+      .category-section,
+      .featured-items {
+        padding: 40px 24px;
+      }
+      .category-section h2 {
+        font-size: 1.8rem;
+      }
+      .cloth-card {
+        width: 100%;
+        max-width: 280px;
+      }
+      .product {
+        width: 100%;
+        max-width: 260px;
+      }
+      .right-nav a {
+        width: 38px;
+        height: 38px;
+        font-size: 1.1rem;
+      }
+      .right-nav {
+        gap: 12px;
+      }
+    }
+
+    /* --- MOBILE (320px – 599px) --- */
+    @media screen and (max-width: 599px) {
+      .navigation {
+        padding: 10px 16px;
+        gap: 8px;
+        min-height: 60px;
+      }
+
+      .logo-icon {
+        width: 34px;
+        height: 34px;
+      }
+      .logo-icon i {
+        font-size: 18px;
+      }
+
+      .logo-text .main {
+        font-size: 1.2rem;
+        letter-spacing: -0.3px;
+      }
+      .logo-text .sub {
+        font-size: 0.5rem;
+        letter-spacing: 1.2px;
+        margin-top: -2px;
+      }
+
+      .menu li a {
+        font-size: 0.9rem;
+        padding: 10px 14px;
+      }
+
+      .right-nav a {
+        width: 34px;
+        height: 34px;
+        font-size: 1rem;
+      }
+      .right-nav a span {
+        font-size: 9px;
+        min-width: 16px;
+        height: 16px;
+        top: -5px;
+        right: -5px;
+      }
+      .right-nav {
+        gap: 10px;
+      }
+
+      .hero-banner {
+        padding: 24px 16px;
+        gap: 20px;
+        min-height: 70vh;
+      }
+      .hero-text h1 {
+        font-size: 2.2rem;
+      }
+      .hero-text p {
+        font-size: 0.9rem;
+        margin: 14px 0;
+      }
+      .btn-primary {
+        padding: 12px 28px;
+        font-size: 0.85rem;
+      }
+
+      .category-section {
+        padding: 30px 16px;
+      }
+      .category-section h2 {
+        font-size: 1.5rem;
+        margin-bottom: 28px;
+      }
+      .cloth-card {
+        padding: 16px;
+        width: 100%;
+        max-width: 260px;
+      }
+      .cloth-icon {
+        font-size: 44px;
+      }
+      .cloth-card h3 {
+        font-size: 1.2rem;
+      }
+
+      .featured-items {
+        padding: 30px 16px 50px;
+      }
+      .section-title {
+        font-size: 1.5rem;
+      }
+      .product {
+        width: 100%;
+        max-width: 220px;
+        padding: 14px;
+      }
+      .product i {
+        font-size: 36px;
+      }
+
+      footer {
+        padding: 24px 16px;
+        font-size: 0.75rem;
+      }
+    }
+
+    /* --- EXTRA SMALL (<= 380px) --- */
+    @media screen and (max-width: 380px) {
+      .navigation {
+        padding: 8px 12px;
+        min-height: 54px;
+        gap: 6px;
+      }
+      .logo-icon {
+        width: 28px;
+        height: 28px;
+      }
+      .logo-icon i {
+        font-size: 15px;
+      }
+      .logo-text .main {
+        font-size: 1rem;
+      }
+      .logo-text .sub {
+        font-size: 0.45rem;
+        letter-spacing: 0.8px;
+      }
+      .right-nav a {
+        width: 30px;
+        height: 30px;
+        font-size: 0.85rem;
+      }
+      .right-nav a span {
+        font-size: 8px;
+        min-width: 14px;
+        height: 14px;
+        top: -4px;
+        right: -4px;
+      }
+      .right-nav {
+        gap: 8px;
+      }
+      .hero-text h1 {
+        font-size: 1.8rem;
+      }
+      .hero-banner {
+        padding: 16px 12px;
+      }
+      .btn-primary {
+        padding: 10px 20px;
+        font-size: 0.8rem;
+      }
+      .category-section h2 {
+        font-size: 1.3rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <nav class="navbar">
-  <div class="logo">
-    <a href="/">Newn Shop</a>
-  </div>
+  <!--==Navigation - FULLY RESPONSIVE (laptop, tab, mobile) ==============================-->
+  <nav class="navigation">
+    <!-- LOGO: ThreadCycle – responsive on all devices -->
+    <a href="/" class="logo">
+      <div class="logo-icon">
+        <i class="fas fa-tshirt"></i>
+      </div>
+      <div class="logo-text">
+        <span class="main">THREADCYCLE</span>
+        <span class="sub">NEW & PRE-LOVED</span>
+      </div>
+    </a>
 
-  <ul>
-    <li><a href="/">Home</a></li>
-    <li><a href="/shop">Shop</a></li>
-    <li><a href="/old-clothes">Old Clothes</a></li>
-    <li><a href="/wishlist">Wishlist</a></li>
-    <li><a href="/cart">Cart</a></li>
-    <li><a href="/orders/userOrders">Orders</a></li>
-    <li><a href="/profile">Profile</a></li>
-  </ul>
-</nav>
+    <!--menu-btn (hamburger)-->
+    <input type="checkbox" class="menu-btn" id="menu-btn">
+    <label for="menu-btn" class="menu-icon">
+      <span class="nav-icon"></span>
+    </label>
+
+    <!--menu - removed Feedback & Signup -->
+    <ul class="menu">
+      <li><a href="/" class="active">Home</a></li>
+      <li><a href="/contact">Contact&nbsp;Us</a></li>
+      <li><a href="/shop">Sell&nbsp;Clothes</a></li>
+      <li><a href="/aboutus">About&nbsp;Us</a></li>
+      <li><a href="/auth/login">Login</a></li>
+      <li><a href="/userOrders">My&nbsp;Order</a></li>
+      <li><a href="/adregister">Admin</a></li>
+    </ul>
+
+    <!--right-nav icons (wishlist, cart, profile)-->
+    <div class="right-nav">
+      <a href="/whislist" class="like" aria-label="Wishlist">
+        <i class="fa-regular fa-heart"></i>
+        <span>4</span>
+      </a>
+
+      <a href="/cart" class="cart" aria-label="Cart">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span>2</span>
+      </a>
+
+      <a href="/profile" class="user-profile" aria-label="Profile">
+        <i class="fas fa-user"></i>
+        <span>1</span>
+      </a>
+    </div>
+  </nav>
+
+  <script>
+    // active link highlight based on current URL path
+    (function() {
+      const currentPath = window.location.pathname;
+      const navLinks = document.querySelectorAll('.menu li a');
+      navLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === currentPath || (currentPath === '/' && href === '/')) {
+          link.classList.add('active');
+        } else if (href !== '/' && currentPath.startsWith(href) && href !== '/') {
+          link.classList.add('active');
+        } else if (link.classList.contains('active') && href !== currentPath) {
+          link.classList.remove('active');
+        }
+      });
+      console.log('🧥 THREADCYCLE — fully responsive for laptop, tablet, mobile');
+    })();
+  </script>
+  <!-- External scripts remain for future cart/wishlist features (api.js etc) -->
 </body>
 </html>

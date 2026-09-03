@@ -13,7 +13,7 @@ const session = require("express-session");
 const methodOverride = require("method-override");
 
 const connectDB = require("./config/db");
-const MongoStore = require("connect-mongo");
+const { MongoStore } = require("connect-mongo");
 
 // ======================================================
 // CONFIG
