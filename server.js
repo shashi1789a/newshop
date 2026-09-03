@@ -13,6 +13,7 @@ const session = require("express-session");
 const methodOverride = require("method-override");
 
 const connectDB = require("./config/db");
+const MongoStore = require("connect-mongo");
 
 // ======================================================
 // CONFIG
@@ -52,6 +53,8 @@ app.use(
   methodOverride("_method")
 );
 
+
+app.set("trust proxy", 1);
 // SESSION
 app.use(
   session({
@@ -64,6 +67,11 @@ app.use(
 
     saveUninitialized: false,
 
+     store: MongoStore.create({
+    mongoUrl: process.env.MONGODB_URI,
+    collectionName: "sessions"
+  }),
+
     cookie: {
 
       maxAge:
@@ -74,7 +82,7 @@ app.use(
 
       httpOnly: true,
 
-      secure: false,
+      secure: process.env.NODE_ENV === "production",
     },
   })
 );
