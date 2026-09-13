@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Payment Successful | ThreadCycle</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f6f8;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 80px auto;
+      padding: 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 45px 30px;
+      text-align: center;
+      box-shadow: 0 8px 30px rgba(0,0,0,.08);
+    }
+
+    .icon {
+      font-size: 70px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      margin-bottom: 12px;
+    }
+
+    p {
+      color: #777;
+      margin-bottom: 10px;
+      line-height: 1.6;
+    }
+
+    .order-id {
+      font-weight: 700;
+      margin: 20px 0;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 25px;
+    }
+
+    a {
+      text-decoration: none;
+      padding: 13px 20px;
+      border-radius: 8px;
+    }
+
+    .primary {
+      background: #111;
+      color: white;
+    }
+
+    .secondary {
+      border: 1px solid #ddd;
+      color: #111;
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+<%- include('../partials/navbar') %>
+
+<div class="container">
+
+  <div class="card">
+
+
+    <div class="icon">
+      ✅
+    </div>
+
+
+    <h1>
+      Payment Successful!
+    </h1>
+
+
+    <p>
+      Your payment has been successfully verified.
+    </p>
+
+
+    <p>
+      Your order has been confirmed.
+    </p>
+
+
+    <div class="order-id">
+
+      Order ID:
+      #<%= order._id
+        .toString()
+        .slice(-8)
+        .toUpperCase() %>
+
+    </div>
+
+
+    <p>
+
+      Total Paid:
+      ₹<%= Number(
+        order.totalAmount || 0
+      ).toLocaleString("en-IN") %>
+
+    </p>
+
+
+    <div class="buttons">
+
+      <a
+        href="/orders/<%= order._id %>"
+        class="primary"
+      >
+        View Order
+      </a>
+
+
+      <a
+        href="/products"
+        class="secondary"
+      >
+        Continue Shopping
+      </a>
+
+    </div>
+
+
+  </div>
+
+</div>
+
+
+</body>
+
+</html>

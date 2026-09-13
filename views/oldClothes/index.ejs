@@ -1,0 +1,2085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Pre-Loved Marketplace — Reciclaja</title>
+
+  <meta
+    name="description"
+    content="Buy and sell quality pre-owned clothes at affordable prices on Reciclaja."
+  />
+
+  <%- include('../partials/head') %>
+
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/5471644867.js" crossorigin="anonymous"></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,700&display=swap" rel="stylesheet" />
+
+  <style>
+
+    /* =====================================================
+       DESIGN TOKENS
+    ===================================================== */
+
+    :root {
+      --forest: #0d3b2e;
+      --forest-2: #14523f;
+      --forest-3: #1e6b52;
+      --forest-soft: #2d8a6a;
+      --forest-deep: #072a20;
+
+      --emerald: #10b981;
+      --emerald-soft: #34d399;
+
+      --mango: #f59e0b;
+      --mango-soft: #fbbf24;
+      --mango-deep: #d97706;
+
+      --coral: #f97362;
+      --coral-soft: #fb9585;
+      --coral-deep: #e05a44;
+
+      --blush: #fef3e7;
+      --blush-2: #fde8d0;
+
+      --mint: #ecfdf5;
+      --mint-2: #d1fae5;
+
+      --bg: #fbfaf7;
+      --surface: #ffffff;
+      --surface-2: #f7f4ee;
+      --surface-3: #efeae0;
+
+      --text: #10261d;
+      --text-muted: #556b5f;
+      --text-light: #8a9a90;
+
+      --border: #e6e0d4;
+      --border-soft: #f0ebe0;
+
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius: 16px;
+      --radius-sm: 10px;
+
+      --shadow-sm: 0 2px 8px rgba(13, 59, 46, 0.05);
+      --shadow-md: 0 8px 28px rgba(13, 59, 46, 0.08);
+      --shadow-lg: 0 20px 48px rgba(13, 59, 46, 0.12);
+      --shadow-glow: 0 12px 40px rgba(16, 185, 129, 0.18);
+      --shadow-mango: 0 12px 40px rgba(245, 158, 11, 0.22);
+
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    /* =====================================================
+       RESET
+    ===================================================== */
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    button, input, select { font: inherit; }
+    button { cursor: pointer; font-family: inherit; }
+    a { text-decoration: none; color: inherit; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    img { display: block; max-width: 100%; }
+
+    /* =====================================================
+       SCROLL PROGRESS BAR
+    ===================================================== */
+
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--emerald) 0%, var(--mango) 50%, var(--coral) 100%);
+      z-index: 9999;
+      transition: width 0.1s linear;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
+    }
+
+    /* =====================================================
+       SCROLL REVEAL
+    ===================================================== */
+
+    [data-reveal] {
+      opacity: 0;
+      transition:
+        opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: opacity, transform;
+    }
+
+    [data-reveal="up"] { transform: translateY(40px); }
+    [data-reveal="left"] { transform: translateX(-40px); }
+    [data-reveal="right"] { transform: translateX(40px); }
+    [data-reveal="zoom"] { transform: scale(0.9); }
+    [data-reveal="zoom-up"] { transform: scale(0.94) translateY(30px); }
+
+    [data-reveal].is-revealed {
+      opacity: 1;
+      transform: translate(0, 0) scale(1);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      [data-reveal] {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+    }
+
+    /* =====================================================
+       HERO
+    ===================================================== */
+
+    .hero {
+      background:
+        radial-gradient(circle at 15% 20%, rgba(245, 158, 11, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 85% 80%, rgba(16, 185, 129, 0.12) 0%, transparent 45%),
+        linear-gradient(135deg, #fffdf9 0%, #f5efe4 100%);
+      border-bottom: 1px solid var(--border-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: -80px;
+      right: -80px;
+      width: 340px;
+      height: 340px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(251, 191, 36, 0.14) 0%, transparent 70%);
+      filter: blur(50px);
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      bottom: -100px;
+      left: -100px;
+      width: 380px;
+      height: 380px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, transparent 70%);
+      filter: blur(50px);
+      pointer-events: none;
+    }
+
+    .hero-container {
+      max-width: 1400px;
+      margin: auto;
+      padding: 70px 24px 80px;
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr;
+      gap: 48px;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(13, 59, 46, 0.06);
+      border: 1px solid rgba(13, 59, 46, 0.08);
+      color: var(--forest-3);
+      padding: 9px 18px;
+      border-radius: 30px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 22px;
+    }
+
+    .hero-eyebrow::before {
+      content: "♻️";
+      font-size: 13px;
+    }
+
+    .hero h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(40px, 5.2vw, 68px);
+      font-weight: 500;
+      line-height: 1.04;
+      letter-spacing: -2.5px;
+      margin-bottom: 22px;
+      color: var(--forest);
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      background: linear-gradient(120deg, var(--mango-deep) 0%, var(--coral) 60%, var(--mango) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      max-width: 600px;
+      color: var(--text-muted);
+      font-size: 17px;
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .hero-btn {
+      padding: 15px 30px;
+      border-radius: var(--radius-sm);
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 0.4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-primary {
+      background: linear-gradient(135deg, var(--forest) 0%, var(--forest-3) 100%);
+      color: #ffffff;
+      box-shadow: 0 10px 28px rgba(13, 59, 46, 0.25);
+    }
+
+    .hero-primary::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 0.35), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .hero-primary:hover::before { left: 100%; }
+
+    .hero-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 36px rgba(13, 59, 46, 0.35);
+      gap: 14px;
+    }
+
+    .hero-secondary {
+      background: #ffffff;
+      border: 2px solid var(--forest);
+      color: var(--forest);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .hero-secondary:hover {
+      background: var(--forest);
+      color: #ffffff;
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(13, 59, 46, 0.22);
+      gap: 14px;
+    }
+
+    /* Hero card */
+
+    .hero-card {
+      background:
+        radial-gradient(circle at 90% 10%, rgba(16, 185, 129, 0.06) 0%, transparent 50%),
+        #ffffff;
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-xl);
+      padding: 32px 30px;
+      box-shadow: 0 20px 60px rgba(13, 59, 46, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--mango) 0%, var(--coral) 50%, var(--emerald) 100%);
+    }
+
+    .hero-card h3 {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--forest);
+      letter-spacing: -0.5px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .hero-card h3 i {
+      width: 40px;
+      height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(145deg, var(--blush) 0%, var(--blush-2) 100%);
+      border-radius: 12px;
+      color: var(--coral);
+      font-size: 16px;
+    }
+
+    .hero-stat {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 0;
+      border-bottom: 1px dashed var(--border);
+      transition: all 0.3s ease;
+    }
+
+    .hero-stat:hover {
+      padding-left: 6px;
+    }
+
+    .hero-stat:last-child {
+      border-bottom: none;
+    }
+
+    .hero-stat span:first-child {
+      color: var(--text-muted);
+      font-size: 13.5px;
+      font-weight: 500;
+    }
+
+    .hero-stat strong {
+      color: var(--forest);
+      font-size: 13.5px;
+      font-weight: 800;
+      padding: 5px 12px;
+      background: linear-gradient(135deg, var(--mint) 0%, var(--mint-2) 100%);
+      border-radius: 30px;
+      letter-spacing: 0.2px;
+    }
+
+    /* =====================================================
+       CATEGORY STRIP
+    ===================================================== */
+
+    .category-section {
+      max-width: 1400px;
+      margin: auto;
+      padding: 40px 24px 10px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: 26px;
+      font-weight: 600;
+      color: var(--forest);
+      letter-spacing: -0.6px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .section-title::before {
+      content: "";
+      width: 5px;
+      height: 26px;
+      background: linear-gradient(180deg, var(--mango) 0%, var(--coral) 100%);
+      border-radius: 4px;
+    }
+
+    .category-list {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 14px;
+      scrollbar-width: none;
+    }
+
+    .category-list::-webkit-scrollbar {
+      display: none;
+    }
+
+    .category-btn {
+      white-space: nowrap;
+      border: 2px solid var(--border);
+      background: #ffffff;
+      border-radius: 30px;
+      padding: 10px 20px;
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--text-muted);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .category-btn:hover {
+      border-color: var(--mango);
+      color: var(--forest);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-mango);
+    }
+
+    .category-btn.active {
+      background: linear-gradient(135deg, var(--forest) 0%, var(--forest-3) 100%);
+      color: #ffffff;
+      border-color: var(--forest);
+      box-shadow: 0 8px 20px rgba(13, 59, 46, 0.25);
+    }
+
+    /* =====================================================
+       MAIN LAYOUT
+    ===================================================== */
+
+    .main-container {
+      max-width: 1400px;
+      margin: auto;
+      padding: 32px 24px 70px;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 28px;
+    }
+
+    /* =====================================================
+       FILTER SIDEBAR
+    ===================================================== */
+
+    .filter-sidebar {
+      background: #ffffff;
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-lg);
+      padding: 24px 22px;
+      height: fit-content;
+      position: sticky;
+      top: 100px;
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+
+    .filter-sidebar::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--mango) 0%, var(--emerald) 100%);
+    }
+
+    .filter-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .filter-header h3 {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--forest);
+      letter-spacing: -0.4px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .filter-header h3 i {
+      color: var(--mango-deep);
+      font-size: 16px;
+    }
+
+    .clear-btn {
+      border: none;
+      background: transparent;
+      color: var(--coral);
+      font-weight: 800;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      transition: all 0.25s ease;
+    }
+
+    .clear-btn:hover {
+      background: rgba(249, 115, 98, 0.08);
+      color: var(--coral-deep);
+    }
+
+    .filter-group {
+      margin-bottom: 20px;
+    }
+
+    .filter-group label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      margin-bottom: 9px;
+      color: var(--forest);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+    }
+
+    .filter-group label i {
+      color: var(--mango-deep);
+      font-size: 11px;
+    }
+
+    .filter-group input,
+    .filter-group select {
+      width: 100%;
+      height: 44px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0 14px;
+      outline: none;
+      background: var(--surface-2);
+      font-size: 13.5px;
+      color: var(--text);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-family: inherit;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .filter-group select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23556b5f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 38px;
+      cursor: pointer;
+    }
+
+    .filter-group input:focus,
+    .filter-group select:focus {
+      border-color: var(--mango);
+      background: #ffffff;
+      box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.12);
+    }
+
+    .filter-group input::placeholder {
+      color: var(--text-light);
+    }
+
+    .price-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .apply-btn {
+      width: 100%;
+      border: none;
+      background: linear-gradient(135deg, var(--forest) 0%, var(--forest-3) 100%);
+      color: #ffffff;
+      padding: 14px;
+      border-radius: var(--radius-sm);
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 8px 20px rgba(13, 59, 46, 0.22);
+      position: relative;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .apply-btn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 0.35), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .apply-btn:hover::before { left: 100%; }
+
+    .apply-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(13, 59, 46, 0.32);
+      gap: 12px;
+    }
+
+    /* =====================================================
+       PRODUCTS AREA
+    ===================================================== */
+
+    .products-area {
+      min-width: 0;
+    }
+
+    .products-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 15px;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+    }
+
+    .products-top h2 {
+      font-family: var(--font-serif);
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--forest);
+      letter-spacing: -0.6px;
+      margin-bottom: 4px;
+    }
+
+    .products-count {
+      color: var(--text-light);
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .products-count::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--emerald);
+      box-shadow: 0 0 8px var(--emerald);
+    }
+
+    .sort-select {
+      border: 2px solid var(--border);
+      background: #ffffff;
+      border-radius: var(--radius-sm);
+      padding: 10px 40px 10px 14px;
+      outline: none;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      appearance: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23556b5f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      font-family: inherit;
+    }
+
+    .sort-select:focus {
+      border-color: var(--mango);
+      box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.12);
+    }
+
+    /* =====================================================
+       PRODUCT GRID
+    ===================================================== */
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .product-card {
+      background: #ffffff;
+      border: 2px solid var(--border-soft);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      animation: cardIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+    }
+
+    @keyframes cardIn {
+      0% { opacity: 0; transform: translateY(20px) scale(0.96); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .product-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--mango) 0%, var(--coral) 50%, var(--emerald) 100%);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 3;
+    }
+
+    .product-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .product-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--mint-2);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .product-image {
+      position: relative;
+      aspect-ratio: 4 / 4.5;
+      background:
+        linear-gradient(145deg, var(--surface-2) 0%, var(--surface-3) 100%);
+      overflow: hidden;
+    }
+
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .product-card:hover .product-image img {
+      transform: scale(1.07);
+    }
+
+    .condition-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      padding: 6px 11px;
+      background: rgba(13, 59, 46, 0.92);
+      backdrop-filter: blur(8px);
+      color: #ffffff;
+      border-radius: 30px;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      z-index: 2;
+    }
+
+    .featured-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      padding: 6px 11px;
+      background: linear-gradient(135deg, var(--mango) 0%, var(--mango-soft) 100%);
+      color: var(--forest);
+      border-radius: 30px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      box-shadow: 0 6px 16px rgba(245, 158, 11, 0.35);
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .featured-badge::before {
+      content: "★";
+      font-size: 11px;
+    }
+
+    .wishlist-btn {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      font-size: 17px;
+      display: grid;
+      place-items: center;
+      color: var(--text-muted);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 12px rgba(13, 59, 46, 0.12);
+      z-index: 2;
+    }
+
+    .wishlist-btn:hover {
+      background: var(--coral);
+      color: #ffffff;
+      transform: scale(1.1);
+      box-shadow: 0 8px 20px rgba(249, 115, 98, 0.4);
+    }
+
+    .wishlist-btn[data-active="true"] {
+      background: linear-gradient(135deg, var(--coral) 0%, var(--coral-deep) 100%);
+      color: #ffffff;
+    }
+
+    .product-info {
+      padding: 16px 18px 18px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-brand {
+      font-size: 10px;
+      color: var(--mango-deep);
+      text-transform: uppercase;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      margin-bottom: 6px;
+    }
+
+    .product-title {
+      font-size: 15.5px;
+      font-weight: 700;
+      color: var(--forest);
+      margin: 0 0 10px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      letter-spacing: -0.2px;
+      line-height: 1.4;
+    }
+
+    .product-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .meta-item {
+      font-size: 10.5px;
+      background: var(--surface-2);
+      padding: 5px 10px;
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      border: 1px solid var(--border-soft);
+    }
+
+    .product-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 10px;
+      margin-top: auto;
+      padding-top: 12px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .price {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--forest);
+      letter-spacing: -0.6px;
+      line-height: 1;
+    }
+
+    .views {
+      color: var(--text-light);
+      font-size: 11px;
+      margin-top: 5px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .views::before {
+      content: "👁";
+      font-size: 10px;
+    }
+
+    .view-btn {
+      background: linear-gradient(135deg, var(--forest) 0%, var(--forest-3) 100%);
+      color: #ffffff;
+      border-radius: var(--radius-sm);
+      padding: 9px 16px;
+      font-size: 11.5px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 6px 16px rgba(13, 59, 46, 0.2);
+      white-space: nowrap;
+    }
+
+    .view-btn::after {
+      content: "→";
+      transition: transform 0.3s ease;
+    }
+
+    .view-btn:hover {
+      background: linear-gradient(135deg, var(--mango) 0%, var(--mango-soft) 100%);
+      color: var(--forest);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(245, 158, 11, 0.35);
+      gap: 10px;
+    }
+
+    .view-btn:hover::after {
+      transform: translateX(2px);
+    }
+
+    /* =====================================================
+       LOADING
+    ===================================================== */
+
+    .loading {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--text-muted);
+    }
+
+    .spinner {
+      width: 44px;
+      height: 44px;
+      border: 3px solid var(--border);
+      border-top-color: var(--mango);
+      border-right-color: var(--coral);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+      margin: 0 auto 18px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* =====================================================
+       EMPTY STATE
+    ===================================================== */
+
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 80px 30px;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.05) 0%, transparent 70%),
+        #ffffff;
+      border: 2px dashed var(--border);
+      border-radius: var(--radius-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .empty-state::before {
+      content: "♻️";
+      position: absolute;
+      font-size: 180px;
+      opacity: 0.04;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .empty-icon {
+      font-size: 56px;
+      margin-bottom: 16px;
+      display: block;
+      position: relative;
+      z-index: 2;
+    }
+
+    .empty-state h3 {
+      font-family: var(--font-serif);
+      font-size: 24px;
+      color: var(--forest);
+      margin-bottom: 8px;
+      font-weight: 600;
+      letter-spacing: -0.4px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .empty-state p {
+      color: var(--text-muted);
+      font-size: 14px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* =====================================================
+       ERROR
+    ===================================================== */
+
+    .error-box {
+      grid-column: 1 / -1;
+      background: rgba(249, 115, 98, 0.08);
+      border: 1px solid rgba(249, 115, 98, 0.3);
+      border-left: 4px solid var(--coral);
+      color: var(--coral-deep);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      text-align: center;
+    }
+
+    .error-box strong {
+      display: block;
+      font-size: 16px;
+      margin-bottom: 8px;
+      font-weight: 800;
+    }
+
+    .error-box p {
+      font-size: 13.5px;
+      margin-bottom: 16px;
+      opacity: 0.85;
+    }
+
+    .error-box .apply-btn {
+      max-width: 200px;
+      margin: 0 auto;
+    }
+
+    /* =====================================================
+       MOBILE FILTER BUTTON
+    ===================================================== */
+
+    .mobile-filter-btn {
+      display: none;
+      width: 100%;
+      background: #ffffff;
+      border: 2px solid var(--border);
+      padding: 13px;
+      border-radius: var(--radius-sm);
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 0.4px;
+      color: var(--forest);
+      margin-bottom: 18px;
+      transition: all 0.3s ease;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .mobile-filter-btn:hover {
+      border-color: var(--mango);
+      background: var(--surface-2);
+    }
+
+    /* =====================================================
+       RESPONSIVE
+    ===================================================== */
+
+    @media (max-width: 1100px) {
+
+      .product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .hero-container {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .hero-card {
+        max-width: 500px;
+      }
+
+    }
+
+    @media (max-width: 900px) {
+
+      .main-container {
+        grid-template-columns: 1fr;
+      }
+
+      .filter-sidebar {
+        display: none;
+        position: static;
+      }
+
+      .filter-sidebar.open {
+        display: block;
+        animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      @keyframes slideDown {
+        0% { opacity: 0; transform: translateY(-12px); }
+        100% { opacity: 1; transform: translateY(0); }
+      }
+
+      .mobile-filter-btn {
+        display: flex;
+      }
+
+    }
+
+    @media (max-width: 600px) {
+
+      .hero-container {
+        padding: 50px 18px 60px;
+      }
+
+      .hero h1 {
+        font-size: 36px;
+        letter-spacing: -1.2px;
+      }
+
+      .hero p {
+        font-size: 14.5px;
+      }
+
+      .hero-card {
+        padding: 24px 22px;
+      }
+
+      .main-container,
+      .category-section {
+        padding-left: 15px;
+        padding-right: 15px;
+      }
+
+      .category-section {
+        padding-top: 30px;
+      }
+
+      .section-title {
+        font-size: 21px;
+      }
+
+      .products-top h2 {
+        font-size: 22px;
+      }
+
+      .product-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .product-info {
+        padding: 12px 13px 14px;
+      }
+
+      .product-title {
+        font-size: 13.5px;
+      }
+
+      .product-brand {
+        font-size: 9.5px;
+      }
+
+      .price {
+        font-size: 17px;
+      }
+
+      .view-btn {
+        padding: 8px 12px;
+        font-size: 10.5px;
+      }
+
+      .meta-item {
+        font-size: 9.5px;
+        padding: 4px 8px;
+      }
+
+      .condition-badge,
+      .featured-badge {
+        font-size: 9px;
+        padding: 5px 9px;
+      }
+
+      .wishlist-btn {
+        width: 34px;
+        height: 34px;
+        font-size: 15px;
+      }
+
+    }
+
+    @media (max-width: 400px) {
+
+      .product-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .product-image {
+        aspect-ratio: 4 / 3.5;
+      }
+
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- Scroll progress -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+
+  <!-- =====================================================
+       NAVBAR
+  ====================================================== -->
+
+  <%- include('../partials/navbar') %>
+
+
+  <!-- =====================================================
+       HERO
+  ====================================================== -->
+
+  <section class="hero">
+
+    <div class="hero-container">
+
+      <div>
+
+        <span class="hero-eyebrow" data-reveal="down">
+          Sustainable Marketplace
+        </span>
+
+        <h1 data-reveal="up" data-delay="100">
+          Give Your Clothes<br>
+          <em>Another Life.</em>
+        </h1>
+
+        <p data-reveal="up" data-delay="200">
+          Buy quality pre-owned clothes at affordable prices or
+          sell the clothes you no longer need. Simple, sustainable,
+          and better for your wallet.
+        </p>
+
+        <div class="hero-actions" data-reveal="up" data-delay="300">
+
+          <a
+            href="#products"
+            class="hero-btn hero-primary"
+          >
+            <i class="fas fa-shopping-bag"></i>
+            Explore Clothes
+          </a>
+
+          <a
+            href="/old-clothes/upload"
+            class="hero-btn hero-secondary"
+          >
+            <i class="fas fa-tag"></i>
+            Sell Your Clothes
+          </a>
+
+        </div>
+
+      </div>
+
+
+      <div class="hero-card" data-reveal="right" data-delay="200">
+
+        <h3>
+          <i class="fas fa-leaf"></i>
+          Why buy pre-owned?
+        </h3>
+
+        <div class="hero-stat">
+          <span>Affordable Prices</span>
+          <strong>Save More</strong>
+        </div>
+
+        <div class="hero-stat">
+          <span>Pre-owned Fashion</span>
+          <strong>Reuse</strong>
+        </div>
+
+        <div class="hero-stat">
+          <span>Less Textile Waste</span>
+          <strong>Eco Friendly</strong>
+        </div>
+
+        <div class="hero-stat">
+          <span>Sell Your Clothes</span>
+          <strong>Earn Money</strong>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       CATEGORIES
+  ====================================================== -->
+
+  <section class="category-section">
+
+    <div class="section-header" data-reveal="up">
+
+      <h2 class="section-title">
+        Shop by Category
+      </h2>
+
+    </div>
+
+    <div class="category-list" data-reveal="up" data-delay="100">
+
+      <button class="category-btn active" data-category="">
+        <i class="fas fa-th-large" style="font-size:10px;margin-right:5px;"></i>
+        All
+      </button>
+
+      <button class="category-btn" data-category="shirt">
+        Shirts
+      </button>
+
+      <button class="category-btn" data-category="tshirt">
+        T-Shirts
+      </button>
+
+      <button class="category-btn" data-category="jeans">
+        Jeans
+      </button>
+
+      <button class="category-btn" data-category="jacket">
+        Jackets
+      </button>
+
+      <button class="category-btn" data-category="kurta">
+        Kurtas
+      </button>
+
+      <button class="category-btn" data-category="saree">
+        Sarees
+      </button>
+
+      <button class="category-btn" data-category="hoodie">
+        Hoodies
+      </button>
+
+      <button class="category-btn" data-category="kidswear">
+        Kidswear
+      </button>
+
+      <button class="category-btn" data-category="shoes">
+        Shoes
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       MAIN MARKETPLACE
+  ====================================================== -->
+
+  <main
+    class="main-container"
+    id="products"
+  >
+
+    <!-- Mobile filter -->
+
+    <button
+      class="mobile-filter-btn"
+      id="mobileFilterBtn"
+      type="button"
+    >
+      <i class="fas fa-sliders-h"></i>
+      Filters
+    </button>
+
+
+    <!-- ===================================================
+         FILTER SIDEBAR
+    ==================================================== -->
+
+    <aside
+      class="filter-sidebar"
+      id="filterSidebar"
+      data-reveal="left"
+    >
+
+      <div class="filter-header">
+
+        <h3>
+          <i class="fas fa-filter"></i>
+          Filters
+        </h3>
+
+        <button
+          class="clear-btn"
+          id="clearFilters"
+          type="button"
+        >
+          Clear All
+        </button>
+
+      </div>
+
+
+      <!-- Category -->
+
+      <div class="filter-group">
+
+        <label for="categoryFilter">
+          <i class="fas fa-tag"></i>
+          Category
+        </label>
+
+        <select id="categoryFilter">
+
+          <option value="">All Categories</option>
+          <option value="shirt">Shirt</option>
+          <option value="tshirt">T-Shirt</option>
+          <option value="jeans">Jeans</option>
+          <option value="jacket">Jacket</option>
+          <option value="kurta">Kurta</option>
+          <option value="saree">Saree</option>
+          <option value="hoodie">Hoodie</option>
+          <option value="kidswear">Kidswear</option>
+          <option value="shoes">Shoes</option>
+          <option value="other">Other</option>
+
+        </select>
+
+      </div>
+
+
+      <!-- Condition -->
+
+      <div class="filter-group">
+
+        <label for="conditionFilter">
+          <i class="fas fa-star"></i>
+          Condition
+        </label>
+
+        <select id="conditionFilter">
+
+          <option value="">Any Condition</option>
+          <option value="like_new">Like New</option>
+          <option value="good">Good</option>
+          <option value="average">Average</option>
+          <option value="damaged">Damaged</option>
+
+        </select>
+
+      </div>
+
+
+      <!-- Brand -->
+
+      <div class="filter-group">
+
+        <label for="brandFilter">
+          <i class="fas fa-crown"></i>
+          Brand
+        </label>
+
+        <input
+          type="text"
+          id="brandFilter"
+          placeholder="e.g. Nike"
+        />
+
+      </div>
+
+
+      <!-- Price -->
+
+      <div class="filter-group">
+
+        <label>
+          <i class="fas fa-rupee-sign"></i>
+          Price Range
+        </label>
+
+        <div class="price-row">
+
+          <input
+            type="number"
+            id="minPrice"
+            min="0"
+            placeholder="Min ₹"
+          />
+
+          <input
+            type="number"
+            id="maxPrice"
+            min="0"
+            placeholder="Max ₹"
+          />
+
+        </div>
+
+      </div>
+
+
+      <button
+        class="apply-btn"
+        id="applyFilters"
+        type="button"
+      >
+        <i class="fas fa-check"></i>
+        Apply Filters
+      </button>
+
+    </aside>
+
+
+    <!-- ===================================================
+         PRODUCTS
+    ==================================================== -->
+
+    <section class="products-area">
+
+      <div class="products-top" data-reveal="up">
+
+        <div>
+
+          <h2>
+            Pre-owned Clothes
+          </h2>
+
+          <div
+            class="products-count"
+            id="productsCount"
+          >
+            Loading...
+          </div>
+
+        </div>
+
+
+        <select
+          class="sort-select"
+          id="sortSelect"
+        >
+
+          <option value="latest">Latest</option>
+          <option value="price_low">Price: Low to High</option>
+          <option value="price_high">Price: High to Low</option>
+          <option value="oldest">Oldest</option>
+
+        </select>
+
+      </div>
+
+
+      <!-- Product grid -->
+
+      <div
+        class="product-grid"
+        id="productGrid"
+      >
+
+        <div class="loading">
+
+          <div class="spinner"></div>
+
+          <p>Loading clothes...</p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =====================================================
+       FOOTER PARTIAL
+  ====================================================== -->
+
+  <%- include('../partials/footer') %>
+
+
+  <!-- =====================================================
+       JAVASCRIPT
+  ====================================================== -->
+
+  <script>
+
+    /* =====================================================
+       SCROLL PROGRESS
+    ===================================================== */
+
+    const progressBar = document.getElementById('scrollProgress');
+
+    function updateProgress() {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progressBar.style.width = progress + '%';
+    }
+
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    window.addEventListener('resize', updateProgress);
+    updateProgress();
+
+
+    /* =====================================================
+       SCROLL REVEAL
+    ===================================================== */
+
+    const revealEls = document.querySelectorAll('[data-reveal]');
+
+    if ('IntersectionObserver' in window) {
+
+      const revealObserver = new IntersectionObserver((entries, observer) => {
+
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const el = entry.target;
+            const delay = parseInt(el.dataset.delay || 0, 10);
+
+            setTimeout(() => {
+              el.classList.add('is-revealed');
+            }, delay);
+
+            observer.unobserve(el);
+          }
+        });
+
+      }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -60px 0px'
+      });
+
+      revealEls.forEach(el => revealObserver.observe(el));
+
+    } else {
+
+      revealEls.forEach(el => el.classList.add('is-revealed'));
+
+    }
+
+
+    /* =====================================================
+       ELEMENTS
+    ====================================================== */
+
+    const productGrid = document.getElementById("productGrid");
+    const productsCount = document.getElementById("productsCount");
+    const searchInput = document.getElementById("searchInput");
+    const categoryFilter = document.getElementById("categoryFilter");
+    const conditionFilter = document.getElementById("conditionFilter");
+    const brandFilter = document.getElementById("brandFilter");
+    const minPrice = document.getElementById("minPrice");
+    const maxPrice = document.getElementById("maxPrice");
+    const sortSelect = document.getElementById("sortSelect");
+    const applyFilters = document.getElementById("applyFilters");
+    const clearFilters = document.getElementById("clearFilters");
+    const mobileFilterBtn = document.getElementById("mobileFilterBtn");
+    const filterSidebar = document.getElementById("filterSidebar");
+
+
+    /* =====================================================
+       STATE
+    ====================================================== */
+
+    let searchTimer = null;
+
+
+    /* =====================================================
+       FORMAT HELPERS
+    ====================================================== */
+
+    function formatPrice(price) {
+      const value = Number(price || 0);
+      return new Intl.NumberFormat("en-IN", {
+        style: "currency",
+        currency: "INR",
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+
+    function formatCondition(condition) {
+      if (!condition) return "";
+      return condition
+        .replaceAll("_", " ")
+        .replace(/\b\w/g, char => char.toUpperCase());
+    }
+
+
+    function escapeHtml(value) {
+      if (value === null || value === undefined) return "";
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+
+    /* =====================================================
+       FETCH PRODUCTS
+    ====================================================== */
+
+    async function fetchProducts() {
+
+      productGrid.innerHTML = `
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Finding clothes...</p>
+        </div>
+      `;
+
+      const params = new URLSearchParams();
+
+      const search = searchInput && searchInput.value.trim();
+      const category = categoryFilter.value;
+      const condition = conditionFilter.value;
+      const brand = brandFilter.value.trim();
+      const minimum = minPrice.value;
+      const maximum = maxPrice.value;
+      const sort = sortSelect.value;
+
+      if (search) params.set("search", search);
+      if (category) params.set("category", category);
+      if (condition) params.set("condition", condition);
+      if (brand) params.set("brand", brand);
+      if (minimum) params.set("minPrice", minimum);
+      if (maximum) params.set("maxPrice", maximum);
+      if (sort) params.set("sort", sort);
+
+      try {
+
+        const response = await fetch(
+          `/old-clothes?${params.toString()}`,
+          {
+            method: "GET",
+            headers: { "Accept": "application/json" }
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`Server error: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        const cloths = Array.isArray(result.data) ? result.data : [];
+
+        renderProducts(cloths);
+
+      } catch (error) {
+
+        console.error("Fetch clothes error:", error);
+
+        productGrid.innerHTML = `
+          <div class="error-box">
+            <strong>Unable to load clothes.</strong>
+            <p>Please check your server and try again.</p>
+            <button class="apply-btn" onclick="fetchProducts()" type="button">
+              <i class="fas fa-sync-alt"></i>
+              Try Again
+            </button>
+          </div>
+        `;
+
+        productsCount.textContent = "Unable to load";
+
+      }
+
+    }
+
+
+    /* =====================================================
+       RENDER PRODUCTS
+    ====================================================== */
+
+    function renderProducts(cloths) {
+
+      productsCount.textContent =
+        `${cloths.length} ${cloths.length === 1 ? "item" : "items"} found`;
+
+
+      if (!cloths.length) {
+
+        productGrid.innerHTML = `
+          <div class="empty-state">
+            <span class="empty-icon">👕</span>
+            <h3>No clothes found</h3>
+            <p>Try changing your search or filters.</p>
+          </div>
+        `;
+
+        return;
+      }
+
+
+      productGrid.innerHTML = cloths
+        .map((cloth, index) => createProductCard(cloth, index))
+        .join("");
+
+      // Trigger stagger animation after render
+      requestAnimationFrame(() => {
+        const cards = productGrid.querySelectorAll(".product-card");
+        cards.forEach((card, i) => {
+          card.style.animationDelay = `${Math.min(i * 60, 400)}ms`;
+        });
+      });
+
+    }
+
+
+    /* =====================================================
+       PRODUCT CARD
+    ====================================================== */
+
+    function createProductCard(cloth, index) {
+
+      const id = encodeURIComponent(cloth._id);
+
+      const image =
+        cloth.images && cloth.images.length
+          ? cloth.images[0].url
+          : "https://via.placeholder.com/600x700?text=No+Image";
+
+      const brand = escapeHtml(cloth.brand || "Local");
+      const title = escapeHtml(cloth.title);
+      const category = escapeHtml(cloth.category);
+      const size = escapeHtml(cloth.size || "N/A");
+      const condition = formatCondition(cloth.condition);
+      const price = formatPrice(cloth.recommendedSellingPrice);
+      const views = Number(cloth.views || 0);
+
+      const featured = cloth.isFeatured
+        ? `<span class="featured-badge">Featured</span>`
+        : "";
+
+      return `
+        <article class="product-card">
+
+          <div class="product-image">
+
+            <img
+              src="${escapeHtml(image)}"
+              alt="${title}"
+              loading="lazy"
+              onerror="this.src='https://via.placeholder.com/600x700?text=No+Image'"
+            >
+
+            <span class="condition-badge">${condition}</span>
+
+            ${featured}
+
+            <button
+              class="wishlist-btn"
+              type="button"
+              title="Add to wishlist"
+              data-active="false"
+              onclick="toggleWishlist('${id}', this)"
+            >
+              ♡
+            </button>
+
+          </div>
+
+
+          <div class="product-info">
+
+            <div class="product-brand">${brand}</div>
+
+            <h3 class="product-title" title="${title}">${title}</h3>
+
+            <div class="product-meta">
+              <span class="meta-item">${category}</span>
+              <span class="meta-item">Size: ${size}</span>
+            </div>
+
+            <div class="product-bottom">
+
+              <div>
+                <div class="price">${price}</div>
+                <div class="views">${views} views</div>
+              </div>
+
+              <a class="view-btn" href="/old-clothes/${id}">
+                View
+              </a>
+
+            </div>
+
+          </div>
+
+        </article>
+      `;
+
+    }
+
+
+    /* =====================================================
+       SEARCH
+    ====================================================== */
+
+    if (searchInput) {
+      searchInput.addEventListener("input", () => {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(fetchProducts, 450);
+      });
+    }
+
+
+    /* =====================================================
+       FILTER
+    ====================================================== */
+
+    applyFilters.addEventListener("click", () => {
+      fetchProducts();
+      if (window.innerWidth <= 900) {
+        filterSidebar.classList.remove("open");
+      }
+    });
+
+
+    /* =====================================================
+       SORT
+    ====================================================== */
+
+    sortSelect.addEventListener("change", fetchProducts);
+
+
+    /* =====================================================
+       CATEGORY BUTTONS
+    ====================================================== */
+
+    document.querySelectorAll(".category-btn").forEach(button => {
+
+      button.addEventListener("click", () => {
+
+        document.querySelectorAll(".category-btn").forEach(btn => {
+          btn.classList.remove("active");
+        });
+
+        button.classList.add("active");
+
+        const category = button.dataset.category;
+
+        categoryFilter.value = category;
+
+        fetchProducts();
+
+      });
+
+    });
+
+
+    /* =====================================================
+       CLEAR FILTERS
+    ====================================================== */
+
+    clearFilters.addEventListener("click", () => {
+
+      if (searchInput) searchInput.value = "";
+      categoryFilter.value = "";
+      conditionFilter.value = "";
+      brandFilter.value = "";
+      minPrice.value = "";
+      maxPrice.value = "";
+      sortSelect.value = "latest";
+
+      document.querySelectorAll(".category-btn").forEach(btn => {
+        btn.classList.remove("active");
+      });
+
+      document.querySelector('.category-btn[data-category=""]').classList.add("active");
+
+      fetchProducts();
+
+    });
+
+
+    /* =====================================================
+       MOBILE FILTER
+    ====================================================== */
+
+    mobileFilterBtn.addEventListener("click", () => {
+      filterSidebar.classList.toggle("open");
+    });
+
+
+    /* =====================================================
+       WISHLIST UI
+    ====================================================== */
+
+    function toggleWishlist(productId, button) {
+
+      const active = button.dataset.active === "true";
+
+      if (active) {
+        button.innerHTML = "♡";
+        button.dataset.active = "false";
+      } else {
+        button.innerHTML = "♥";
+        button.dataset.active = "true";
+      }
+
+      button.style.transform = "scale(0.9)";
+      setTimeout(() => {
+        button.style.transform = "scale(1)";
+      }, 150);
+
+    }
+
+
+    /* =====================================================
+       INITIAL LOAD
+    ====================================================== */
+
+    fetchProducts();
+
+  </script>
+
+</body>
+</html>

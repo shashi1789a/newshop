@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <%- include('../partials/head') %>
+
+  <title>My Profile — Reciclaja</title>
+
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/5471644867.js" crossorigin="anonymous"></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,700&display=swap" rel="stylesheet" />
+
+  <style>
+
+    /* =====================================================
+       DESIGN TOKENS
+    ===================================================== */
+
+    :root {
+      --forest: #0d3b2e;
+      --forest-2: #14523f;
+      --forest-3: #1e6b52;
+      --forest-soft: #2d8a6a;
+      --forest-deep: #072a20;
+
+      --emerald: #10b981;
+      --emerald-soft: #34d399;
+
+      --mango: #f59e0b;
+      --mango-soft: #fbbf24;
+      --mango-deep: #d97706;
+
+      --coral: #f97362;
+      --coral-soft: #fb9585;
+      --coral-deep: #e05a44;
+
+      --blush: #fef3e7;
+      --blush-2: #fde8d0;
+
+      --mint: #ecfdf5;
+      --mint-2: #d1fae5;
+
+      --sky: #e8f4ff;
+      --sky-2: #d0e6ff;
+
+      --lavender: #f0ebff;
+      --lavender-2: #e0d5ff;
+
+      --bg: #fbfaf7;
+      --surface: #ffffff;
+      --surface-2: #f7f4ee;
+      --surface-3: #efeae0;
+
+      --text: #10261d;
+      --text-muted: #556b5f;
+      --text-light: #8a9a90;
+
+      --border: #e6e0d4;
+      --border-soft: #f0ebe0;
+
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius: 16px;
+      --radius-sm: 10px;
+
+      --shadow-sm: 0 2px 8px rgba(13, 59, 46, 0.05);
+      --shadow-md: 0 8px 28px rgba(13, 59, 46, 0.08);
+      --shadow-lg: 0 20px 48px rgba(13, 59, 46, 0.12);
+      --shadow-glow: 0 12px 40px rgba(16, 185, 129, 0.18);
+      --shadow-mango: 0 12px 40px rgba(245, 158, 11, 0.22);
+
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    /* =====================================================
+       RESET
+    ===================================================== */
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    a { text-decoration: none; color: inherit; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    img { display: block; max-width: 100%; }
+
+    /* =====================================================
+       PAGE BACKGROUND
+    ===================================================== */
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 12% 15%, rgba(245, 158, 11, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 88% 85%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* =====================================================
+       SCROLL PROGRESS BAR
+    ===================================================== */
+
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--emerald) 0%, var(--mango) 50%, var(--coral) 100%);
+      z-index: 9999;
+      transition: width 0.1s linear;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
+    }
+
+    /* =====================================================
+       SCROLL REVEAL
+    ===================================================== */
+
+    [data-reveal] {
+      opacity: 0;
+      transition:
+        opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: opacity, transform;
+    }
+
+    [data-reveal="up"] { transform: translateY(40px); }
+    [data-reveal="down"] { transform: translateY(-40px); }
+    [data-reveal="left"] { transform: translateX(-40px); }
+    [data-reveal="right"] { transform: translateX(40px); }
+    [data-reveal="zoom-up"] { transform: scale(0.94) translateY(30px); }
+
+    [data-reveal].is-revealed {
+      opacity: 1;
+      transform: translate(0, 0) scale(1);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      [data-reveal] {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+    }
+
+    /* =====================================================
+       PROFILE CONTAINER
+    ===================================================== */
+
+    .profile-container {
+      width: 92%;
+      max-width: 1140px;
+      margin: 45px auto 80px;
+    }
+
+    /* =====================================================
+       PAGE HEADER
+    ===================================================== */
+
+    .page-header {
+      margin-bottom: 34px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    .page-header::after {
+      content: "";
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 90px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--mango) 0%, var(--coral) 100%);
+      border-radius: 3px;
+    }
+
+    .page-header-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(13, 59, 46, 0.06);
+      border: 1px solid rgba(13, 59, 46, 0.08);
+      color: var(--forest-3);
+      padding: 7px 15px;
+      border-radius: 30px;
+      font-size: 10.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 14px;
+    }
+
+    .page-header-eyebrow::before {
+      content: "👤";
+      font-size: 12px;
+    }
+
+    .page-header h1 {
+      font-family: var(--font-serif);
+      font-size: 40px;
+      font-weight: 500;
+      letter-spacing: -1.5px;
+      color: var(--forest);
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+
+    .page-header h1 em {
+      font-style: italic;
+      background: linear-gradient(120deg, var(--mango-deep) 0%, var(--coral) 60%, var(--mango) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .page-header p {
+      color: var(--text-muted);
+      font-size: 14.5px;
+      max-width: 560px;
+      line-height: 1.65;
+    }
+
+    /* =====================================================
+       PROFILE HEADER CARD
+    ===================================================== */
+
+    .profile-header {
+      background: var(--surface);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 12px 40px rgba(13, 59, 46, 0.06);
+      position: relative;
+      overflow: hidden;
+      flex-wrap: wrap;
+    }
+
+    .profile-header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--mango) 0%, var(--coral) 50%, var(--emerald) 100%);
+    }
+
+    .profile-header::after {
+      content: "";
+      position: absolute;
+      top: -80px;
+      right: -80px;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .profile-info {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      position: relative;
+      z-index: 2;
+      flex-wrap: wrap;
+    }
+
+    .profile-avatar {
+      width: 88px;
+      height: 88px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, var(--forest) 0%, var(--forest-3) 100%);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-serif);
+      font-size: 36px;
+      font-weight: 700;
+      text-transform: uppercase;
+      flex-shrink: 0;
+      box-shadow: 0 12px 32px rgba(13, 59, 46, 0.28);
+      transition: transform 0.35s ease;
+      position: relative;
+    }
+
+    .profile-avatar::after {
+      content: "";
+      position: absolute;
+      inset: -4px;
+      border-radius: 28px;
+      border: 2px dashed rgba(251, 191, 36, 0.35);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+
+    .profile-header:hover .profile-avatar {
+      transform: scale(1.04) rotate(-3deg);
+    }
+
+    .profile-header:hover .profile-avatar::after {
+      opacity: 1;
+    }
+
+    .profile-header h1 {
+      font-family: var(--font-serif);
+      color: var(--forest);
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: -0.6px;
+      margin-bottom: 6px;
+      line-height: 1.2;
+    }
+
+    .profile-email {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .profile-email i {
+      color: var(--mango-deep);
+      font-size: 12px;
+    }
+
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, var(--blush) 0%, var(--blush-2) 100%);
+      color: var(--mango-deep);
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border: 1px solid rgba(245, 158, 11, 0.22);
+    }
+
+    .role-badge::before {
+      content: "●";
+      font-size: 8px;
+      color: var(--mango);
+      text-shadow: 0 0 6px var(--mango);
+    }
+
+    /* =====================================================
+       EDIT BUTTON
+    ===================================================== */
+
+    .edit-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 26px;
+      background: linear-gradient(135deg, var(--forest) 0%, var(--forest-3) 100%);
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 10px 28px rgba(13, 59, 46, 0.25);
+      position: relative;
+      overflow: hidden;
+      z-index: 2;
+    }
+
+    .edit-btn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 0.35), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .edit-btn:hover::before { left: 100%; }
+
+    .edit-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 36px rgba(13, 59, 46, 0.35);
+      gap: 14px;
+    }
+
+    /* =====================================================
+       PROFILE GRID
+    ===================================================== */
+
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    /* =====================================================
+       PROFILE CARD
+    ===================================================== */
+
+    .profile-card {
+      background: var(--surface);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: 0 12px 40px rgba(13, 59, 46, 0.06);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .profile-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--mango) 0%, var(--coral) 50%, var(--emerald) 100%);
+      opacity: 0.5;
+    }
+
+    .profile-card:hover {
+      box-shadow: var(--shadow-glow);
+      border-color: var(--mint-2);
+      transform: translateY(-4px);
+    }
+
+    .profile-card.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .profile-card h2 {
+      font-family: var(--font-serif);
+      color: var(--forest);
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.4px;
+      margin-bottom: 22px;
+      padding-bottom: 14px;
+      border-bottom: 1px dashed var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .profile-card h2::before {
+      content: "";
+      width: 5px;
+      height: 20px;
+      background: linear-gradient(180deg, var(--mango) 0%, var(--coral) 100%);
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    /* =====================================================
+       DETAIL ROWS
+    ===================================================== */
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      padding: 14px 0;
+      border-bottom: 1px dashed var(--border);
+      transition: all 0.25s ease;
+      position: relative;
+    }
+
+    .detail-row:hover {
+      padding-left: 6px;
+    }
+
+    .detail-row::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 0;
+      background: linear-gradient(180deg, var(--mango) 0%, var(--emerald) 100%);
+      border-radius: 2px;
+      transition: height 0.3s ease;
+    }
+
+    .detail-row:hover::before {
+      height: 60%;
+    }
+
+    .detail-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .detail-row:first-child {
+      padding-top: 0;
+    }
+
+    .detail-label {
+      color: var(--text-light);
+      font-size: 10.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      flex-shrink: 0;
+    }
+
+    .detail-value {
+      color: var(--forest);
+      font-size: 14px;
+      font-weight: 700;
+      text-align: right;
+      word-break: break-word;
+      letter-spacing: -0.1px;
+      max-width: 60%;
+    }
+
+    /* =====================================================
+       QUICK ACTIONS
+    ===================================================== */
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .action-card {
+      text-decoration: none;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 20px 12px;
+      text-align: center;
+      color: var(--forest);
+      background: var(--surface-2);
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .action-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--mango) 0%, var(--coral) 100%);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.35s ease;
+    }
+
+    .action-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .action-card:hover {
+      border-color: var(--mango);
+      background: #ffffff;
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-mango);
+    }
+
+    .action-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      background: linear-gradient(145deg, var(--blush) 0%, var(--blush-2) 100%);
+      color: var(--mango-deep);
+      transition: all 0.35s ease;
+      flex-shrink: 0;
+    }
+
+    .action-card:nth-child(2) .action-icon {
+      background: linear-gradient(145deg, var(--mint) 0%, var(--mint-2) 100%);
+      color: var(--forest-3);
+    }
+
+    .action-card:nth-child(3) .action-icon {
+      background: linear-gradient(145deg, var(--sky) 0%, var(--sky-2) 100%);
+      color: #2b7de0;
+    }
+
+    .action-card:hover .action-icon {
+      transform: scale(1.08) rotate(-6deg);
+    }
+
+    .action-title {
+      font-size: 12.5px;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    /* =====================================================
+       LOGOUT
+    ===================================================== */
+
+    .logout-section {
+      margin-top: 32px;
+      padding-top: 28px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .logout-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 30px;
+      background: #ffffff;
+      color: var(--coral-deep);
+      border: 2px solid rgba(249, 115, 98, 0.25);
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .logout-btn:hover {
+      background: linear-gradient(135deg, var(--coral) 0%, var(--coral-deep) 100%);
+      color: #ffffff;
+      border-color: var(--coral);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(249, 115, 98, 0.3);
+      gap: 14px;
+    }
+
+    /* =====================================================
+       NOT AVAILABLE
+    ===================================================== */
+
+    .not-available {
+      color: var(--text-light);
+      font-weight: 500;
+      font-style: italic;
+      font-size: 13px;
+    }
+
+    /* =====================================================
+       RESPONSIVE
+    ===================================================== */
+
+    @media (max-width: 900px) {
+
+      .profile-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .profile-card.full-width {
+        grid-column: auto;
+      }
+
+      .page-header h1 { font-size: 34px; }
+
+    }
+
+    @media (max-width: 700px) {
+
+      .profile-container {
+        width: 94%;
+        margin: 30px auto 60px;
+      }
+
+      .profile-header {
+        padding: 26px 24px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 20px;
+      }
+
+      .profile-info {
+        gap: 18px;
+      }
+
+      .profile-avatar {
+        width: 76px;
+        height: 76px;
+        font-size: 30px;
+        border-radius: 20px;
+      }
+
+      .profile-header h1 {
+        font-size: 22px;
+      }
+
+      .edit-btn {
+        justify-content: center;
+        width: 100%;
+      }
+
+      .actions {
+        grid-template-columns: 1fr;
+      }
+
+      .page-header h1 { font-size: 28px; letter-spacing: -1px; }
+
+      .page-header p { font-size: 13.5px; }
+
+      .profile-card { padding: 22px; }
+
+      .profile-card h2 { font-size: 18px; }
+
+    }
+
+    @media (max-width: 500px) {
+
+      .profile-avatar {
+        width: 64px;
+        height: 64px;
+        font-size: 26px;
+        border-radius: 18px;
+      }
+
+      .profile-header h1 {
+        font-size: 19px;
+      }
+
+      .profile-email {
+        font-size: 12.5px;
+      }
+
+      .role-badge {
+        font-size: 10px;
+        padding: 5px 11px;
+      }
+
+      .detail-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+      }
+
+      .detail-value {
+        text-align: left;
+        max-width: 100%;
+        font-size: 13px;
+      }
+
+      .detail-label {
+        font-size: 10px;
+      }
+
+      .action-card {
+        flex-direction: row;
+        padding: 16px;
+        text-align: left;
+        justify-content: flex-start;
+      }
+
+      .action-title {
+        font-size: 13px;
+      }
+
+      .logout-btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .page-header h1 { font-size: 24px; }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+  <!-- Scroll progress -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+
+  <!-- =====================================================
+       NAVBAR
+  ====================================================== -->
+
+  <%- include('../partials/navbar') %>
+
+
+  <!-- =====================================================
+       MAIN
+  ====================================================== -->
+
+  <main class="profile-container">
+
+
+    <!-- =================================================
+         PAGE HEADER
+    ================================================== -->
+
+    <div class="page-header" data-reveal="down">
+
+      <span class="page-header-eyebrow">
+        Account
+      </span>
+
+      <h1>
+        My <em>Profile.</em>
+      </h1>
+
+      <p>
+        Manage your account information, view quick actions, and access
+        your seller details — all in one place.
+      </p>
+
+    </div>
+
+
+    <!-- =================================================
+         PROFILE HEADER CARD
+    ================================================== -->
+
+    <section class="profile-header" data-reveal="zoom-up">
+
+      <div class="profile-info">
+
+        <div class="profile-avatar">
+          <%= (user.name || "U").charAt(0) %>
+        </div>
+
+        <div>
+
+          <h1>
+            <%= user.name %>
+          </h1>
+
+          <p class="profile-email">
+            <i class="fas fa-envelope"></i>
+            <%= user.email %>
+          </p>
+
+          <span class="role-badge">
+            <%= user.role || "user" %>
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <a href="/auth/profile/edit" class="edit-btn">
+        <i class="fas fa-pen"></i>
+        Edit Profile
+      </a>
+
+    </section>
+
+
+    <!-- =================================================
+         PROFILE GRID
+    ================================================== -->
+
+    <div class="profile-grid">
+
+
+      <!-- =================================================
+           PERSONAL INFORMATION
+      ================================================== -->
+
+      <section class="profile-card" data-reveal="left" data-delay="0">
+
+        <h2>Personal Information</h2>
+
+
+        <div class="detail-row">
+
+          <span class="detail-label">Full Name</span>
+
+          <span class="detail-value">
+            <%= user.name || "Not provided" %>
+          </span>
+
+        </div>
+
+
+        <div class="detail-row">
+
+          <span class="detail-label">Email</span>
+
+          <span class="detail-value">
+            <%= user.email || "Not provided" %>
+          </span>
+
+        </div>
+
+
+        <div class="detail-row">
+
+          <span class="detail-label">Phone</span>
+
+          <span class="detail-value">
+
+            <% if (user.phone) { %>
+              <%= user.phone %>
+            <% } else { %>
+              <span class="not-available">Not provided</span>
+            <% } %>
+
+          </span>
+
+        </div>
+
+
+        <div class="detail-row">
+
+          <span class="detail-label">Account Type</span>
+
+          <span class="detail-value">
+            <%= user.role || "user" %>
+          </span>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================
+           QUICK ACTIONS
+      ================================================== -->
+
+      <section class="profile-card" data-reveal="right" data-delay="100">
+
+        <h2>Quick Actions</h2>
+
+        <div class="actions">
+
+          <a href="/orders" class="action-card">
+
+            <span class="action-icon">
+              <i class="fas fa-box"></i>
+            </span>
+
+            <span class="action-title">
+              My Orders
+            </span>
+
+          </a>
+
+
+          <a href="/cart" class="action-card">
+
+            <span class="action-icon">
+              <i class="fas fa-shopping-cart"></i>
+            </span>
+
+            <span class="action-title">
+              My Cart
+            </span>
+
+          </a>
+
+
+          <a href="/shop" class="action-card">
+
+            <span class="action-icon">
+              <i class="fas fa-shopping-bag"></i>
+            </span>
+
+            <span class="action-title">
+              Continue Shopping
+            </span>
+
+          </a>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================
+           SELLER INFORMATION
+      ================================================== -->
+
+      <% if (user.role === "seller") { %>
+
+
+        <!-- BUSINESS INFO -->
+
+        <section class="profile-card full-width" data-reveal="up" data-delay="0">
+
+          <h2>Seller / Business Information</h2>
+
+
+          <div class="detail-row">
+
+            <span class="detail-label">Business Name</span>
+
+            <span class="detail-value">
+              <%= user.businessName || "Not provided" %>
+            </span>
+
+          </div>
+
+
+          <div class="detail-row">
+
+            <span class="detail-label">Business Type</span>
+
+            <span class="detail-value">
+              <%= user.businessType || "Not provided" %>
+            </span>
+
+          </div>
+
+
+          <div class="detail-row">
+
+            <span class="detail-label">PAN Number</span>
+
+            <span class="detail-value">
+              <%= user.panNumber || "Not provided" %>
+            </span>
+
+          </div>
+
+
+          <div class="detail-row">
+
+            <span class="detail-label">GST Number</span>
+
+            <span class="detail-value">
+              <%= user.gstNumber || "Not provided" %>
+            </span>
+
+          </div>
+
+        </section>
+
+
+        <!-- PICKUP ADDRESS -->
+
+        <section class="profile-card" data-reveal="left" data-delay="100">
+
+          <h2>Pickup Address</h2>
+
+
+          <div class="detail-row">
+
+            <span class="detail-label">Street / Area</span>
+
+            <span class="detail-value">
+              <%= user.pickupStreet || "Not provided" %>
+            </span>
+
+          </div>
+
+
+          <div class="detail-row">
+
+            <span class="detail-label">City</span>
+
+            <span class="detail-value">
+              <%= user.pickupCity || "Not provided" %>
+            </span>
+
+          </div>
+
+
+          <div class="detail-row">
+
+            <span class="detail-label">State</span>
+
+            <span class="detail-value">
+              <%= user.pickupState || "Not provided" %>
+            </span>
+
+          </div>
+
+
+          <div class="detail-row">
+
+            <span class="detail-label">PIN Code</span>
+
+            <span class="detail-value">
+              <%= user.pickupZipCode || "Not provided" %>
+            </span>
+
+          </div>
+
+        </section>
+
+
+        <!-- PAYOUT DETAILS -->
+
+        <section class="profile-card" data-reveal="right" data-delay="160">
+
+          <h2>Payout Details</h2>
+
+
+          <div class="detail-row">
+
+            <span class="detail-label">Account Holder</span>
+
+            <span class="detail-value">
+              <%= user.accountHolderName || "Not provided" %>
+            </span>
+
+          </div>
+
+
+          <div class="detail-row">
+
+            <span class="detail-label">Account Number</span>
+
+            <span class="detail-value">
+
+              <% if (user.accountNumber) { %>
+
+                ****<%= String(user.accountNumber).slice(-4) %>
+
+              <% } else { %>
+
+                <span class="not-available">Not provided</span>
+
+              <% } %>
+
+            </span>
+
+          </div>
+
+
+          <div class="detail-row">
+
+            <span class="detail-label">IFSC Code</span>
+
+            <span class="detail-value">
+              <%= user.ifscCode || "Not provided" %>
+            </span>
+
+          </div>
+
+
+          <div class="detail-row">
+
+            <span class="detail-label">UPI ID</span>
+
+            <span class="detail-value">
+              <%= user.upiId || "Not provided" %>
+            </span>
+
+          </div>
+
+        </section>
+
+
+      <% } %>
+
+
+    </div>
+
+
+    <!-- =================================================
+         LOGOUT
+    ================================================== -->
+
+    <div class="logout-section" data-reveal="up">
+
+      <a href="/auth/logout" class="logout-btn">
+
+        <i class="fas fa-sign-out-alt"></i>
+        Logout
+
+      </a>
+
+    </div>
+
+
+  </main>
+
+
+  <!-- =====================================================
+       FOOTER PARTIAL
+  ====================================================== -->
+
+  <%- include('../partials/footer') %>
+
+
+  <!-- =====================================================
+       SCRIPT
+  ====================================================== -->
+
+  <script>
+
+    /* =====================================================
+       SCROLL PROGRESS
+    ===================================================== */
+
+    const progressBar = document.getElementById('scrollProgress');
+
+    function updateProgress() {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progressBar.style.width = progress + '%';
+    }
+
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    window.addEventListener('resize', updateProgress);
+    updateProgress();
+
+
+    /* =====================================================
+       SCROLL REVEAL
+    ===================================================== */
+
+    const revealEls = document.querySelectorAll('[data-reveal]');
+
+    if ('IntersectionObserver' in window) {
+
+      const revealObserver = new IntersectionObserver((entries, observer) => {
+
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const el = entry.target;
+            const delay = parseInt(el.dataset.delay || 0, 10);
+
+            setTimeout(() => {
+              el.classList.add('is-revealed');
+            }, delay);
+
+            observer.unobserve(el);
+          }
+        });
+
+      }, {
+        threshold: 0.08,
+        rootMargin: '0px 0px -60px 0px'
+      });
+
+      revealEls.forEach(el => revealObserver.observe(el));
+
+    } else {
+
+      revealEls.forEach(el => el.classList.add('is-revealed'));
+
+    }
+
+
+    console.log("Reciclaja — My Profile page loaded 👤");
+
+  </script>
+
+</body>
+
+</html>

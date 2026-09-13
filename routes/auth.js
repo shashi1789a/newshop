@@ -11,10 +11,6 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../models/User");
 
-// ======================================================
-// REGISTER PAGE
-// ======================================================
-
 router.get(
   "/register",
   (req, res) => {
@@ -30,158 +26,221 @@ router.get(
   }
 );
 
-// ======================================================
-// REGISTER USER
-// ======================================================
+const registerValidationRules = [
+
+  body("name")
+    .notEmpty()
+    .withMessage("Name is required"),
+
+  body("email")
+    .isEmail()
+    .withMessage("Please enter valid email"),
+
+  body("password")
+    .isLength({ min: 6 })
+    .withMessage("Password must be at least 6 characters"),
+
+  body("confirmPassword")
+    .custom((value, { req }) => {
+      if (value !== req.body.password) {
+        throw new Error("Passwords do not match");
+      }
+      return true;
+    }),
+
+  body("role")
+    .isIn(["user", "seller"])
+    .withMessage("Please select account type"),
+
+  body("phone")
+    .if(body("role").equals("seller"))
+    .notEmpty()
+    .withMessage("Phone number is required for sellers"),
+
+  body("businessName")
+    .if(body("role").equals("seller"))
+    .trim()
+    .notEmpty()
+    .withMessage("Business name is required"),
+
+  body("businessType")
+    .if(body("role").equals("seller"))
+    .isIn([
+      "INDIVIDUAL",
+      "PROPRIETORSHIP",
+      "PARTNERSHIP",
+      "PRIVATE_LIMITED",
+      "LLP",
+    ])
+    .withMessage("Please select a valid business type"),
+
+  body("panNumber")
+    .if(body("role").equals("seller"))
+    .trim()
+    .notEmpty()
+    .withMessage("PAN number is required for sellers"),
+
+  body("pickupStreet")
+    .if(body("role").equals("seller"))
+    .trim()
+    .notEmpty()
+    .withMessage("Pickup address is required"),
+
+  body("pickupCity")
+    .if(body("role").equals("seller"))
+    .trim()
+    .notEmpty()
+    .withMessage("City is required"),
+
+  body("pickupState")
+    .if(body("role").equals("seller"))
+    .trim()
+    .notEmpty()
+    .withMessage("State is required"),
+
+  body("pickupZipCode")
+    .if(body("role").equals("seller"))
+    .trim()
+    .notEmpty()
+    .withMessage("ZIP code is required"),
+
+  body("accountHolderName")
+    .if(body("role").equals("seller"))
+    .trim()
+    .notEmpty()
+    .withMessage("Account holder name is required"),
+
+  body("accountNumber")
+    .if(body("role").equals("seller"))
+    .trim()
+    .notEmpty()
+    .withMessage("Bank account number is required"),
+
+  body("ifscCode")
+    .if(body("role").equals("seller"))
+    .trim()
+    .notEmpty()
+    .withMessage("IFSC code is required"),
+
+];
 
 router.post(
 
   "/register",
 
-  [
+  registerValidationRules,
 
-    body("name")
-      .notEmpty()
-      .withMessage(
-        "Name is required"
-      ),
+  async (req, res) => {
 
-    body("email")
-      .isEmail()
-      .withMessage(
-        "Please enter valid email"
-      ),
-
-    body("password")
-      .isLength({
-        min: 6,
-      })
-      .withMessage(
-        "Password must be at least 6 characters"
-      ),
-
-    body("confirmPassword")
-      .custom(
-        (
-          value,
-          { req }
-        ) => {
-
-          if (
-            value !==
-            req.body.password
-          ) {
-
-            throw new Error(
-              "Passwords do not match"
-            );
-
-          }
-
-          return true;
-
-        }
-      ),
-
-  ],
-
-  async (
-    req,
-    res
-  ) => {
-
-    const errors =
-      validationResult(req);
+    const errors = validationResult(req);
 
     const {
       name,
       email,
       password,
+      role,
+      phone,
+      businessName,
+      businessType,
+      gstNumber,
+      panNumber,
+
+      pickupStreet,
+      pickupCity,
+      pickupState,
+      pickupZipCode,
+
+      accountHolderName,
+      bankName,
+      accountNumber,
+      ifscCode,
+      upiId,
     } = req.body;
 
-    // ================= VALIDATION ERROR =================
-
-    if (
-      !errors.isEmpty()
-    ) {
+    if (!errors.isEmpty()) {
 
       return res
         .status(400)
-        .render(
-          "auth/register",
-          {
+        .render("auth/register", {
 
-            errors:
-              errors.array(),
+          errors: errors.array(),
+          oldInput: req.body,
 
-            oldInput: {
-              name,
-              email,
-            },
-
-          }
-        );
+        });
 
     }
 
     try {
 
-      // ================= CHECK USER =================
-
-      let user =
-        await User.findOne({
-          email,
-        });
+      let user = await User.findOne({ email });
 
       if (user) {
 
         return res
           .status(400)
-          .render(
-            "auth/register",
-            {
+          .render("auth/register", {
 
-              errors: [
-                {
-                  msg:
-                    "User already exists",
-                },
-              ],
+            errors: [
+              { msg: "User already exists" },
+            ],
 
-              oldInput: {
-                name,
-                email,
-              },
+            oldInput: req.body,
 
-            }
-          );
+          });
 
       }
+      const newUserData = {
+        name,
+        email,
+        password,
+        role,
+        phone: phone || undefined,
+      };
 
-      // ================= CREATE USER =================
+      if (role === "seller") {
 
-      user =
-        new User({
+        newUserData.sellerDetails = {
 
-          name,
+          businessName,
+          businessType,
+          gstNumber: gstNumber || undefined,
+          panNumber,
 
-          email,
+          pickupAddress: {
+            street: pickupStreet,
+            city: pickupCity,
+            state: pickupState,
+            zipCode: pickupZipCode,
+            country: "India",
+          },
 
-          password,
+          payout: {
+            accountHolderName,
+            bankName: bankName || undefined,
+            accountNumber,
+            ifscCode,
+            upiId: upiId || undefined,
+          },
 
-          role: "user",
-
-        });
+        };
+      }
+      user = new User(newUserData);
 
       await user.save();
 
       console.log(
-        `User Registered: ${email}`
+        `${role === "seller" ? "Seller" : "User"} Registered: ${email}`
       );
 
-      res.redirect(
-        "/auth/login"
-      );
+
+      if (role === "seller") {
+
+        return res.render("auth/seller-pending", {
+          name: user.name,
+        });
+      }
+
+      res.redirect("/auth/login");
 
     } catch (error) {
 
@@ -189,33 +248,20 @@ router.post(
 
       res
         .status(500)
-        .render(
-          "auth/register",
-          {
+        .render("auth/register", {
 
-            errors: [
-              {
-                msg:
-                  "Server Error",
-              },
-            ],
+          errors: [
+            { msg: "Server Error" },
+          ],
 
-            oldInput: {
-              name,
-              email,
-            },
+          oldInput: req.body,
 
-          }
-        );
+        });
 
     }
 
   }
 );
-
-// ======================================================
-// LOGIN PAGE
-// ======================================================
 
 router.get(
   "/login",
@@ -232,10 +278,6 @@ router.get(
   }
 );
 
-// ======================================================
-// LOGIN USER
-// ======================================================
-
 router.post(
 
   "/login",
@@ -244,174 +286,113 @@ router.post(
 
     body("email")
       .isEmail()
-      .withMessage(
-        "Please enter valid email"
-      ),
+      .withMessage("Please enter valid email"),
 
     body("password")
       .notEmpty()
-      .withMessage(
-        "Password is required"
-      ),
+      .withMessage("Password is required"),
 
   ],
 
-  async (
-    req,
-    res
-  ) => {
+  async (req, res) => {
 
-    const errors =
-      validationResult(req);
+    const errors = validationResult(req);
 
-    const {
-      email,
-      password,
-    } = req.body;
+    const { email, password } = req.body;
 
-    // ================= VALIDATION ERROR =================
 
-    if (
-      !errors.isEmpty()
-    ) {
+    if (!errors.isEmpty()) {
 
       return res
         .status(400)
-        .render(
-          "auth/login",
-          {
+        .render("auth/login", {
 
-            errors:
-              errors.array(),
+          errors: errors.array(),
 
-            oldInput: {
-              email,
-            },
+          oldInput: { email },
 
-          }
-        );
+        });
 
     }
 
     try {
 
-      // ================= FIND USER =================
 
-      const user =
-        await User.findOne({
-          email,
-        });
-
-      // ================= USER NOT FOUND =================
+      const user = await User.findOne({ email });
 
       if (!user) {
 
         return res
           .status(400)
-          .render(
-            "auth/login",
-            {
+          .render("auth/login", {
 
-              errors: [
-                {
-                  msg:
-                    "Invalid credentials",
-                },
-              ],
+            errors: [
+              { msg: "Invalid credentials" },
+            ],
 
-              oldInput: {
-                email,
-              },
+            oldInput: { email },
 
-            }
-          );
+          });
 
       }
 
-      // ================= PASSWORD CHECK =================
-
-      const isMatch =
-        await user.comparePassword(
-          password
-        );
+      const isMatch = await user.comparePassword(password);
 
       if (!isMatch) {
 
         return res
           .status(400)
-          .render(
-            "auth/login",
-            {
+          .render("auth/login", {
 
-              errors: [
-                {
-                  msg:
-                    "Invalid credentials",
-                },
-              ],
+            errors: [
+              { msg: "Invalid credentials" },
+            ],
 
-              oldInput: {
-                email,
-              },
+            oldInput: { email },
 
-            }
-          );
+          });
 
       }
 
-      // ================= JWT TOKEN =================
+      if (user.isBlocked) {
 
-      const token =
-        jwt.sign(
+        return res
+          .status(403)
+          .render("auth/login", {
 
-          {
+            errors: [
+              { msg: "Your account has been blocked. Contact support." },
+            ],
 
-            userId:
-              user._id,
+            oldInput: { email },
 
-            role:
-              user.role,
+          });
 
-          },
+      }
 
-          process.env.JWT_SECRET,
+      const token = jwt.sign(
 
-          {
-
-            expiresIn:
-              "1d",
-
-          }
-
-        );
-
-      // ================= COOKIE =================
-
-      res.cookie(
-        "token",
-        token,
         {
+          userId: user._id,
+          role: user.role,
+        },
 
-          httpOnly: true,
+        process.env.JWT_SECRET,
 
-          secure: false,
-
-          sameSite: "lax",
-
-          maxAge:
-            24 *
-            60 *
-            60 *
-            1000,
-
+        {
+          expiresIn: "1d",
         }
+
       );
 
-      console.log(
-        `User Logged In: ${email}`
-      );
+      res.cookie("token", token, {
 
-      // ================= REDIRECT =================
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
+        maxAge: 24 * 60 * 60 * 1000,
+
+      });
 
       res.redirect("/");
 
@@ -421,44 +402,28 @@ router.post(
 
       res
         .status(500)
-        .render(
-          "auth/login",
-          {
+        .render("auth/login", {
 
-            errors: [
-              {
-                msg:
-                  "Server Error",
-              },
-            ],
+          errors: [
+            { msg: "Server Error" },
+          ],
 
-            oldInput: {
-              email,
-            },
+          oldInput: { email },
 
-          }
-        );
+        });
 
     }
 
   }
 );
 
-// ======================================================
-// LOGOUT USER
-// ======================================================
-
 router.get(
   "/logout",
   (req, res) => {
 
-    res.clearCookie(
-      "token"
-    );
+    res.clearCookie("token");
 
-    res.redirect(
-      "/auth/login"
-    );
+    res.redirect("/auth/login");
 
   }
 );

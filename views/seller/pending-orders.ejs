@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Pending Orders — Reciclaja Seller</title>
+
+  <%- include('../partials/head') %>
+
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/5471644867.js" crossorigin="anonymous"></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,700&display=swap" rel="stylesheet" />
+
+  <style>
+
+    /* =====================================================
+       DESIGN TOKENS
+    ===================================================== */
+
+    :root {
+      --forest: #0d3b2e;
+      --forest-2: #14523f;
+      --forest-3: #1e6b52;
+      --forest-soft: #2d8a6a;
+      --forest-deep: #072a20;
+
+      --emerald: #10b981;
+      --emerald-soft: #34d399;
+
+      --mango: #f59e0b;
+      --mango-soft: #fbbf24;
+      --mango-deep: #d97706;
+
+      --coral: #f97362;
+      --coral-soft: #fb9585;
+      --coral-deep: #e05a44;
+
+      --blush: #fef3e7;
+      --blush-2: #fde8d0;
+
+      --mint: #ecfdf5;
+      --mint-2: #d1fae5;
+
+      --sky: #e8f4ff;
+      --sky-2: #d0e6ff;
+
+      --bg: #fbfaf7;
+      --surface: #ffffff;
+      --surface-2: #f7f4ee;
+      --surface-3: #efeae0;
+
+      --text: #10261d;
+      --text-muted: #556b5f;
+      --text-light: #8a9a90;
+
+      --border: #e6e0d4;
+      --border-soft: #f0ebe0;
+
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius: 16px;
+      --radius-sm: 10px;
+
+      --shadow-sm: 0 2px 8px rgba(13, 59, 46, 0.05);
+      --shadow-md: 0 8px 28px rgba(13, 59, 46, 0.08);
+      --shadow-lg: 0 20px 48px rgba(13, 59, 46, 0.12);
+      --shadow-glow: 0 12px 40px rgba(16, 185, 129, 0.18);
+      --shadow-mango: 0 12px 40px rgba(245, 158, 11, 0.22);
+      --shadow-sky: 0 12px 32px rgba(43, 125, 224, 0.28);
+
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    /* =====================================================
+       RESET
+    ===================================================== */
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    a { text-decoration: none; color: inherit; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    img { display: block; max-width: 100%; }
+    button { font-family: inherit; cursor: pointer; }
+
+    /* =====================================================
+       PAGE BACKGROUND
+    ===================================================== */
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 12% 15%, rgba(245, 158, 11, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 88% 85%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* =====================================================
+       SCROLL PROGRESS BAR
+    ===================================================== */
+
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--emerald) 0%, var(--mango) 50%, var(--coral) 100%);
+      z-index: 9999;
+      transition: width 0.1s linear;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
+    }
+
+    /* =====================================================
+       SCROLL REVEAL
+    ===================================================== */
+
+    [data-reveal] {
+      opacity: 0;
+      transition:
+        opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: opacity, transform;
+    }
+
+    [data-reveal="up"] { transform: translateY(40px); }
+    [data-reveal="down"] { transform: translateY(-40px); }
+    [data-reveal="zoom-up"] { transform: scale(0.94) translateY(30px); }
+
+    [data-reveal].is-revealed {
+      opacity: 1;
+      transform: translate(0, 0) scale(1);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      [data-reveal] {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+    }
+
+    /* =====================================================
+       CONTAINER
+    ===================================================== */
+
+    .container {
+      width: 94%;
+      max-width: 1300px;
+      margin: 45px auto 80px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* =====================================================
+       PAGE HEADER
+    ===================================================== */
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 34px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      gap: 20px;
+      flex-wrap: wrap;
+      position: relative;
+    }
+
+    .header::after {
+      content: "";
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 90px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--mango) 0%, var(--coral) 100%);
+      border-radius: 3px;
+    }
+
+    .header-text {
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .header-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.22);
+      color: var(--mango-deep);
+      padding: 7px 15px;
+      border-radius: 30px;
+      font-size: 10.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 14px;
+    }
+
+    .header-eyebrow::before {
+      content: "⏳";
+      font-size: 12px;
+    }
+
+    .header h1 {
+      font-family: var(--font-serif);
+      font-size: 40px;
+      font-weight: 500;
+      letter-spacing: -1.5px;
+      color: var(--forest);
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+
+    .header h1 em {
+      font-style: italic;
+      background: linear-gradient(120deg, var(--mango-deep) 0%, var(--coral) 60%, var(--mango) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header p {
+      color: var(--text-muted);
+      font-size: 14.5px;
+      line-height: 1.65;
+      max-width: 560px;
+    }
+
+    /* =====================================================
+       BACK BUTTON
+    ===================================================== */
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      background: linear-gradient(135deg, var(--forest) 0%, var(--forest-3) 100%);
+      color: #ffffff;
+      padding: 13px 24px;
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 10px 28px rgba(13, 59, 46, 0.25);
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .back-btn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 0.35), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .back-btn:hover::before { left: 100%; }
+
+    .back-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 36px rgba(13, 59, 46, 0.35);
+      gap: 14px;
+    }
+
+    .back-btn i {
+      transition: transform 0.3s ease;
+    }
+
+    .back-btn:hover i {
+      transform: translateX(-3px);
+    }
+
+    /* =====================================================
+       ORDER CARD
+    ===================================================== */
+
+    .order-card {
+      background: var(--surface);
+      padding: 30px 32px 28px;
+      margin-bottom: 24px;
+      border-radius: var(--radius-xl);
+      box-shadow: 0 12px 40px rgba(13, 59, 46, 0.06);
+      border: 2px solid var(--border-soft);
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      animation: cardIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+    }
+
+    @keyframes cardIn {
+      0% { opacity: 0; transform: translateY(24px) scale(0.97); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .order-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--mango) 0%, var(--coral) 100%);
+    }
+
+    .order-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(245, 158, 11, 0.35);
+      box-shadow: var(--shadow-mango);
+    }
+
+    /* =====================================================
+       ORDER HEADER
+    ===================================================== */
+
+    .order-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 18px;
+      margin-bottom: 22px;
+      border-bottom: 1px dashed var(--border);
+      gap: 16px;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 2;
+    }
+
+    .order-id {
+      font-family: var(--font-serif);
+      font-weight: 600;
+      font-size: 17px;
+      color: var(--forest);
+      letter-spacing: -0.3px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .order-id i {
+      width: 32px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(145deg, var(--blush) 0%, var(--blush-2) 100%);
+      border-radius: 10px;
+      color: var(--mango-deep);
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+
+    /* =====================================================
+       STATUS BADGE
+    ===================================================== */
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--blush) 0%, var(--blush-2) 100%);
+      color: var(--mango-deep);
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-size: 10.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      box-shadow: 0 6px 16px rgba(245, 158, 11, 0.18);
+    }
+
+    .status::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--mango);
+      box-shadow: 0 0 8px var(--mango);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* =====================================================
+       ORDER INFO
+    ===================================================== */
+
+    .order-info {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 26px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .info-box {
+      background: var(--surface-2);
+      padding: 16px 18px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-soft);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .info-box::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 3px;
+      height: 100%;
+      background: linear-gradient(180deg, var(--mango) 0%, var(--emerald) 100%);
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: transform 0.35s ease;
+    }
+
+    .info-box:hover::before {
+      transform: scaleY(1);
+    }
+
+    .info-box:hover {
+      background: #ffffff;
+      border-color: var(--mango);
+      transform: translateX(3px);
+      box-shadow: var(--shadow-mango);
+    }
+
+    .info-box strong {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-light);
+      font-size: 10.5px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      font-weight: 800;
+    }
+
+    .info-box strong i {
+      color: var(--mango-deep);
+      font-size: 10px;
+    }
+
+    .info-box > *:not(strong) {
+      color: var(--forest);
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: -0.1px;
+    }
+
+    /* =====================================================
+       PRODUCTS HEADING
+    ===================================================== */
+
+    .products-heading {
+      font-family: var(--font-serif);
+      font-size: 19px;
+      font-weight: 600;
+      color: var(--forest);
+      letter-spacing: -0.3px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .products-heading::before {
+      content: "";
+      width: 4px;
+      height: 18px;
+      background: linear-gradient(180deg, var(--mango) 0%, var(--coral) 100%);
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    /* =====================================================
+       ITEM ROW
+    ===================================================== */
+
+    .item {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      border-top: 1px dashed var(--border);
+      padding: 18px 0;
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 2;
+    }
+
+    .item:hover {
+      padding-left: 4px;
+    }
+
+    .item img {
+      width: 84px;
+      height: 84px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(145deg, var(--surface-2) 0%, var(--surface-3) 100%);
+      border: 1px solid var(--border-soft);
+      flex-shrink: 0;
+      transition: transform 0.35s ease;
+    }
+
+    .item:hover img {
+      transform: scale(1.04);
+    }
+
+    .item-details {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .item-details h3 {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--forest);
+      letter-spacing: -0.3px;
+      margin-bottom: 8px;
+      line-height: 1.35;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .item-details p {
+      color: var(--text-muted);
+      margin: 4px 0;
+      font-size: 12.5px;
+      font-weight: 600;
+    }
+
+    .item-details p strong {
+      color: var(--forest);
+      font-weight: 800;
+    }
+
+    /* =====================================================
+       ORDER TOTAL
+    ===================================================== */
+
+    .order-total {
+      text-align: right;
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--forest);
+      padding-top: 20px;
+      margin-top: 4px;
+      border-top: 1px dashed var(--border);
+      letter-spacing: -0.6px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .order-total span {
+      background: linear-gradient(120deg, var(--mango-deep) 0%, var(--coral) 60%, var(--mango) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-size: 26px;
+    }
+
+    /* =====================================================
+       ACTIONS
+    ===================================================== */
+
+    .actions {
+      margin-top: 24px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 2;
+    }
+
+    .action-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border: none;
+      padding: 14px 28px;
+      border-radius: var(--radius-sm);
+      color: #ffffff;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      font-family: inherit;
+    }
+
+    .action-btn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .action-btn:hover::before { left: 100%; }
+
+    .ship-btn {
+      background: linear-gradient(135deg, #2b7de0 0%, #125ca5 100%);
+      box-shadow: 0 10px 28px rgba(43, 125, 224, 0.28);
+    }
+
+    .ship-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 36px rgba(43, 125, 224, 0.4);
+      gap: 14px;
+    }
+
+    /* =====================================================
+       EMPTY STATE
+    ===================================================== */
+
+    .empty {
+      background:
+        radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.06) 0%, transparent 65%),
+        var(--surface);
+      text-align: center;
+      padding: 80px 30px;
+      border-radius: var(--radius-xl);
+      box-shadow: 0 12px 40px rgba(13, 59, 46, 0.06);
+      border: 2px dashed var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .empty::before {
+      content: "⏳";
+      position: absolute;
+      font-size: 220px;
+      opacity: 0.04;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .empty-icon {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--mint) 0%, var(--mint-2) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 38px;
+      color: var(--emerald);
+      margin: 0 auto 22px;
+      box-shadow: 0 12px 32px rgba(16, 185, 129, 0.2);
+      position: relative;
+      z-index: 2;
+    }
+
+    .empty h2 {
+      font-family: var(--font-serif);
+      font-size: 26px;
+      font-weight: 600;
+      color: var(--forest);
+      letter-spacing: -0.6px;
+      margin-bottom: 10px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .empty p {
+      color: var(--text-muted);
+      margin-bottom: 26px;
+      font-size: 14.5px;
+      position: relative;
+      z-index: 2;
+      line-height: 1.65;
+    }
+
+    .orders-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, var(--forest) 0%, var(--forest-3) 100%);
+      color: #ffffff;
+      text-decoration: none;
+      padding: 14px 28px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 10px 28px rgba(13, 59, 46, 0.25);
+      position: relative;
+      z-index: 2;
+      overflow: hidden;
+    }
+
+    .orders-btn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 0.35), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .orders-btn:hover::before { left: 100%; }
+
+    .orders-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 36px rgba(13, 59, 46, 0.35);
+      gap: 14px;
+    }
+
+    /* =====================================================
+       RESPONSIVE
+    ===================================================== */
+
+    @media (max-width: 900px) {
+
+      .container {
+        width: 94%;
+        margin: 32px auto 60px;
+      }
+
+      .header h1 {
+        font-size: 34px;
+      }
+
+      .order-card {
+        padding: 26px 26px 24px;
+      }
+
+      .order-info {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+    }
+
+    @media (max-width: 768px) {
+
+      .header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 18px;
+      }
+
+      .back-btn {
+        justify-content: center;
+        width: 100%;
+      }
+
+      .order-info {
+        grid-template-columns: 1fr;
+      }
+
+      .order-card {
+        padding: 24px 22px 22px;
+        border-radius: var(--radius-lg);
+      }
+
+      .item {
+        align-items: flex-start;
+        gap: 14px;
+      }
+
+      .item img {
+        width: 72px;
+        height: 72px;
+      }
+
+      .item-details h3 {
+        font-size: 14px;
+      }
+
+      .order-total {
+        font-size: 19px;
+      }
+
+      .order-total span {
+        font-size: 22px;
+      }
+
+    }
+
+    @media (max-width: 500px) {
+
+      .header h1 {
+        font-size: 26px;
+        letter-spacing: -1px;
+      }
+
+      .header-eyebrow {
+        font-size: 10px;
+        padding: 6px 12px;
+        letter-spacing: 1.5px;
+      }
+
+      .header p {
+        font-size: 13px;
+      }
+
+      .order-card {
+        padding: 20px 18px 18px;
+      }
+
+      .order-id {
+        font-size: 15px;
+      }
+
+      .order-id i {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+      }
+
+      .status {
+        font-size: 9.5px;
+        padding: 6px 12px;
+      }
+
+      .info-box {
+        padding: 13px 14px;
+      }
+
+      .info-box strong {
+        font-size: 10px;
+      }
+
+      .info-box > *:not(strong) {
+        font-size: 13px;
+      }
+
+      .products-heading {
+        font-size: 17px;
+      }
+
+      .item {
+        padding: 14px 0;
+      }
+
+      .item img {
+        width: 62px;
+        height: 62px;
+      }
+
+      .item-details h3 {
+        font-size: 13px;
+      }
+
+      .item-details p {
+        font-size: 11.5px;
+      }
+
+      .order-total {
+        font-size: 17px;
+      }
+
+      .order-total span {
+        font-size: 20px;
+      }
+
+      .action-btn {
+        width: 100%;
+        padding: 13px 22px;
+        font-size: 12.5px;
+      }
+
+      .empty {
+        padding: 55px 22px;
+      }
+
+      .empty-icon {
+        width: 72px;
+        height: 72px;
+        font-size: 32px;
+      }
+
+      .empty h2 {
+        font-size: 21px;
+      }
+
+      .orders-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 13px 22px;
+        font-size: 12.5px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+  <!-- Scroll progress -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+
+  <!-- =====================================================
+       NAVBAR
+  ====================================================== -->
+
+  <%- include('../partials/navbar') %>
+
+
+  <!-- =====================================================
+       MAIN
+  ====================================================== -->
+
+  <div class="container">
+
+
+    <!-- =================================================
+         PAGE HEADER
+    ================================================== -->
+
+    <div class="header" data-reveal="down">
+
+      <div class="header-text">
+
+        <span class="header-eyebrow">
+          Awaiting Shipment
+        </span>
+
+        <h1>
+          Pending <em>Orders.</em>
+        </h1>
+
+        <p>
+          Orders that are waiting to be shipped. Review the details and mark
+          them as shipped once they're on the way to your customer.
+        </p>
+
+      </div>
+
+
+      <a href="/seller/dashboard" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        Dashboard
+      </a>
+
+    </div>
+
+
+    <!-- =================================================
+         PENDING LIST
+    ================================================== -->
+
+    <%
+      const pendingList = Array.isArray(orders) ? orders : [];
+    %>
+
+
+    <% if (pendingList.length === 0) { %>
+
+
+      <div class="empty" data-reveal="zoom-up">
+
+        <div class="empty-icon">
+          <i class="fas fa-check-circle"></i>
+        </div>
+
+        <h2>
+          No Pending Orders
+        </h2>
+
+        <p>
+          All caught up! You currently have no pending orders waiting to
+          be shipped.
+        </p>
+
+        <a href="/seller/orders" class="orders-btn">
+          <i class="fas fa-shopping-bag"></i>
+          View All Orders
+        </a>
+
+      </div>
+
+
+    <% } else { %>
+
+
+      <% pendingList.forEach((order, index) => { %>
+
+
+        <div
+          class="order-card"
+          data-reveal="zoom-up"
+          data-delay="<%= Math.min(index * 80, 500) %>"
+        >
+
+
+          <!-- =============================================
+               ORDER HEADER
+          ============================================== -->
+
+          <div class="order-header">
+
+            <div class="order-id">
+
+              <i class="fas fa-receipt"></i>
+
+              Order ID:
+              <%= String(order._id).slice(-10).toUpperCase() %>
+
+            </div>
+
+
+            <span class="status">
+              <%= order.status || "Pending" %>
+            </span>
+
+          </div>
+
+
+          <!-- =============================================
+               ORDER INFO
+          ============================================== -->
+
+          <div class="order-info">
+
+
+            <div class="info-box">
+
+              <strong>
+                <i class="fas fa-user"></i>
+                Customer
+              </strong>
+
+              <%= order.user?.name ||
+                  order.user?.email ||
+                  "Customer" %>
+
+            </div>
+
+
+            <div class="info-box">
+
+              <strong>
+                <i class="fas fa-calendar"></i>
+                Order Date
+              </strong>
+
+              <%= order.createdAt
+                ? new Date(order.createdAt).toLocaleDateString("en-IN", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric"
+                  })
+                : "N/A"
+              %>
+
+            </div>
+
+
+            <div class="info-box">
+
+              <strong>
+                <i class="fas fa-credit-card"></i>
+                Payment
+              </strong>
+
+              <%= order.paymentMethod || "N/A" %>
+
+            </div>
+
+
+          </div>
+
+
+          <!-- =============================================
+               PRODUCTS
+          ============================================== -->
+
+          <h3 class="products-heading">
+            Products
+          </h3>
+
+
+          <% if (Array.isArray(order.items) && order.items.length > 0) { %>
+
+
+            <% order.items.forEach(item => { %>
+
+
+              <%
+                const product = item.product || item;
+
+                const image =
+                  product?.images?.[0]?.url ||
+                  product?.images?.[0] ||
+                  "/images/placeholder.jpg";
+              %>
+
+
+              <div class="item">
+
+
+                <img
+                  src="<%= image %>"
+                  alt="<%= product?.name || 'Product' %>"
+                  onerror="this.src='/images/placeholder.jpg'"
+                  loading="lazy"
+                >
+
+
+                <div class="item-details">
+
+                  <h3>
+                    <%= product?.name || "Product" %>
+                  </h3>
+
+                  <p>
+                    Quantity:
+                    <strong>
+                      <%= item.quantity || 1 %>
+                    </strong>
+                  </p>
+
+                  <p>
+                    Price:
+                    <strong>
+                      ₹<%= Number(
+                            item.price ||
+                            product?.price ||
+                            0
+                          ).toLocaleString("en-IN") %>
+                    </strong>
+                  </p>
+
+                </div>
+
+
+              </div>
+
+
+            <% }) %>
+
+
+          <% } else { %>
+
+
+            <p style="color:var(--text-muted);padding:10px 0;font-style:italic;">
+              No product details available.
+            </p>
+
+
+          <% } %>
+
+
+          <!-- =============================================
+               ORDER TOTAL
+          ============================================== -->
+
+          <div class="order-total">
+
+            Total:
+            <span>
+              ₹<%= Number(
+                order.totalAmount ||
+                order.total ||
+                0
+              ).toLocaleString("en-IN") %>
+            </span>
+
+          </div>
+
+
+          <!-- =============================================
+               ACTIONS
+          ============================================== -->
+
+          <div class="actions">
+
+
+            <form
+              action="/seller/orders/<%= order._id %>/status"
+              method="POST"
+              style="display:contents;"
+            >
+
+              <input
+                type="hidden"
+                name="_method"
+                value="PATCH"
+              >
+
+              <input
+                type="hidden"
+                name="status"
+                value="shipped"
+              >
+
+              <button
+                type="submit"
+                class="action-btn ship-btn"
+              >
+                <i class="fas fa-shipping-fast"></i>
+                Mark as Shipped
+              </button>
+
+            </form>
+
+
+          </div>
+
+
+        </div>
+
+
+      <% }) %>
+
+
+    <% } %>
+
+
+  </div>
+
+
+  <!-- =====================================================
+       FOOTER PARTIAL
+  ====================================================== -->
+
+  <%- include('../partials/footer') %>
+
+
+  <!-- =====================================================
+       SCRIPT
+  ====================================================== -->
+
+  <script>
+
+    /* =====================================================
+       SCROLL PROGRESS
+    ===================================================== */
+
+    const progressBar = document.getElementById('scrollProgress');
+
+    function updateProgress() {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progressBar.style.width = progress + '%';
+    }
+
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    window.addEventListener('resize', updateProgress);
+    updateProgress();
+
+
+    /* =====================================================
+       SCROLL REVEAL
+    ===================================================== */
+
+    const revealEls = document.querySelectorAll('[data-reveal]');
+
+    if ('IntersectionObserver' in window) {
+
+      const revealObserver = new IntersectionObserver((entries, observer) => {
+
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const el = entry.target;
+            const delay = parseInt(el.dataset.delay || 0, 10);
+
+            setTimeout(() => {
+              el.classList.add('is-revealed');
+            }, delay);
+
+            observer.unobserve(el);
+          }
+        });
+
+      }, {
+        threshold: 0.08,
+        rootMargin: '0px 0px -60px 0px'
+      });
+
+      revealEls.forEach(el => revealObserver.observe(el));
+
+    } else {
+
+      revealEls.forEach(el => el.classList.add('is-revealed'));
+
+    }
+
+
+    console.log("Reciclaja — Pending Orders page loaded ⏳");
+
+  </script>
+
+</body>
+
+</html>

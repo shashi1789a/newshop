@@ -1,645 +1,1373 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <!--==Title==================================-->
-  <title>ThreadCycle - Buy & Sell New & Pre-Loved Fashion</title>
+<!-- =========================================================
+     RECICLAJA NAVBAR
+========================================================= -->
 
-  <!--==Stylesheet=============================-->
-  <link rel="stylesheet" type="text/css" href="Home Page CSS.css">
+<!-- TOP PROMO BAR -->
+<div class="top-banner">
+  <div class="container">
+    <span>
+      <i class="fas fa-bolt"></i>
+      Super Sale is Live — Get 50% Off on Selected Products
+    </span>
 
-  <!--==Fav-icon===============================-->
-  <link rel="icon" type="image/png" href="images/favicon.png">
+    <a href="/products/shop">
+      Shop Now
+      <i class="fas fa-arrow-right"></i>
+    </a>
+  </div>
+</div>
 
-  <!--==Using-Font-Awesome=====================-->
-  <script src="https://kit.fontawesome.com/5471644867.js" crossorigin="anonymous"></script>
 
-  <!--==API & JS Files=========================-->
-  <script src="api.js" defer></script>
-  <script src="Home Page JS.js" defer></script>
-  <script src="js/homepageaddcart.js" defer></script>
+<!-- =========================================================
+     MAIN HEADER
+========================================================= -->
 
-  <!--==Fonts==================================-->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<header class="main-header">
 
-  <style>
-    /* ===== RESET & GLOBAL ===== */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  <div class="container header-inner">
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #faf9f7;
-      scroll-behavior: smooth;
-    }
-
-    /* ===== CUSTOM NAVIGATION - FULLY RESPONSIVE (laptop, tab, mobile) ===== */
-    .navigation {
-      width: 100%;
-      background: #ffffff;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.05);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 48px;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      transition: all 0.3s ease;
-      border-bottom: 2px solid #f0ede8;
-      flex-wrap: wrap;
-      gap: 12px 16px;
-      min-height: 76px;
-    }
-
-    /* ----- FULLY RESPONSIVE LOGO (ThreadCycle) ----- */
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-      font-family: 'Playfair Display', serif;
-      transition: transform 0.2s ease;
-      flex-shrink: 0;
-      flex-wrap: nowrap;
-    }
-
-    .logo:hover {
-      transform: scale(1.02);
-    }
-
-    .logo-icon {
-      background: #1e1e2a;
-      width: 46px;
-      height: 46px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 8px 14px rgba(0, 0, 0, 0.08);
-      flex-shrink: 0;
-      transition: all 0.2s ease;
-    }
-
-    .logo-icon i {
-      font-size: 28px;
-      color: #f5e7d9;
-      transition: font-size 0.2s ease;
-    }
-
-    .logo-text {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.1;
-      white-space: nowrap;
-    }
-
-    .logo-text .main {
-      font-size: 1.7rem;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      background: linear-gradient(135deg, #1f1a2e, #3a2c2c);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      transition: font-size 0.2s ease;
-    }
-
-    .logo-text .sub {
-      font-size: 0.6rem;
-      letter-spacing: 2.2px;
-      font-weight: 600;
-      color: #b87333;
-      text-transform: uppercase;
-      margin-top: -4px;
-      transition: font-size 0.2s ease, letter-spacing 0.2s ease;
-    }
-
-    /* menu button */
-    .menu-btn {
-      display: none;
-    }
-
-    .menu-icon {
-      display: none;
-      cursor: pointer;
-      background: #f3f0eb;
-      width: 44px;
-      height: 44px;
-      border-radius: 30px;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: background 0.2s;
-    }
-
-    .menu-icon:hover {
-      background: #e6ddd2;
-    }
-
-    .menu-icon .nav-icon {
-      width: 22px;
-      height: 2.5px;
-      background-color: #2c2c2c;
-      display: block;
-      position: relative;
-      transition: all 0.3s ease-in-out;
-      border-radius: 4px;
-    }
-
-    .menu-icon .nav-icon::before,
-    .menu-icon .nav-icon::after {
-      content: '';
-      width: 22px;
-      height: 2.5px;
-      background-color: #2c2c2c;
-      position: absolute;
-      left: 0;
-      transition: all 0.3s ease-in-out;
-      border-radius: 4px;
-    }
-
-    .menu-icon .nav-icon::before {
-      top: -8px;
-    }
-
-    .menu-icon .nav-icon::after {
-      top: 8px;
-    }
-
-    /* menu list - clothing store style */
-    .menu {
-      display: flex;
-      gap: 8px;
-      list-style: none;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .menu li a {
-      text-decoration: none;
-      color: #2d2a24;
-      font-weight: 500;
-      font-size: 0.95rem;
-      padding: 8px 20px;
-      border-radius: 40px;
-      transition: all 0.25s ease;
-      font-family: 'Inter', sans-serif;
-      display: inline-block;
-    }
-
-    .menu li a:hover,
-    .menu li a.active {
-      background: #d4af7a;
-      color: #1e1b16;
-      box-shadow: 0 4px 8px rgba(180, 130, 70, 0.2);
-      transform: translateY(-2px);
-    }
-
-    /* Right Icons - refined */
-    .right-nav {
-      display: flex;
-      gap: 18px;
-      align-items: center;
-      flex-shrink: 0;
-    }
-
-    .right-nav a {
-      position: relative;
-      font-size: 1.25rem;
-      color: #2c2a27;
-      background: #f5f2ed;
-      width: 42px;
-      height: 42px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      transition: all 0.25s ease;
-      text-decoration: none;
-    }
-
-    .right-nav a:hover {
-      background: #d4af7a;
-      color: #1e1b16;
-      transform: translateY(-3px);
-    }
-
-    .right-nav a span {
-      position: absolute;
-      top: -6px;
-      right: -6px;
-      background: #c45c2c;
-      color: white;
-      font-size: 11px;
-      font-weight: 700;
-      min-width: 20px;
-      height: 20px;
-      border-radius: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-      padding: 0 4px;
-    }
-    /* ============================================================
-       RESPONSIVE BREAKPOINTS – LAPTOP, TAB, MOBILE (all devices)
-    ============================================================ */
-
-    /* --- LAPTOP (1025px – 1440px) --- */
-    @media screen and (max-width: 1280px) {
-      .navigation {
-        padding: 14px 32px;
-      }
-      .hero-banner {
-        padding: 40px 48px;
-      }
-      .logo-text .main {
-        font-size: 1.6rem;
-      }
-      .logo-text .sub {
-        font-size: 0.58rem;
-        letter-spacing: 2px;
-      }
-    }
-
-    /* --- TABLET (769px – 1024px) --- */
-    @media screen and (max-width: 1024px) {
-      .navigation {
-        padding: 14px 28px;
-        min-height: 70px;
-      }
-      .logo-text .main {
-        font-size: 1.5rem;
-      }
-      .logo-text .sub {
-        font-size: 0.55rem;
-        letter-spacing: 1.8px;
-      }
-      .logo-icon {
-        width: 42px;
-        height: 42px;
-      }
-      .logo-icon i {
-        font-size: 24px;
-      }
-      .hero-banner {
-        padding: 36px 40px;
-        gap: 32px;
-      }
-      .hero-text h1 {
-        font-size: 3rem;
-      }
-      .menu li a {
-        font-size: 0.9rem;
-        padding: 7px 16px;
-      }
-      .right-nav a {
-        width: 38px;
-        height: 38px;
-        font-size: 1.1rem;
-      }
-      .right-nav {
-        gap: 14px;
-      }
-    }
-
-    /* --- SMALL TABLET / LARGE MOBILE (600px – 768px) --- */
-    @media screen and (max-width: 820px) {
-      .navigation {
-        padding: 12px 20px;
-        gap: 10px;
-        min-height: 66px;
-      }
-
-      .menu-icon {
-        display: flex;
-        order: 3;
-      }
-
-      .menu {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        flex-direction: column;
-        background: #ffffff;
-        display: none;
-        border-top: 1px solid #e4d9cd;
-        padding: 16px 24px 24px;
-        gap: 6px;
-        box-shadow: 0 20px 30px -12px rgba(0,0,0,0.08);
-        order: 4;
-        flex: 0 0 100%;
-        margin-top: 6px;
-      }
-
-      .menu li a {
-        display: block;
-        padding: 12px 20px;
-        border-radius: 50px;
-        font-size: 1rem;
-        text-align: center;
-        width: 100%;
-      }
-
-      .menu-btn:checked ~ .menu {
-        display: flex;
-      }
-
-      .right-nav {
-        margin-left: auto;
-        order: 2;
-      }
-
-      .logo {
-        order: 1;
-        flex: 0 1 auto;
-      }
-
-      .logo-text .main {
-        font-size: 1.4rem;
-      }
-      .logo-text .sub {
-        font-size: 0.55rem;
-        letter-spacing: 1.6px;
-      }
-      .logo-icon {
-        width: 40px;
-        height: 40px;
-      }
-      .logo-icon i {
-        font-size: 22px;
-      }
-
-      .hero-banner {
-        padding: 30px 24px;
-        flex-direction: column;
-        text-align: center;
-        gap: 28px;
-      }
-      .hero-text h1 {
-        font-size: 2.6rem;
-      }
-      .hero-text p {
-        max-width: 100%;
-        margin: 16px auto;
-      }
-      .category-section,
-      .featured-items {
-        padding: 40px 24px;
-      }
-      .category-section h2 {
-        font-size: 1.8rem;
-      }
-      .cloth-card {
-        width: 100%;
-        max-width: 280px;
-      }
-      .product {
-        width: 100%;
-        max-width: 260px;
-      }
-      .right-nav a {
-        width: 38px;
-        height: 38px;
-        font-size: 1.1rem;
-      }
-      .right-nav {
-        gap: 12px;
-      }
-    }
-
-    /* --- MOBILE (320px – 599px) --- */
-    @media screen and (max-width: 599px) {
-      .navigation {
-        padding: 10px 16px;
-        gap: 8px;
-        min-height: 60px;
-      }
-
-      .logo-icon {
-        width: 34px;
-        height: 34px;
-      }
-      .logo-icon i {
-        font-size: 18px;
-      }
-
-      .logo-text .main {
-        font-size: 1.2rem;
-        letter-spacing: -0.3px;
-      }
-      .logo-text .sub {
-        font-size: 0.5rem;
-        letter-spacing: 1.2px;
-        margin-top: -2px;
-      }
-
-      .menu li a {
-        font-size: 0.9rem;
-        padding: 10px 14px;
-      }
-
-      .right-nav a {
-        width: 34px;
-        height: 34px;
-        font-size: 1rem;
-      }
-      .right-nav a span {
-        font-size: 9px;
-        min-width: 16px;
-        height: 16px;
-        top: -5px;
-        right: -5px;
-      }
-      .right-nav {
-        gap: 10px;
-      }
-
-      .hero-banner {
-        padding: 24px 16px;
-        gap: 20px;
-        min-height: 70vh;
-      }
-      .hero-text h1 {
-        font-size: 2.2rem;
-      }
-      .hero-text p {
-        font-size: 0.9rem;
-        margin: 14px 0;
-      }
-      .btn-primary {
-        padding: 12px 28px;
-        font-size: 0.85rem;
-      }
-
-      .category-section {
-        padding: 30px 16px;
-      }
-      .category-section h2 {
-        font-size: 1.5rem;
-        margin-bottom: 28px;
-      }
-      .cloth-card {
-        padding: 16px;
-        width: 100%;
-        max-width: 260px;
-      }
-      .cloth-icon {
-        font-size: 44px;
-      }
-      .cloth-card h3 {
-        font-size: 1.2rem;
-      }
-
-      .featured-items {
-        padding: 30px 16px 50px;
-      }
-      .section-title {
-        font-size: 1.5rem;
-      }
-      .product {
-        width: 100%;
-        max-width: 220px;
-        padding: 14px;
-      }
-      .product i {
-        font-size: 36px;
-      }
-
-      footer {
-        padding: 24px 16px;
-        font-size: 0.75rem;
-      }
-    }
-
-    /* --- EXTRA SMALL (<= 380px) --- */
-    @media screen and (max-width: 380px) {
-      .navigation {
-        padding: 8px 12px;
-        min-height: 54px;
-        gap: 6px;
-      }
-      .logo-icon {
-        width: 28px;
-        height: 28px;
-      }
-      .logo-icon i {
-        font-size: 15px;
-      }
-      .logo-text .main {
-        font-size: 1rem;
-      }
-      .logo-text .sub {
-        font-size: 0.45rem;
-        letter-spacing: 0.8px;
-      }
-      .right-nav a {
-        width: 30px;
-        height: 30px;
-        font-size: 0.85rem;
-      }
-      .right-nav a span {
-        font-size: 8px;
-        min-width: 14px;
-        height: 14px;
-        top: -4px;
-        right: -4px;
-      }
-      .right-nav {
-        gap: 8px;
-      }
-      .hero-text h1 {
-        font-size: 1.8rem;
-      }
-      .hero-banner {
-        padding: 16px 12px;
-      }
-      .btn-primary {
-        padding: 10px 20px;
-        font-size: 0.8rem;
-      }
-      .category-section h2 {
-        font-size: 1.3rem;
-      }
-    }
-  </style>
-</head>
-<body>
-  <!--==Navigation - FULLY RESPONSIVE (laptop, tab, mobile) ==============================-->
-  <nav class="navigation">
-    <!-- LOGO: ThreadCycle – responsive on all devices -->
+    <!-- LOGO -->
     <a href="/" class="logo">
-      <div class="logo-icon">
-        <i class="fas fa-tshirt"></i>
-      </div>
-      <div class="logo-text">
-        <span class="main">THREADCYCLE</span>
-        <span class="sub">NEW & PRE-LOVED</span>
-      </div>
+
+      <img
+        src="/image/logo/logo1.png"
+        alt="Reciclaja"
+        class="logo-image"
+      />
+
     </a>
 
-    <!--menu-btn (hamburger)-->
-    <input type="checkbox" class="menu-btn" id="menu-btn">
-    <label for="menu-btn" class="menu-icon">
-      <span class="nav-icon"></span>
-    </label>
 
-    <!--menu - removed Feedback & Signup -->
-    <ul class="menu">
-      <li><a href="/" class="active">Home</a></li>
-      <li><a href="/contact">Contact&nbsp;Us</a></li>
-      <li><a href="/shop">Sell&nbsp;Clothes</a></li>
-      <li><a href="/aboutus">About&nbsp;Us</a></li>
-      <li><a href="/auth/login">Login</a></li>
-      <li><a href="/userOrders">My&nbsp;Order</a></li>
-      <li><a href="/adregister">Admin</a></li>
-    </ul>
+    <!-- SEARCH -->
+    <form
+      action="/products/shop"
+      method="GET"
+      class="search-wrap"
+    >
 
-    <!--right-nav icons (wishlist, cart, profile)-->
-    <div class="right-nav">
-      <a href="/whislist" class="like" aria-label="Wishlist">
-        <i class="fa-regular fa-heart"></i>
-        <span>4</span>
-      </a>
+      <i class="fas fa-search search-icon"></i>
 
-      <a href="/cart" class="cart" aria-label="Cart">
-        <i class="fa-solid fa-cart-shopping"></i>
-        <span>2</span>
-      </a>
+      <input
+        type="search"
+        name="search"
+        placeholder="Search clothes, brands and more..."
+        autocomplete="off"
+      />
 
-      <a href="/profile" class="user-profile" aria-label="Profile">
-        <i class="fas fa-user"></i>
-        <span>1</span>
-      </a>
+      <button
+        type="submit"
+        aria-label="Search"
+      >
+        Search
+      </button>
+
+    </form>
+
+
+    <!-- RIGHT SIDE -->
+    <div class="nav-actions">
+
+      <!-- WISHLIST -->
+      <% if (typeof user !== "undefined" && user) { %>
+
+        <a
+          href="/wishlist"
+          class="nav-action"
+          title="Wishlist"
+        >
+          <i class="far fa-heart"></i>
+          <span>Wishlist</span>
+        </a>
+
+
+        <!-- CART -->
+        <a
+          href="/cart"
+          class="nav-action cart-action"
+          title="Shopping Cart"
+        >
+
+          <i class="fas fa-shopping-bag"></i>
+
+          <span>Cart</span>
+
+          <% if (
+            user.cart &&
+            user.cart.length > 0
+          ) { %>
+
+            <span class="cart-badge">
+              <%= user.cart.length %>
+            </span>
+
+          <% } %>
+
+        </a>
+
+      <% } else { %>
+
+        <!-- GUEST WISHLIST -->
+        <a
+          href="/auth/login"
+          class="nav-action"
+          title="Wishlist"
+        >
+          <i class="far fa-heart"></i>
+          <span>Wishlist</span>
+        </a>
+
+
+        <!-- GUEST CART -->
+        <a
+          href="/auth/login"
+          class="nav-action"
+          title="Cart"
+        >
+          <i class="fas fa-shopping-bag"></i>
+          <span>Cart</span>
+        </a>
+
+      <% } %>
+
+
+      <!-- ACCOUNT -->
+      <div class="account-wrapper">
+
+        <% if (typeof user !== "undefined" && user) { %>
+
+          <button
+            type="button"
+            class="account-button"
+            onclick="toggleAccountMenu()"
+          >
+
+            <i class="far fa-user-circle"></i>
+
+            <span>
+              <%= user.name || "Account" %>
+            </span>
+
+            <i class="fas fa-chevron-down"></i>
+
+          </button>
+
+
+          <!-- ACCOUNT DROPDOWN -->
+
+          <div
+            class="account-dropdown"
+            id="accountDropdown"
+          >
+
+            <div class="account-header">
+
+              <div class="account-avatar">
+                <i class="fas fa-user"></i>
+              </div>
+
+              <div>
+                <strong>
+                  <%= user.name || "User" %>
+                </strong>
+
+                <small>
+                  <%= user.email %>
+                </small>
+              </div>
+
+            </div>
+
+
+            <div class="dropdown-divider"></div>
+
+
+            <a href="/profile">
+              <i class="far fa-user"></i>
+              My Profile
+            </a>
+
+
+            <a href="/orders/userOrders">
+              <i class="fas fa-box"></i>
+              My Orders
+            </a>
+
+
+            <a href="/wishlist">
+              <i class="far fa-heart"></i>
+              My Wishlist
+            </a>
+
+
+            <a href="/cart">
+              <i class="fas fa-shopping-cart"></i>
+              My Cart
+            </a>
+
+
+            <div class="dropdown-divider"></div>
+
+
+            <!-- SELLER -->
+            <% if (
+              user.role === "seller" ||
+              user.role === "admin"
+            ) { %>
+
+              <a href="/owner">
+                <i class="fas fa-store"></i>
+                Seller Dashboard
+              </a>
+
+            <% } %>
+
+
+            <a href="/old-clothes/upload">
+              <i class="fas fa-tshirt"></i>
+              Sell Pre-Loved Clothes
+            </a>
+
+
+            <div class="dropdown-divider"></div>
+
+
+            <a
+              href="/auth/logout"
+              class="logout-link"
+            >
+              <i class="fas fa-sign-out-alt"></i>
+              Logout
+            </a>
+
+          </div>
+
+        <% } else { %>
+
+          <!-- GUEST ACCOUNT -->
+
+          <a
+            href="/auth/login"
+            class="login-button"
+          >
+            <i class="far fa-user"></i>
+            Login
+          </a>
+
+          <a
+            href="/auth/register"
+            class="register-button"
+          >
+            Register
+          </a>
+
+        <% } %>
+
+      </div>
+
     </div>
-  </nav>
 
-  <script>
-    // active link highlight based on current URL path
-    (function() {
-      const currentPath = window.location.pathname;
-      const navLinks = document.querySelectorAll('.menu li a');
-      navLinks.forEach(link => {
-        const href = link.getAttribute('href');
-        if (href === currentPath || (currentPath === '/' && href === '/')) {
-          link.classList.add('active');
-        } else if (href !== '/' && currentPath.startsWith(href) && href !== '/') {
-          link.classList.add('active');
-        } else if (link.classList.contains('active') && href !== currentPath) {
-          link.classList.remove('active');
-        }
-      });
-      console.log('🧥 THREADCYCLE — fully responsive for laptop, tablet, mobile');
-    })();
-  </script>
-  <!-- External scripts remain for future cart/wishlist features (api.js etc) -->
-</body>
-</html>
+  </div>
+
+</header>
+
+
+<!-- =========================================================
+     CATEGORY NAVIGATION
+========================================================= -->
+
+<nav class="category-bar">
+
+  <div class="container category-inner">
+
+    <a
+      href="/products/shop"
+      class="category-all"
+    >
+      <i class="fas fa-bars"></i>
+      All Categories
+    </a>
+
+
+    <a href="/products/shop">
+      New Clothes
+    </a>
+
+
+    <a href="/old-clothes">
+      Pre-Loved
+    </a>
+
+
+    <a href="/products/shop?category=tshirts">
+      T-Shirts
+    </a>
+
+
+    <a href="/products/shop?category=shirts">
+      Shirts
+    </a>
+
+
+    <a href="/products/shop?category=jeans">
+      Jeans
+    </a>
+
+
+    <a href="/products/shop?category=dresses">
+      Dresses
+    </a>
+
+
+    <a href="/products/shop?category=jackets">
+      Jackets
+    </a>
+
+
+    <a href="/products/shop?category=hoodies">
+      Hoodies
+    </a>
+
+
+    <a href="/products/shop?category=kidswear">
+      Kids Wear
+    </a>
+
+
+    <a href="/aboutus">
+      About Us
+    </a>
+
+
+    <a href="/contact">
+      Contact
+    </a>
+
+  </div>
+
+</nav>
+
+
+<!-- =========================================================
+     RECICLAJA NAVBAR CSS — Redesigned
+========================================================= -->
+
+<style>
+
+/* =========================================================
+   TOKENS
+========================================================= */
+
+:root {
+  --forest: #0d3b2e;
+  --forest-2: #14523f;
+  --forest-3: #1e6b52;
+  --forest-soft: #2d8a6a;
+  --forest-deep: #072a20;
+
+  --emerald: #10b981;
+  --emerald-soft: #34d399;
+
+  --mango: #f59e0b;
+  --mango-soft: #fbbf24;
+  --mango-deep: #d97706;
+
+  --coral: #f97362;
+  --coral-soft: #fb9585;
+  --coral-deep: #e05a44;
+
+  --bg: #fbfaf7;
+  --surface: #ffffff;
+  --surface-2: #f7f4ee;
+
+  --text: #10261d;
+  --text-muted: #556b5f;
+  --text-light: #8a9a90;
+
+  --border: #e6e0d4;
+  --border-soft: #f0ebe0;
+
+  --radius: 12px;
+  --radius-sm: 10px;
+
+  --shadow-sm: 0 2px 8px rgba(13, 59, 46, 0.05);
+  --shadow-md: 0 8px 28px rgba(13, 59, 46, 0.08);
+  --shadow-lg: 0 20px 48px rgba(13, 59, 46, 0.12);
+  --shadow-mango: 0 12px 32px rgba(245, 158, 11, 0.28);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   MAIN HEADER
+========================================================= */
+
+.main-header {
+  background: #ffffff;
+  border-bottom: 1px solid var(--border-soft);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 1px 0 rgba(13, 59, 46, 0.02);
+}
+
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: auto;
+  padding: 0 24px;
+}
+
+
+/* =========================================================
+   TOP BANNER
+========================================================= */
+
+.top-banner {
+  background:
+    radial-gradient(circle at 15% 50%, rgba(245, 158, 11, 0.18) 0%, transparent 40%),
+    radial-gradient(circle at 85% 50%, rgba(16, 185, 129, 0.15) 0%, transparent 40%),
+    linear-gradient(100deg, var(--forest) 0%, var(--forest-2) 50%, var(--forest-3) 100%);
+
+  color: #ffffff;
+  padding: 10px 0;
+  font-size: 13.5px;
+  font-weight: 500;
+  position: relative;
+  overflow: hidden;
+}
+
+.top-banner::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(251, 191, 36, 0.18),
+    transparent
+  );
+  animation: bannerShimmer 5s infinite;
+  pointer-events: none;
+}
+
+@keyframes bannerShimmer {
+  0% { left: -100%; }
+  100% { left: 200%; }
+}
+
+.top-banner .container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  z-index: 2;
+  flex-wrap: wrap;
+}
+
+.top-banner i {
+  color: var(--mango-soft);
+}
+
+.top-banner span i {
+  margin-right: 4px;
+}
+
+.top-banner a {
+  color: var(--mango-soft);
+  font-weight: 800;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 30px;
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.25);
+  transition: all 0.3s ease;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+}
+
+.top-banner a:hover {
+  background: rgba(251, 191, 36, 0.25);
+  transform: translateX(3px);
+  gap: 10px;
+}
+
+
+/* =========================================================
+   HEADER LAYOUT
+========================================================= */
+
+.header-inner {
+  min-height: 82px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.logo {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 8px 12px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.logo:hover {
+  background: var(--surface-2);
+}
+
+.logo-image {
+  width: auto;
+  height: 60px;
+  max-width: 200px;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.logo:hover .logo-image {
+  transform: scale(1.04);
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.search-wrap {
+  flex: 1;
+  max-width: 640px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  background: var(--surface-2);
+  border: 2px solid transparent;
+  border-radius: 26px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.search-wrap:focus-within {
+  background: #ffffff;
+  border-color: var(--mango);
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.12);
+}
+
+.search-icon {
+  margin-left: 18px;
+  color: var(--text-light);
+  font-size: 15px;
+  transition: color 0.3s ease;
+}
+
+.search-wrap:focus-within .search-icon {
+  color: var(--mango-deep);
+}
+
+.search-wrap input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 0 14px;
+  font-size: 14px;
+  color: var(--text);
+  font-family: inherit;
+}
+
+.search-wrap input::placeholder {
+  color: var(--text-light);
+}
+
+.search-wrap button {
+  height: 100%;
+  border: none;
+  padding: 0 26px;
+  background: linear-gradient(135deg, var(--mango) 0%, var(--mango-soft) 100%);
+  color: var(--forest);
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  margin: 4px;
+  border-radius: 22px;
+}
+
+.search-wrap button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.search-wrap button:hover::before {
+  left: 100%;
+}
+
+.search-wrap button:hover {
+  box-shadow: 0 6px 18px rgba(245, 158, 11, 0.35);
+}
+
+
+/* =========================================================
+   NAV ACTIONS
+========================================================= */
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.nav-action {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  padding: 10px 14px;
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-action i {
+  font-size: 19px;
+  transition: transform 0.3s ease;
+}
+
+.nav-action:hover {
+  background: var(--surface-2);
+  color: var(--forest);
+}
+
+.nav-action:hover i {
+  color: var(--mango-deep);
+  transform: scale(1.1) translateY(-1px);
+}
+
+.cart-action:hover {
+  background: rgba(245, 158, 11, 0.08);
+}
+
+
+/* CART BADGE */
+
+.cart-badge {
+  position: absolute;
+  top: 2px;
+  right: 6px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  background: linear-gradient(135deg, var(--coral) 0%, var(--coral-deep) 100%);
+  color: #ffffff;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 8px rgba(249, 115, 98, 0.4);
+  border: 2px solid #ffffff;
+  animation: badgePop 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes badgePop {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+
+/* =========================================================
+   ACCOUNT
+========================================================= */
+
+.account-wrapper {
+  position: relative;
+}
+
+.account-button {
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  padding: 10px 14px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.account-button:hover {
+  background: var(--surface-2);
+  color: var(--forest);
+}
+
+.account-button > i:first-child {
+  font-size: 22px;
+  color: var(--forest-3);
+  transition: transform 0.3s ease;
+}
+
+.account-button:hover > i:first-child {
+  transform: scale(1.08);
+}
+
+.account-button > i:last-child {
+  font-size: 10px;
+  color: var(--text-light);
+  transition: transform 0.3s ease;
+}
+
+.account-button[aria-expanded="true"] > i:last-child,
+.account-dropdown.show ~ .account-button > i:last-child {
+  transform: rotate(180deg);
+}
+
+
+/* Login / Register buttons */
+
+.login-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, var(--forest) 0%, var(--forest-3) 100%);
+  color: #ffffff;
+  padding: 11px 20px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  box-shadow: 0 6px 18px rgba(13, 59, 46, 0.22);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.login-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(13, 59, 46, 0.32);
+  gap: 10px;
+}
+
+.register-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--forest);
+  border: 2px solid var(--forest);
+  padding: 9px 18px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #ffffff;
+}
+
+.register-button:hover {
+  background: var(--forest);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(13, 59, 46, 0.22);
+}
+
+
+/* =========================================================
+   ACCOUNT DROPDOWN
+========================================================= */
+
+.account-dropdown {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 14px);
+  width: 280px;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow:
+    0 20px 48px rgba(13, 59, 46, 0.15),
+    0 4px 12px rgba(13, 59, 46, 0.05);
+  overflow: hidden;
+  transform-origin: top right;
+  z-index: 100;
+}
+
+.account-dropdown.show {
+  display: block;
+  animation: dropdownIn 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes dropdownIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.94) translateY(-8px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+
+.account-dropdown::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--mango) 0%,
+    var(--coral) 50%,
+    var(--emerald) 100%
+  );
+}
+
+
+/* Account header */
+
+.account-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 16px 14px;
+  background:
+    radial-gradient(circle at 90% 10%, rgba(16, 185, 129, 0.06) 0%, transparent 60%),
+    linear-gradient(135deg, var(--surface-2) 0%, #ffffff 100%);
+}
+
+.account-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--mango) 0%, var(--coral) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 16px;
+  flex-shrink: 0;
+  box-shadow: 0 6px 16px rgba(245, 158, 11, 0.28);
+}
+
+.account-header strong {
+  display: block;
+  font-size: 14px;
+  color: var(--forest);
+  font-weight: 800;
+  margin-bottom: 2px;
+  letter-spacing: -0.2px;
+}
+
+.account-header small {
+  display: block;
+  color: var(--text-light);
+  font-size: 11.5px;
+  max-width: 175px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* Dropdown links */
+
+.account-dropdown a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  color: var(--text);
+  font-size: 13.5px;
+  font-weight: 600;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.account-dropdown a i {
+  width: 18px;
+  font-size: 14px;
+  color: var(--text-light);
+  transition: all 0.25s ease;
+  text-align: center;
+}
+
+.account-dropdown a::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 0;
+  background: linear-gradient(180deg, var(--mango) 0%, var(--coral) 100%);
+  border-radius: 0 3px 3px 0;
+  transition: height 0.3s ease;
+}
+
+.account-dropdown a:hover {
+  background: var(--surface-2);
+  color: var(--forest);
+  padding-left: 22px;
+}
+
+.account-dropdown a:hover::before {
+  height: 60%;
+}
+
+.account-dropdown a:hover i {
+  color: var(--mango-deep);
+  transform: scale(1.1);
+}
+
+
+.dropdown-divider {
+  height: 1px;
+  background: var(--border-soft);
+  margin: 4px 12px;
+}
+
+
+.logout-link {
+  color: var(--coral-deep) !important;
+}
+
+.logout-link i {
+  color: var(--coral-deep) !important;
+}
+
+.logout-link:hover {
+  background: rgba(249, 115, 98, 0.08) !important;
+  color: var(--coral-deep) !important;
+}
+
+.logout-link:hover::before {
+  background: var(--coral-deep) !important;
+}
+
+.logout-link:hover i {
+  color: var(--coral-deep) !important;
+}
+
+
+/* =========================================================
+   CATEGORY BAR
+========================================================= */
+
+.category-bar {
+  background: #ffffff;
+  border-bottom: 1px solid var(--border-soft);
+  overflow-x: auto;
+  white-space: nowrap;
+  position: sticky;
+  top: 82px;
+  z-index: 999;
+  scrollbar-width: none;
+}
+
+.category-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.category-inner {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 50px;
+}
+
+
+.category-inner a {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px 14px;
+  border-radius: 10px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  white-space: nowrap;
+}
+
+
+.category-inner a::after {
+  content: "";
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--mango) 0%, var(--coral) 100%);
+  border-radius: 2px;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+.category-inner a:hover {
+  color: var(--forest);
+  background: var(--surface-2);
+}
+
+
+.category-inner a:hover::after {
+  width: 40%;
+}
+
+
+/* Category "All" pill */
+
+.category-all {
+  background: linear-gradient(135deg, var(--forest) 0%, var(--forest-3) 100%) !important;
+  color: #ffffff !important;
+  padding: 10px 16px !important;
+  border-radius: 12px !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 12px rgba(13, 59, 46, 0.2);
+  transition: all 0.3s ease !important;
+  margin-right: 8px;
+}
+
+.category-all::after {
+  display: none !important;
+}
+
+.category-all:hover {
+  background: linear-gradient(135deg, var(--mango) 0%, var(--mango-soft) 100%) !important;
+  color: var(--forest) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(245, 158, 11, 0.35);
+}
+
+.category-all i {
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1100px) {
+
+  .nav-action span {
+    display: none;
+  }
+
+  .account-button span {
+    display: none;
+  }
+
+  .header-inner {
+    gap: 14px;
+  }
+
+  .nav-actions {
+    gap: 4px;
+  }
+
+  .nav-action {
+    padding: 10px 12px;
+  }
+
+}
+
+
+@media (max-width: 850px) {
+
+  .header-inner {
+    flex-wrap: wrap;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    gap: 12px;
+  }
+
+  .logo-image {
+    height: 50px;
+  }
+
+  .search-wrap {
+    order: 3;
+    flex-basis: 100%;
+    max-width: none;
+    height: 44px;
+  }
+
+  .search-wrap button {
+    padding: 0 20px;
+    font-size: 12px;
+  }
+
+  .category-inner {
+    gap: 0;
+  }
+
+  .category-inner a {
+    padding: 10px 12px;
+    font-size: 12.5px;
+  }
+
+  .login-button,
+  .register-button {
+    padding: 9px 14px;
+    font-size: 12px;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .container {
+    padding: 0 14px;
+  }
+
+  .top-banner {
+    font-size: 11.5px;
+    padding: 8px 0;
+  }
+
+  .top-banner span i {
+    display: none;
+  }
+
+  .top-banner a {
+    padding: 3px 10px;
+    font-size: 11px;
+  }
+
+  .logo-image {
+    height: 42px;
+    max-width: 145px;
+  }
+
+  .nav-action {
+    padding: 8px 10px;
+  }
+
+  .nav-action i {
+    font-size: 18px;
+  }
+
+  .account-button {
+    padding: 8px 10px;
+  }
+
+  .account-button > i:first-child {
+    font-size: 20px;
+  }
+
+  .login-button,
+  .register-button {
+    padding: 8px 12px;
+    font-size: 11.5px;
+  }
+
+  .login-button i {
+    display: none;
+  }
+
+  .account-dropdown {
+    width: 260px;
+    right: -8px;
+  }
+
+  .category-inner a {
+    padding: 10px 10px;
+    font-size: 12px;
+  }
+
+  .category-all {
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+  }
+
+}
+
+
+@media (max-width: 420px) {
+
+  .top-banner {
+    font-size: 10.5px;
+  }
+
+  .top-banner a {
+    display: none;
+  }
+
+  .logo-image {
+    height: 38px;
+    max-width: 130px;
+  }
+
+  .nav-actions {
+    gap: 2px;
+  }
+
+  .nav-action {
+    padding: 6px 8px;
+  }
+
+  .register-button {
+    display: none;
+  }
+
+}
+
+
+/* =========================================================
+   DROPDOWN ANIMATION FOR CLOSE
+========================================================= */
+
+.account-dropdown:not(.show) {
+  animation: dropdownOut 0.2s ease forwards;
+}
+
+@keyframes dropdownOut {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+}
+
+</style>
+
+
+<!-- =========================================================
+     ACCOUNT DROPDOWN JS
+========================================================= -->
+
+<script>
+
+function toggleAccountMenu() {
+
+  const dropdown =
+    document.getElementById(
+      "accountDropdown"
+    );
+
+  const button =
+    document.querySelector(
+      ".account-button"
+    );
+
+  if (!dropdown) return;
+
+  const isOpen = dropdown.classList.toggle("show");
+
+  if (button) {
+    button.setAttribute(
+      "aria-expanded",
+      isOpen ? "true" : "false"
+    );
+  }
+}
+
+
+// Close dropdown when clicking outside
+
+document.addEventListener(
+  "click",
+  function (event) {
+
+    const wrapper =
+      document.querySelector(
+        ".account-wrapper"
+      );
+
+    const dropdown =
+      document.getElementById(
+        "accountDropdown"
+      );
+
+    const button =
+      document.querySelector(
+        ".account-button"
+      );
+
+    if (
+      wrapper &&
+      dropdown &&
+      !wrapper.contains(event.target)
+    ) {
+
+      dropdown.classList.remove("show");
+
+      if (button) {
+        button.setAttribute("aria-expanded", "false");
+      }
+
+    }
+
+  }
+);
+
+
+// Close on Escape key
+
+document.addEventListener(
+  "keydown",
+  function (event) {
+
+    if (event.key === "Escape") {
+
+      const dropdown =
+        document.getElementById("accountDropdown");
+
+      if (dropdown && dropdown.classList.contains("show")) {
+
+        dropdown.classList.remove("show");
+
+        const button = document.querySelector(".account-button");
+        if (button) button.setAttribute("aria-expanded", "false");
+
+      }
+
+    }
+
+  }
+);
+
+</script>

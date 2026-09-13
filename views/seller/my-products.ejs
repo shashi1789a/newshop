@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>My Products — Reciclaja Seller</title>
+
+  <%- include('../partials/head') %>
+
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/5471644867.js" crossorigin="anonymous"></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,700&display=swap" rel="stylesheet" />
+
+  <style>
+
+    /* =====================================================
+       DESIGN TOKENS
+    ===================================================== */
+
+    :root {
+      --forest: #0d3b2e;
+      --forest-2: #14523f;
+      --forest-3: #1e6b52;
+      --forest-soft: #2d8a6a;
+      --forest-deep: #072a20;
+
+      --emerald: #10b981;
+      --emerald-soft: #34d399;
+
+      --mango: #f59e0b;
+      --mango-soft: #fbbf24;
+      --mango-deep: #d97706;
+
+      --coral: #f97362;
+      --coral-soft: #fb9585;
+      --coral-deep: #e05a44;
+
+      --blush: #fef3e7;
+      --blush-2: #fde8d0;
+
+      --mint: #ecfdf5;
+      --mint-2: #d1fae5;
+
+      --sky: #e8f4ff;
+      --sky-2: #d0e6ff;
+
+      --bg: #fbfaf7;
+      --surface: #ffffff;
+      --surface-2: #f7f4ee;
+      --surface-3: #efeae0;
+
+      --text: #10261d;
+      --text-muted: #556b5f;
+      --text-light: #8a9a90;
+
+      --border: #e6e0d4;
+      --border-soft: #f0ebe0;
+
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius: 16px;
+      --radius-sm: 10px;
+
+      --shadow-sm: 0 2px 8px rgba(13, 59, 46, 0.05);
+      --shadow-md: 0 8px 28px rgba(13, 59, 46, 0.08);
+      --shadow-lg: 0 20px 48px rgba(13, 59, 46, 0.12);
+      --shadow-glow: 0 12px 40px rgba(16, 185, 129, 0.18);
+      --shadow-mango: 0 12px 40px rgba(245, 158, 11, 0.22);
+
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    /* =====================================================
+       RESET
+    ===================================================== */
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    a { text-decoration: none; color: inherit; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    img { display: block; max-width: 100%; }
+    button { font-family: inherit; cursor: pointer; }
+
+    /* =====================================================
+       PAGE BACKGROUND
+    ===================================================== */
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 12% 15%, rgba(245, 158, 11, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 88% 85%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* =====================================================
+       SCROLL PROGRESS BAR
+    ===================================================== */
+
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--emerald) 0%, var(--mango) 50%, var(--coral) 100%);
+      z-index: 9999;
+      transition: width 0.1s linear;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
+    }
+
+    /* =====================================================
+       SCROLL REVEAL
+    ===================================================== */
+
+    [data-reveal] {
+      opacity: 0;
+      transition:
+        opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: opacity, transform;
+    }
+
+    [data-reveal="up"] { transform: translateY(40px); }
+    [data-reveal="down"] { transform: translateY(-40px); }
+    [data-reveal="zoom-up"] { transform: scale(0.94) translateY(30px); }
+
+    [data-reveal].is-revealed {
+      opacity: 1;
+      transform: translate(0, 0) scale(1);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      [data-reveal] {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+    }
+
+    /* =====================================================
+       CONTAINER
+    ===================================================== */
+
+    .container {
+      width: 94%;
+      max-width: 1300px;
+      margin: 45px auto 80px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* =====================================================
+       PAGE HEADER
+    ===================================================== */
+
+    .page-header {
+      margin-bottom: 34px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    .page-header::after {
+      content: "";
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 90px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--mango) 0%, var(--coral) 100%);
+      border-radius: 3px;
+    }
+
+    .page-header-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(13, 59, 46, 0.06);
+      border: 1px solid rgba(13, 59, 46, 0.08);
+      color: var(--forest-3);
+      padding: 7px 15px;
+      border-radius: 30px;
+      font-size: 10.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 14px;
+    }
+
+    .page-header-eyebrow::before {
+      content: "📦";
+      font-size: 12px;
+    }
+
+    h1 {
+      font-family: var(--font-serif);
+      font-size: 42px;
+      font-weight: 500;
+      letter-spacing: -1.5px;
+      color: var(--forest);
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+
+    h1 em {
+      font-style: italic;
+      background: linear-gradient(120deg, var(--mango-deep) 0%, var(--coral) 60%, var(--mango) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .page-header p {
+      color: var(--text-muted);
+      font-size: 14.5px;
+      max-width: 620px;
+      line-height: 1.65;
+    }
+
+    /* =====================================================
+       SECTION
+    ===================================================== */
+
+    .section {
+      background: var(--surface);
+      padding: 32px 34px;
+      margin-bottom: 30px;
+      border-radius: var(--radius-xl);
+      box-shadow: 0 12px 40px rgba(13, 59, 46, 0.06);
+      border: 1px solid var(--border-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .section::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--mango) 0%, var(--emerald) 100%);
+      opacity: 0.6;
+    }
+
+    .section h2 {
+      font-family: var(--font-serif);
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--forest);
+      letter-spacing: -0.5px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px dashed var(--border);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .section h2::before {
+      content: "";
+      width: 5px;
+      height: 24px;
+      background: linear-gradient(180deg, var(--mango) 0%, var(--coral) 100%);
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    /* =====================================================
+       PRODUCT GRID
+    ===================================================== */
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* =====================================================
+       PRODUCT CARD
+    ===================================================== */
+
+    .card {
+      border: 2px solid var(--border-soft);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      background: #ffffff;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      animation: cardIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+    }
+
+    @keyframes cardIn {
+      0% { opacity: 0; transform: translateY(20px) scale(0.97); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--mango) 0%, var(--coral) 50%, var(--emerald) 100%);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+      z-index: 3;
+    }
+
+    .card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      border-color: var(--mint-2);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+      margin-bottom: 14px;
+      background: linear-gradient(145deg, var(--surface-2) 0%, var(--surface-3) 100%);
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card:hover img {
+      transform: scale(1.04);
+    }
+
+    .card h3 {
+      font-family: var(--font-serif);
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--forest);
+      letter-spacing: -0.3px;
+      margin-bottom: 10px;
+      line-height: 1.35;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card p {
+      color: var(--text-muted);
+      font-size: 12.5px;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .card p strong {
+      color: var(--forest);
+      font-weight: 800;
+    }
+
+    .price {
+      font-family: var(--font-serif);
+      font-size: 20px !important;
+      font-weight: 700 !important;
+      color: var(--forest) !important;
+      margin: 10px 0 !important;
+      letter-spacing: -0.6px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border);
+    }
+
+    /* =====================================================
+       BUTTONS
+    ===================================================== */
+
+    .buttons {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .btn {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-decoration: none;
+      padding: 11px 14px;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--forest) 0%, var(--forest-3) 100%);
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 6px 16px rgba(13, 59, 46, 0.2);
+      position: relative;
+      overflow: hidden;
+      font-family: inherit;
+    }
+
+    .btn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 0.35), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .btn:hover::before { left: 100%; }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(13, 59, 46, 0.3);
+      gap: 10px;
+    }
+
+    .delete {
+      background: linear-gradient(135deg, var(--coral) 0%, var(--coral-deep) 100%);
+      box-shadow: 0 6px 16px rgba(249, 115, 98, 0.25);
+    }
+
+    .delete::before {
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+    }
+
+    .delete:hover {
+      box-shadow: 0 10px 24px rgba(249, 115, 98, 0.4);
+    }
+
+    /* =====================================================
+       EMPTY STATE
+    ===================================================== */
+
+    .empty {
+      color: var(--text-muted);
+      padding: 24px;
+      font-size: 14px;
+      background: var(--surface-2);
+      border-radius: var(--radius-sm);
+      border: 1px dashed var(--border);
+      text-align: center;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .empty::before {
+      content: "📦";
+      font-size: 18px;
+      opacity: 0.6;
+    }
+
+    /* =====================================================
+       RESPONSIVE
+    ===================================================== */
+
+    @media (max-width: 900px) {
+
+      .container {
+        width: 94%;
+        margin: 32px auto 60px;
+      }
+
+      h1 {
+        font-size: 34px;
+      }
+
+      .section {
+        padding: 26px 24px;
+        border-radius: var(--radius-lg);
+      }
+
+      .section h2 {
+        font-size: 21px;
+      }
+
+    }
+
+    @media (max-width: 600px) {
+
+      .container {
+        width: 94%;
+        margin: 24px auto 60px;
+      }
+
+      h1 {
+        font-size: 26px;
+        letter-spacing: -1px;
+      }
+
+      .page-header-eyebrow {
+        font-size: 10px;
+        padding: 6px 12px;
+        letter-spacing: 1.5px;
+      }
+
+      .page-header p {
+        font-size: 13px;
+      }
+
+      .section {
+        padding: 22px 18px;
+      }
+
+      .section h2 {
+        font-size: 18px;
+        margin-bottom: 18px;
+        padding-bottom: 12px;
+      }
+
+      .section h2::before {
+        height: 20px;
+        width: 4px;
+      }
+
+      .products {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .card {
+        padding: 12px;
+        border-radius: var(--radius);
+      }
+
+      .card img {
+        height: 150px;
+        margin-bottom: 10px;
+      }
+
+      .card h3 {
+        font-size: 14px;
+      }
+
+      .card p {
+        font-size: 11px;
+      }
+
+      .price {
+        font-size: 16px !important;
+      }
+
+      .buttons {
+        flex-direction: column;
+        gap: 6px;
+        padding-top: 12px;
+        margin-top: 12px;
+      }
+
+      .btn {
+        padding: 9px 10px;
+        font-size: 11px;
+        width: 100%;
+      }
+
+    }
+
+    @media (max-width: 400px) {
+
+      .products {
+        grid-template-columns: 1fr;
+      }
+
+      .card img {
+        height: 220px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <!-- Scroll progress -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+
+  <!-- =====================================================
+       NAVBAR
+  ====================================================== -->
+
+  <%- include('../partials/navbar') %>
+
+
+  <!-- =====================================================
+       MAIN
+  ====================================================== -->
+
+  <div class="container">
+
+
+    <!-- =================================================
+         PAGE HEADER
+    ================================================== -->
+
+    <div class="page-header" data-reveal="down">
+
+      <span class="page-header-eyebrow">
+        Inventory
+      </span>
+
+      <h1>
+        My <em>Products.</em>
+      </h1>
+
+      <p>
+        Manage your new, used, and pre-loved listings — edit details, update
+        stock, or remove products you no longer want to sell.
+      </p>
+
+    </div>
+
+
+    <!-- =================================================
+         NEW / USED PRODUCTS
+    ================================================== -->
+
+    <div class="section" data-reveal="up">
+
+      <h2>
+        My New / Used Products
+      </h2>
+
+
+      <% if (products && products.length > 0) { %>
+
+
+        <div class="products">
+
+          <% products.forEach((product, index) => { %>
+
+
+            <div
+              class="card"
+              data-reveal="zoom-up"
+              data-delay="<%= Math.min(index * 60, 400) %>"
+            >
+
+
+              <% if (product.images && product.images.length > 0) { %>
+
+                <img
+                  src="<%= product.images[0].url %>"
+                  alt="<%= product.name %>"
+                  loading="lazy"
+                >
+
+              <% } %>
+
+
+              <h3>
+                <%= product.name %>
+              </h3>
+
+
+              <p>
+                Type:
+                <strong>
+                  <%= product.productType || "N/A" %>
+                </strong>
+              </p>
+
+
+              <p class="price">
+                ₹<%= Number(product.price || 0).toLocaleString("en-IN") %>
+              </p>
+
+
+              <p>
+                Stock:
+                <strong>
+                  <%= product.stock || 0 %>
+                </strong>
+              </p>
+
+
+              <div class="buttons">
+
+                <a
+                  class="btn"
+                  href="/seller/products/edit/<%= product._id %>"
+                >
+                  <i class="fas fa-pen"></i>
+                  Edit
+                </a>
+
+                <button
+                  type="button"
+                  class="btn delete"
+                  onclick="deleteProduct('<%= product._id %>')"
+                >
+                  <i class="fas fa-trash-alt"></i>
+                  Delete
+                </button>
+
+              </div>
+
+
+            </div>
+
+
+          <% }) %>
+
+        </div>
+
+
+      <% } else { %>
+
+
+        <p class="empty">
+          You have not added any new/used products yet.
+        </p>
+
+
+      <% } %>
+
+
+    </div>
+
+
+    <!-- =================================================
+         OLD CLOTHES
+    ================================================== -->
+
+    <div class="section" data-reveal="up">
+
+
+      <h2>
+        My Old Clothes
+      </h2>
+
+
+      <% if (oldClothes && oldClothes.length > 0) { %>
+
+
+        <div class="products">
+
+          <% oldClothes.forEach((cloth, index) => { %>
+
+
+            <div
+              class="card"
+              data-reveal="zoom-up"
+              data-delay="<%= Math.min(index * 60, 400) %>"
+            >
+
+
+              <% if (cloth.images && cloth.images.length > 0) { %>
+
+                <img
+                  src="<%= cloth.images[0].url || cloth.images[0] %>"
+                  alt="Old Cloth"
+                  loading="lazy"
+                >
+
+              <% } %>
+
+
+              <h3>
+                <%= cloth.category || "Old Cloth" %>
+              </h3>
+
+
+              <p>
+                Brand:
+                <strong>
+                  <%= cloth.brand || "N/A" %>
+                </strong>
+              </p>
+
+
+              <p class="price">
+                ₹<%= Number(cloth.recommendedSellingPrice || 0).toLocaleString("en-IN") %>
+              </p>
+
+
+              <p>
+                Condition:
+                <strong>
+                  <%= String(cloth.condition || "N/A").replace(/_/g, " ") %>
+                </strong>
+              </p>
+
+
+              <div class="buttons">
+
+                <a
+                  class="btn"
+                  href="/seller/old-clothes/edit/<%= cloth._id %>"
+                >
+                  <i class="fas fa-pen"></i>
+                  Edit
+                </a>
+
+                <button
+                  type="button"
+                  class="btn delete"
+                  onclick="deleteOldCloth('<%= cloth._id %>')"
+                >
+                  <i class="fas fa-trash-alt"></i>
+                  Delete
+                </button>
+
+              </div>
+
+
+            </div>
+
+
+          <% }) %>
+
+        </div>
+
+
+      <% } else { %>
+
+
+        <p class="empty">
+          You have not added any old clothes yet.
+        </p>
+
+
+      <% } %>
+
+
+    </div>
+
+
+  </div>
+
+
+  <!-- =====================================================
+       FOOTER PARTIAL
+  ====================================================== -->
+
+  <%- include('../partials/footer') %>
+
+
+  <!-- =====================================================
+       SCRIPT
+  ====================================================== -->
+
+  <script>
+
+    /* =====================================================
+       SCROLL PROGRESS
+    ===================================================== */
+
+    const progressBar = document.getElementById('scrollProgress');
+
+    function updateProgress() {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progressBar.style.width = progress + '%';
+    }
+
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    window.addEventListener('resize', updateProgress);
+    updateProgress();
+
+
+    /* =====================================================
+       SCROLL REVEAL
+    ===================================================== */
+
+    const revealEls = document.querySelectorAll('[data-reveal]');
+
+    if ('IntersectionObserver' in window) {
+
+      const revealObserver = new IntersectionObserver((entries, observer) => {
+
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const el = entry.target;
+            const delay = parseInt(el.dataset.delay || 0, 10);
+
+            setTimeout(() => {
+              el.classList.add('is-revealed');
+            }, delay);
+
+            observer.unobserve(el);
+          }
+        });
+
+      }, {
+        threshold: 0.08,
+        rootMargin: '0px 0px -60px 0px'
+      });
+
+      revealEls.forEach(el => revealObserver.observe(el));
+
+    } else {
+
+      revealEls.forEach(el => el.classList.add('is-revealed'));
+
+    }
+
+
+    /* =====================================================
+       DELETE PRODUCT
+    ===================================================== */
+
+    async function deleteProduct(id) {
+
+      if (!confirm("Delete this product?")) return;
+
+
+      try {
+
+        const response = await fetch(
+          `/seller/products/${id}`,
+          {
+            method: "DELETE"
+          }
+        );
+
+
+        const data = await response.json();
+
+        alert(data.message);
+
+        if (data.success) {
+          location.reload();
+        }
+
+
+      } catch (error) {
+
+        console.error(error);
+
+        alert("Unable to delete product");
+
+      }
+
+    }
+
+
+    /* =====================================================
+       DELETE OLD CLOTH
+    ===================================================== */
+
+    async function deleteOldCloth(id) {
+
+      if (!confirm("Delete this old cloth?")) return;
+
+
+      try {
+
+        const response = await fetch(
+          `/seller/old-clothes/${id}`,
+          {
+            method: "DELETE"
+          }
+        );
+
+
+        const data = await response.json();
+
+        alert(data.message);
+
+        if (data.success) {
+          location.reload();
+        }
+
+
+      } catch (error) {
+
+        console.error(error);
+
+        alert("Unable to delete old cloth");
+
+      }
+
+    }
+
+
+    console.log("Reciclaja — My Products page loaded 📦");
+
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,1625 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Order Details — Reciclaja</title>
+
+  <%- include('../partials/head') %>
+
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/5471644867.js" crossorigin="anonymous"></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,700&display=swap" rel="stylesheet" />
+
+  <style>
+
+    /* =====================================================
+       DESIGN TOKENS
+    ===================================================== */
+
+    :root {
+      --forest: #0d3b2e;
+      --forest-2: #14523f;
+      --forest-3: #1e6b52;
+      --forest-soft: #2d8a6a;
+      --forest-deep: #072a20;
+
+      --emerald: #10b981;
+      --emerald-soft: #34d399;
+
+      --mango: #f59e0b;
+      --mango-soft: #fbbf24;
+      --mango-deep: #d97706;
+
+      --coral: #f97362;
+      --coral-soft: #fb9585;
+      --coral-deep: #e05a44;
+
+      --blush: #fef3e7;
+      --blush-2: #fde8d0;
+
+      --mint: #ecfdf5;
+      --mint-2: #d1fae5;
+
+      --lavender: #f0ebff;
+      --lavender-2: #e0d5ff;
+
+      --sky: #e8f4ff;
+      --sky-2: #d0e6ff;
+
+      --bg: #fbfaf7;
+      --surface: #ffffff;
+      --surface-2: #f7f4ee;
+      --surface-3: #efeae0;
+
+      --text: #10261d;
+      --text-muted: #556b5f;
+      --text-light: #8a9a90;
+
+      --border: #e6e0d4;
+      --border-soft: #f0ebe0;
+
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius: 16px;
+      --radius-sm: 10px;
+
+      --shadow-sm: 0 2px 8px rgba(13, 59, 46, 0.05);
+      --shadow-md: 0 8px 28px rgba(13, 59, 46, 0.08);
+      --shadow-lg: 0 20px 48px rgba(13, 59, 46, 0.12);
+      --shadow-glow: 0 12px 40px rgba(16, 185, 129, 0.18);
+      --shadow-mango: 0 12px 40px rgba(245, 158, 11, 0.22);
+
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    /* =====================================================
+       RESET
+    ===================================================== */
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    a { text-decoration: none; color: inherit; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    button { font-family: inherit; cursor: pointer; }
+    img { display: block; max-width: 100%; }
+
+    /* =====================================================
+       PAGE BACKGROUND
+    ===================================================== */
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 12% 15%, rgba(245, 158, 11, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 88% 85%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* =====================================================
+       SCROLL PROGRESS BAR
+    ===================================================== */
+
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--emerald) 0%, var(--mango) 50%, var(--coral) 100%);
+      z-index: 9999;
+      transition: width 0.1s linear;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
+    }
+
+    /* =====================================================
+       SCROLL REVEAL
+    ===================================================== */
+
+    [data-reveal] {
+      opacity: 0;
+      transition:
+        opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: opacity, transform;
+    }
+
+    [data-reveal="up"] { transform: translateY(40px); }
+    [data-reveal="down"] { transform: translateY(-40px); }
+    [data-reveal="left"] { transform: translateX(-40px); }
+    [data-reveal="right"] { transform: translateX(40px); }
+    [data-reveal="zoom-up"] { transform: scale(0.94) translateY(30px); }
+
+    [data-reveal].is-revealed {
+      opacity: 1;
+      transform: translate(0, 0) scale(1);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      [data-reveal] {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+    }
+
+    /* =====================================================
+       CONTAINER
+    ===================================================== */
+
+    .container {
+      width: 92%;
+      max-width: 1140px;
+      margin: 40px auto 80px;
+    }
+
+    /* =====================================================
+       PAGE HEADER
+    ===================================================== */
+
+    .page-header {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    .page-header::after {
+      content: "";
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 90px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--mango) 0%, var(--coral) 100%);
+      border-radius: 3px;
+    }
+
+    .page-header-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(13, 59, 46, 0.06);
+      border: 1px solid rgba(13, 59, 46, 0.08);
+      color: var(--forest-3);
+      padding: 7px 15px;
+      border-radius: 30px;
+      font-size: 10.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 14px;
+    }
+
+    .page-header-eyebrow::before {
+      content: "📦";
+      font-size: 12px;
+    }
+
+    .page-header h1 {
+      font-family: var(--font-serif);
+      font-size: 40px;
+      font-weight: 500;
+      letter-spacing: -1.5px;
+      color: var(--forest);
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+
+    .page-header h1 em {
+      font-style: italic;
+      background: linear-gradient(120deg, var(--mango-deep) 0%, var(--coral) 60%, var(--mango) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .page-header p {
+      color: var(--text-muted);
+      font-size: 14.5px;
+      max-width: 560px;
+      line-height: 1.65;
+    }
+
+    /* =====================================================
+       SUCCESS BOX
+    ===================================================== */
+
+    .success-box {
+      background:
+        radial-gradient(circle at 90% 20%, rgba(16, 185, 129, 0.1) 0%, transparent 60%),
+        linear-gradient(135deg, var(--mint) 0%, var(--mint-2) 100%);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-left: 4px solid var(--emerald);
+      color: var(--forest-3);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .success-box::before {
+      content: "✨";
+      position: absolute;
+      font-size: 140px;
+      opacity: 0.06;
+      right: -20px;
+      bottom: -40px;
+      pointer-events: none;
+    }
+
+    .success-box-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--emerald) 0%, var(--forest-3) 100%);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+      position: relative;
+      z-index: 2;
+    }
+
+    .success-box-content {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+    }
+
+    .success-box strong {
+      display: block;
+      font-family: var(--font-serif);
+      font-size: 19px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+      color: var(--forest);
+      margin-bottom: 5px;
+    }
+
+    .success-box p {
+      font-size: 13.5px;
+      color: var(--forest-3);
+      line-height: 1.6;
+      margin: 0;
+      font-weight: 500;
+    }
+
+    /* =====================================================
+       CARDS
+    ===================================================== */
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-lg);
+      padding: 30px 30px 28px;
+      margin-bottom: 24px;
+      box-shadow: 0 12px 40px rgba(13, 59, 46, 0.06);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--mango) 0%, var(--coral) 50%, var(--emerald) 100%);
+      opacity: 0.4;
+    }
+
+    .card-title {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--forest);
+      letter-spacing: -0.5px;
+      margin-bottom: 22px;
+      padding-bottom: 16px;
+      border-bottom: 1px dashed var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .card-title::before {
+      content: "";
+      width: 5px;
+      height: 22px;
+      background: linear-gradient(180deg, var(--mango) 0%, var(--coral) 100%);
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    /* =====================================================
+       INFO GRID
+    ===================================================== */
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .info-item {
+      background: var(--surface-2);
+      padding: 16px 18px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-soft);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .info-item::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 3px;
+      height: 100%;
+      background: linear-gradient(180deg, var(--mango) 0%, var(--emerald) 100%);
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: transform 0.35s ease;
+    }
+
+    .info-item:hover::before {
+      transform: scaleY(1);
+    }
+
+    .info-item:hover {
+      background: #ffffff;
+      border-color: var(--mango);
+      transform: translateX(3px);
+      box-shadow: var(--shadow-mango);
+    }
+
+    .label {
+      font-size: 10.5px;
+      color: var(--text-light);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      font-weight: 800;
+    }
+
+    .value {
+      font-size: 14.5px;
+      font-weight: 700;
+      word-break: break-word;
+      color: var(--forest);
+      letter-spacing: -0.1px;
+      line-height: 1.5;
+    }
+
+    /* =====================================================
+       STATUS BADGES
+    ===================================================== */
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 30px;
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border: 1px solid transparent;
+    }
+
+    .status::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 8px currentColor;
+    }
+
+    .status.pending {
+      background: linear-gradient(135deg, var(--blush) 0%, var(--blush-2) 100%);
+      color: var(--mango-deep);
+      border-color: rgba(245, 158, 11, 0.25);
+    }
+
+    .status.placed {
+      background: linear-gradient(135deg, var(--sky) 0%, var(--sky-2) 100%);
+      color: #2b7de0;
+      border-color: rgba(43, 125, 224, 0.2);
+    }
+
+    .status.confirmed {
+      background: linear-gradient(135deg, var(--mint) 0%, var(--mint-2) 100%);
+      color: var(--forest-3);
+      border-color: rgba(16, 185, 129, 0.22);
+    }
+
+    .status.processing {
+      background: linear-gradient(135deg, var(--lavender) 0%, var(--lavender-2) 100%);
+      color: #6352b8;
+      border-color: rgba(99, 82, 184, 0.2);
+    }
+
+    .status.shipped {
+      background: linear-gradient(135deg, #e8f7ff 0%, #d0ecff 100%);
+      color: #16749a;
+      border-color: rgba(22, 116, 154, 0.2);
+    }
+
+    .status.out_for_delivery {
+      background: linear-gradient(135deg, #fff2e0 0%, #ffe0b8 100%);
+      color: var(--mango-deep);
+      border-color: rgba(217, 119, 6, 0.2);
+    }
+
+    .status.delivered {
+      background: linear-gradient(135deg, var(--mint) 0%, var(--mint-2) 100%);
+      color: var(--forest-3);
+      border-color: rgba(16, 185, 129, 0.22);
+    }
+
+    .status.cancelled {
+      background: linear-gradient(135deg, #ffeaea 0%, #ffd4d4 100%);
+      color: var(--coral-deep);
+      border-color: rgba(224, 90, 68, 0.22);
+    }
+
+    .status.failed {
+      background: linear-gradient(135deg, #ffeaea 0%, #ffd4d4 100%);
+      color: var(--coral-deep);
+      border-color: rgba(224, 90, 68, 0.22);
+    }
+
+    /* =====================================================
+       PRODUCTS
+    ===================================================== */
+
+    .product-item {
+      display: flex;
+      gap: 18px;
+      padding: 20px 0;
+      border-bottom: 1px dashed var(--border);
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+
+    .product-item:hover {
+      padding-left: 4px;
+    }
+
+    .product-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .product-item:first-of-type {
+      padding-top: 4px;
+    }
+
+    .product-image {
+      width: 96px;
+      height: 96px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(145deg, var(--surface-2) 0%, var(--surface-3) 100%);
+      overflow: hidden;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border-soft);
+      font-size: 32px;
+      transition: transform 0.35s ease;
+    }
+
+    .product-item:hover .product-image {
+      transform: scale(1.04);
+    }
+
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .product-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .product-name {
+      font-family: var(--font-serif);
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--forest);
+      margin-bottom: 6px;
+      letter-spacing: -0.3px;
+      line-height: 1.3;
+    }
+
+    .product-price {
+      color: var(--forest-3);
+      font-size: 13.5px;
+      font-weight: 800;
+      margin-bottom: 5px;
+      letter-spacing: 0.2px;
+    }
+
+    .product-quantity {
+      font-size: 12.5px;
+      color: var(--text-light);
+      font-weight: 600;
+    }
+
+    .product-quantity strong {
+      color: var(--forest);
+      font-weight: 800;
+    }
+
+    .product-total {
+      font-family: var(--font-serif);
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--forest);
+      letter-spacing: -0.5px;
+      white-space: nowrap;
+    }
+
+    /* =====================================================
+       SHIPPING ADDRESS
+    ===================================================== */
+
+    .address {
+      line-height: 1.9;
+      color: var(--text-muted);
+      font-size: 14px;
+      background: var(--surface-2);
+      padding: 22px 24px;
+      border-radius: var(--radius-sm);
+      border-left: 4px solid var(--mango);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .address::before {
+      content: "📍";
+      position: absolute;
+      font-size: 100px;
+      opacity: 0.05;
+      right: -10px;
+      bottom: -25px;
+      pointer-events: none;
+    }
+
+    .address strong {
+      color: var(--forest);
+      font-size: 15px;
+      font-weight: 800;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* =====================================================
+       PRICE SUMMARY
+    ===================================================== */
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 0;
+      font-size: 14px;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .summary-row:last-of-type {
+      border-bottom: none;
+    }
+
+    .summary-row span:first-child {
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .summary-row strong {
+      color: var(--forest);
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    .summary-row.total {
+      border-top: 2px solid var(--border);
+      border-bottom: none;
+      margin-top: 14px;
+      padding-top: 22px;
+      font-size: 18px;
+    }
+
+    .summary-row.total span:first-child {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--forest);
+      letter-spacing: -0.3px;
+      text-transform: none;
+    }
+
+    .summary-row.total span:last-child {
+      font-family: var(--font-serif);
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--forest);
+      letter-spacing: -1px;
+      line-height: 1;
+      background: linear-gradient(120deg, var(--mango-deep) 0%, var(--coral) 60%, var(--mango) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* =====================================================
+       ACTIONS
+    ===================================================== */
+
+    .actions {
+      display: flex;
+      gap: 14px;
+      margin-top: 32px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      flex: 1;
+      min-width: 180px;
+      padding: 16px 24px;
+      border-radius: var(--radius-sm);
+      text-align: center;
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--forest) 0%, var(--forest-3) 100%);
+      color: #ffffff;
+      box-shadow: 0 10px 28px rgba(13, 59, 46, 0.25);
+    }
+
+    .btn-primary::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 0.35), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .btn-primary:hover::before { left: 100%; }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 36px rgba(13, 59, 46, 0.35);
+      gap: 14px;
+    }
+
+    .btn-secondary {
+      background: #ffffff;
+      color: var(--forest);
+      border: 2px solid var(--forest);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-secondary:hover {
+      background: var(--forest);
+      color: #ffffff;
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(13, 59, 46, 0.22);
+      gap: 14px;
+    }
+
+    .btn-danger {
+      background: rgba(249, 115, 98, 0.08);
+      color: var(--coral-deep);
+      border: 2px solid rgba(249, 115, 98, 0.25);
+    }
+
+    .btn-danger:hover {
+      background: linear-gradient(135deg, var(--coral) 0%, var(--coral-deep) 100%);
+      color: #ffffff;
+      border-color: var(--coral);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(249, 115, 98, 0.3);
+      gap: 14px;
+    }
+
+    /* =====================================================
+       RESPONSIVE
+    ===================================================== */
+
+    @media (max-width: 768px) {
+
+      .container {
+        width: 94%;
+        margin: 30px auto 60px;
+      }
+
+      .page-header h1 {
+        font-size: 32px;
+        letter-spacing: -1px;
+      }
+
+      .card {
+        padding: 24px 22px 22px;
+        border-radius: var(--radius);
+      }
+
+      .card-title {
+        font-size: 19px;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .product-item {
+        flex-wrap: wrap;
+        gap: 14px;
+      }
+
+      .product-image {
+        width: 84px;
+        height: 84px;
+      }
+
+      .product-name {
+        font-size: 15.5px;
+      }
+
+      .product-total {
+        width: 100%;
+        text-align: right;
+        font-size: 18px;
+        margin-top: 6px;
+        padding-top: 10px;
+        border-top: 1px dashed var(--border);
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+        min-width: 0;
+      }
+
+      .summary-row.total span:last-child {
+        font-size: 26px;
+      }
+
+    }
+
+    @media (max-width: 500px) {
+
+      .page-header h1 {
+        font-size: 26px;
+        letter-spacing: -0.8px;
+      }
+
+      .page-header p {
+        font-size: 13.5px;
+      }
+
+      .card {
+        padding: 22px 18px 20px;
+        border-radius: var(--radius-sm);
+      }
+
+      .card-title {
+        font-size: 17px;
+        margin-bottom: 18px;
+        padding-bottom: 12px;
+      }
+
+      .card-title::before {
+        height: 18px;
+        width: 4px;
+      }
+
+      .info-item {
+        padding: 14px 16px;
+      }
+
+      .value {
+        font-size: 13.5px;
+      }
+
+      .product-image {
+        width: 72px;
+        height: 72px;
+        font-size: 26px;
+      }
+
+      .product-name {
+        font-size: 14px;
+      }
+
+      .product-price {
+        font-size: 12.5px;
+      }
+
+      .product-total {
+        font-size: 16px;
+      }
+
+      .address {
+        padding: 18px 18px;
+        font-size: 13px;
+      }
+
+      .summary-row {
+        font-size: 13px;
+        padding: 12px 0;
+      }
+
+      .summary-row.total span:first-child {
+        font-size: 17px;
+      }
+
+      .summary-row.total span:last-child {
+        font-size: 22px;
+      }
+
+      .success-box {
+        padding: 16px 18px;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .success-box strong {
+        font-size: 16px;
+      }
+
+      .success-box p {
+        font-size: 12.5px;
+      }
+
+      .btn {
+        padding: 14px 20px;
+        font-size: 12.5px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+  <!-- Scroll progress -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+
+  <!-- =====================================================
+       NAVBAR
+  ====================================================== -->
+
+  <%- include('../partials/navbar') %>
+
+
+  <!-- =====================================================
+       MAIN
+  ====================================================== -->
+
+  <main class="container">
+
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <div class="page-header" data-reveal="down">
+
+      <span class="page-header-eyebrow">
+        Order Confirmation
+      </span>
+
+      <h1>
+        Order <em>Details</em>
+      </h1>
+
+      <p>
+        View your order information, products, shipping, and payment details.
+      </p>
+
+    </div>
+
+
+    <!-- =====================================================
+         SUCCESS MESSAGE
+    ====================================================== -->
+
+    <% if (order.paymentStatus === "completed") { %>
+
+      <div class="success-box" data-reveal="zoom-up" data-delay="80">
+
+        <div class="success-box-icon">
+          <i class="fas fa-check"></i>
+        </div>
+
+        <div class="success-box-content">
+
+          <strong>
+            Payment Successful
+          </strong>
+
+          <p>
+            Your payment has been received successfully.
+            Your order is now being processed.
+          </p>
+
+        </div>
+
+      </div>
+
+    <% } else if (order.paymentMethod === "COD") { %>
+
+      <div class="success-box" data-reveal="zoom-up" data-delay="80">
+
+        <div class="success-box-icon">
+          <i class="fas fa-check"></i>
+        </div>
+
+        <div class="success-box-content">
+
+          <strong>
+            Order Placed Successfully
+          </strong>
+
+          <p>
+            Your order has been placed with Cash on Delivery.
+            Please keep exact change ready.
+          </p>
+
+        </div>
+
+      </div>
+
+    <% } %>
+
+
+    <!-- =====================================================
+         ORDER INFORMATION
+    ====================================================== -->
+
+    <div class="card" data-reveal="up" data-delay="0">
+
+      <div class="card-title">
+        Order Information
+      </div>
+
+
+      <div class="info-grid">
+
+
+        <!-- ORDER ID -->
+
+        <div class="info-item">
+
+          <div class="label">
+            Order ID
+          </div>
+
+          <div class="value">
+            #<%= order._id %>
+          </div>
+
+        </div>
+
+
+        <!-- DATE -->
+
+        <div class="info-item">
+
+          <div class="label">
+            Order Date
+          </div>
+
+          <div class="value">
+            <%= new Date(order.createdAt).toLocaleString("en-IN") %>
+          </div>
+
+        </div>
+
+
+        <!-- ORDER STATUS -->
+
+        <div class="info-item">
+
+          <div class="label">
+            Order Status
+          </div>
+
+          <div>
+
+            <%
+              const status =
+                order.orderStatus
+                  ? order.orderStatus.toLowerCase()
+                  : "pending";
+            %>
+
+            <span class="status <%= status %>">
+              <%= order.orderStatus %>
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- PAYMENT STATUS -->
+
+        <div class="info-item">
+
+          <div class="label">
+            Payment Status
+          </div>
+
+          <div>
+
+            <%
+              const paymentStatus =
+                order.paymentStatus || "pending";
+            %>
+
+            <span
+              class="status <%= paymentStatus === 'completed'
+                ? 'confirmed'
+                : paymentStatus === 'failed'
+                ? 'cancelled'
+                : 'pending'
+              %>"
+            >
+              <%= paymentStatus.toUpperCase() %>
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- PAYMENT METHOD -->
+
+        <div class="info-item">
+
+          <div class="label">
+            Payment Method
+          </div>
+
+          <div class="value">
+
+            <% if (order.paymentMethod === "RAZORPAY") { %>
+              <i class="fas fa-credit-card" style="color:var(--mango-deep);margin-right:6px;"></i>
+              Razorpay / Online
+            <% } else { %>
+              <i class="fas fa-money-bill-wave" style="color:var(--mango-deep);margin-right:6px;"></i>
+              Cash on Delivery
+            <% } %>
+
+          </div>
+
+        </div>
+
+
+        <!-- TRACKING -->
+
+        <div class="info-item">
+
+          <div class="label">
+            Tracking Number
+          </div>
+
+          <div class="value">
+            <%= order.trackingNumber || "Not assigned yet" %>
+          </div>
+
+        </div>
+
+
+      </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         PRODUCTS
+    ====================================================== -->
+
+    <div class="card" data-reveal="up" data-delay="120">
+
+      <div class="card-title">
+        Ordered Products
+      </div>
+
+
+      <% if (order.items && order.items.length > 0) { %>
+
+
+        <% order.items.forEach(item => { %>
+
+
+          <div class="product-item">
+
+
+            <!-- IMAGE -->
+
+            <div class="product-image">
+
+              <% if (
+                item.product &&
+                item.product.images &&
+                item.product.images.length > 0
+              ) { %>
+
+                <img
+                  src="<%= item.product.images[0].url || item.product.images[0] %>"
+                  alt="<%= item.product.name || item.product.title %>"
+                  onerror="this.src='https://via.placeholder.com/90?text=No+Image';"
+                >
+
+              <% } else { %>
+
+                <span>👕</span>
+
+              <% } %>
+
+            </div>
+
+
+            <!-- PRODUCT INFO -->
+
+            <div class="product-info">
+
+              <div class="product-name">
+
+                <%= item.product
+                  ? (
+                      item.product.name ||
+                      item.product.title ||
+                      "Product"
+                    )
+                  : "Product Unavailable"
+                %>
+
+              </div>
+
+
+              <div class="product-price">
+
+                ₹<%= Number(item.price || 0).toLocaleString("en-IN") %>
+                <span style="color:var(--text-light);font-weight:600;">/ item</span>
+
+              </div>
+
+
+              <div class="product-quantity">
+
+                Quantity:
+                <strong>
+                  <%= item.quantity %>
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <!-- ITEM TOTAL -->
+
+            <div class="product-total">
+
+              ₹<%= Number(
+                (item.price || 0) * (item.quantity || 1)
+              ).toLocaleString("en-IN") %>
+
+            </div>
+
+
+          </div>
+
+
+        <% }) %>
+
+
+      <% } else { %>
+
+
+        <p style="color:var(--text-muted);font-style:italic;padding:10px 0;">
+          No products found in this order.
+        </p>
+
+
+      <% } %>
+
+
+    </div>
+
+
+    <!-- =====================================================
+         SHIPPING ADDRESS
+    ====================================================== -->
+
+    <div class="card" data-reveal="up" data-delay="200">
+
+      <div class="card-title">
+        Shipping Address
+      </div>
+
+
+      <div class="address">
+
+
+        <% if (order.shippingAddress) { %>
+
+
+          <strong>
+            <%= order.shippingAddress.name %>
+          </strong>
+
+          <br>
+
+          <%= order.shippingAddress.street %>
+
+          <br>
+
+          <%= order.shippingAddress.locality %>
+
+          <br>
+
+          <% if (order.shippingAddress.city) { %>
+            <%= order.shippingAddress.city %>,
+          <% } %>
+
+          <% if (order.shippingAddress.state) { %>
+            <%= order.shippingAddress.state %>
+          <% } %>
+
+          <% if (order.shippingAddress.zipCode) { %>
+            — <%= order.shippingAddress.zipCode %>
+          <% } %>
+
+          <br>
+
+          <span style="color:var(--mango-deep);font-weight:800;">
+            <i class="fas fa-phone" style="margin-right:6px;"></i>
+            <%= order.shippingAddress.phone %>
+          </span>
+
+
+        <% } else { %>
+
+
+          <span style="font-style:italic;">
+            Shipping address not available.
+          </span>
+
+
+        <% } %>
+
+
+      </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         DELIVERY INFORMATION
+    ====================================================== -->
+
+    <div class="card" data-reveal="up" data-delay="260">
+
+      <div class="card-title">
+        Delivery Information
+      </div>
+
+
+      <div class="info-grid">
+
+        <div class="info-item">
+
+          <div class="label">
+            Delivery Date
+          </div>
+
+          <div class="value">
+            <%= order.deliveryDate || "To be confirmed" %>
+          </div>
+
+        </div>
+
+
+        <div class="info-item">
+
+          <div class="label">
+            Time Slot
+          </div>
+
+          <div class="value">
+            <%= order.timeSlot || "To be confirmed" %>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         PRICE SUMMARY
+    ====================================================== -->
+
+    <div class="card" data-reveal="up" data-delay="320">
+
+      <div class="card-title">
+        Price Summary
+      </div>
+
+
+      <div class="summary-row">
+
+        <span>Subtotal</span>
+
+        <strong>
+          ₹<%= Number(order.subtotal || 0).toLocaleString("en-IN") %>
+        </strong>
+
+      </div>
+
+
+      <div class="summary-row">
+
+        <span>Shipping</span>
+
+        <strong>
+
+          <% if (Number(order.shippingCharge || 0) === 0) { %>
+
+            <span style="color:var(--emerald);font-weight:800;">
+              FREE
+            </span>
+
+          <% } else { %>
+
+            ₹<%= Number(order.shippingCharge).toLocaleString("en-IN") %>
+
+          <% } %>
+
+        </strong>
+
+      </div>
+
+
+      <% if (order.discount && Number(order.discount) > 0) { %>
+
+        <div class="summary-row">
+
+          <span>Discount</span>
+
+          <strong style="color:var(--emerald);">
+            − ₹<%= Number(order.discount).toLocaleString("en-IN") %>
+          </strong>
+
+        </div>
+
+      <% } %>
+
+
+      <div class="summary-row total">
+
+        <span>
+          Total
+        </span>
+
+        <span>
+          ₹<%= Number(order.totalAmount || 0).toLocaleString("en-IN") %>
+        </span>
+
+      </div>
+
+
+    </div>
+
+
+    <!-- =====================================================
+         ACTIONS
+    ====================================================== -->
+
+    <div class="actions" data-reveal="up" data-delay="400">
+
+
+      <!-- CONTINUE SHOPPING -->
+
+      <a
+        href="/products/shop"
+        class="btn btn-secondary"
+      >
+        <i class="fas fa-shopping-bag"></i>
+        Continue Shopping
+      </a>
+
+
+      <!-- MY ORDERS -->
+
+      <a
+        href="/orders/userOrders"
+        class="btn btn-primary"
+      >
+        <i class="fas fa-box"></i>
+        My Orders
+      </a>
+
+
+      <!-- CANCEL -->
+
+      <% if (![
+        "SHIPPED",
+        "OUT_FOR_DELIVERY",
+        "DELIVERED",
+        "CANCELLED"
+      ].includes(order.orderStatus)) { %>
+
+        <form
+          action="/orders/<%= order._id %>/cancel"
+          method="POST"
+          style="flex:1; min-width:180px; display:flex;"
+          onsubmit="return confirm('Are you sure you want to cancel this order?');"
+        >
+
+          <button
+            type="submit"
+            class="btn btn-danger"
+            style="width:100%;"
+          >
+            <i class="fas fa-times-circle"></i>
+            Cancel Order
+          </button>
+
+        </form>
+
+      <% } %>
+
+
+    </div>
+
+
+  </main>
+
+
+  <!-- =====================================================
+       FOOTER PARTIAL
+  ====================================================== -->
+
+  <%- include('../partials/footer') %>
+
+
+  <!-- =====================================================
+       SCRIPT
+  ====================================================== -->
+
+  <script>
+
+    /* =====================================================
+       SCROLL PROGRESS
+    ===================================================== */
+
+    const progressBar = document.getElementById('scrollProgress');
+
+    function updateProgress() {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progressBar.style.width = progress + '%';
+    }
+
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    window.addEventListener('resize', updateProgress);
+    updateProgress();
+
+
+    /* =====================================================
+       SCROLL REVEAL
+    ===================================================== */
+
+    const revealEls = document.querySelectorAll('[data-reveal]');
+
+    if ('IntersectionObserver' in window) {
+
+      const revealObserver = new IntersectionObserver((entries, observer) => {
+
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const el = entry.target;
+            const delay = parseInt(el.dataset.delay || 0, 10);
+
+            setTimeout(() => {
+              el.classList.add('is-revealed');
+            }, delay);
+
+            observer.unobserve(el);
+          }
+        });
+
+      }, {
+        threshold: 0.08,
+        rootMargin: '0px 0px -60px 0px'
+      });
+
+      revealEls.forEach(el => revealObserver.observe(el));
+
+    } else {
+
+      revealEls.forEach(el => el.classList.add('is-revealed'));
+
+    }
+
+
+    console.log("Reciclaja — Order Details page loaded 📦");
+
+  </script>
+
+</body>
+
+</html>

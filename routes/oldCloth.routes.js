@@ -2,278 +2,152 @@ const express = require("express");
 
 const router = express.Router();
 
-// ======================================================
-// CONTROLLERS
-// ======================================================
-
 const {
   uploadOldCloth,
   getAllOldCloths,
   getSingleOldCloth,
   deleteOldCloth,
-} = require(
-  "../controllers/oldCloth.controller"
-);
+  estimateOldClothPrice,
+} = require("../controllers/oldCloth.controller");
 
-// ======================================================
-// MODELS
-// ======================================================
+const OldCloth = require("../models/oldCloth.model");
 
-const OldCloth = require(
-  "../models/oldCloth.model"
-);
+const upload = require("../middleware/multer.middleware");
 
-// ======================================================
-// MIDDLEWARE
-// ======================================================
+const { auth } = require("../middleware/auth");
 
-const upload = require(
-  "../config/multer"
-);
+router.get("/upload", auth, (req, res) => {
+  res.render("oldClothes/uploadOldCloth");
+});
 
-const {
+router.post(
+  "/estimate-price",
   auth,
-} = require(
-  "../middleware/auth"
+  estimateOldClothPrice
 );
-
-// ======================================================
-// UPLOAD PAGE
-// ======================================================
-
-router.get(
-  "/upload",
-  auth,
-  (req, res) => {
-
-    res.render(
-      "oldClothes/uploadOldCloth"
-    );
-
-  }
-);
-
-// ======================================================
-// SELLER DASHBOARD
-// ======================================================
-
-router.get(
-  "/seller/dashboard",
-  auth,
-  async (req, res) => {
-
-    try {
-
-      const cloths =
-        await OldCloth.find({
-
-          seller:
-            req.user._id,
-
-        })
-
-          .sort({
-            createdAt: -1,
-          });
-
-      res.render(
-        "oldClothes/sellerDashboard",
-        {
-          cloths,
-        }
-      );
-
-    } catch (error) {
-
-      console.error(
-        "Seller Dashboard Error:",
-        error
-      );
-
-      res.redirect("/");
-
-    }
-
-  }
-);
-
-// ======================================================
-// UPLOAD OLD CLOTH
-// ======================================================
 
 router.post(
   "/upload",
-
   auth,
-
-  upload.array(
-    "images",
-    5
-  ),
-
+  upload.array("images", 5),
   uploadOldCloth
 );
 
-// ======================================================
-// GET ALL OLD CLOTHS PAGE
-// ======================================================
+router.get("/", async (req, res) => {
 
-router.get(
-  "/",
+  try {
 
-  async (req, res) => {
+    const {
+      category,
+      condition,
+      brand,
+      search,
+      minPrice,
+      maxPrice,
+      sort = "latest",
+    } = req.query;
 
-    try {
+    const query = {
+      status: "active",
+    };
 
-      const cloths =
-        await OldCloth.find()
-
-          .populate(
-            "seller",
-            "name"
-          )
-
-          .sort({
-            createdAt: -1,
-          });
-
-      res.render(
-        "oldClothes/oldClothes",
-        {
-          cloths,
-        }
-      );
-
-    } catch (error) {
-
-      console.error(
-        "Old Clothes Page Error:",
-        error
-      );
-
-      res.redirect("/");
-
+    if (category) {
+      query.category = category;
     }
 
-  }
-);
+    if (condition) {
+      query.condition = condition;
+    }
 
-// ======================================================
-// GET SINGLE OLD CLOTH PAGE
-// ======================================================
+    if (brand) {
+      query.brand = new RegExp(brand, "i");
+    }
+
+    if (search) {
+      query.$text = {
+        $search: search,
+      };
+    }
+
+    if (minPrice || maxPrice) {
+
+      query.recommendedSellingPrice = {};
+
+      if (minPrice) {
+        query.recommendedSellingPrice.$gte =
+          Number(minPrice);
+      }
+
+      if (maxPrice) {
+        query.recommendedSellingPrice.$lte =
+          Number(maxPrice);
+      }
+    }
+
+    let sortQuery = {
+      createdAt: -1,
+    };
+
+    if (sort === "price_low") {
+      sortQuery = {
+        recommendedSellingPrice: 1,
+      };
+    }
+
+    if (sort === "price_high") {
+      sortQuery = {
+        recommendedSellingPrice: -1,
+      };
+    }
+
+    if (sort === "oldest") {
+      sortQuery = {
+        createdAt: 1,
+      };
+    }
+
+    const cloths =
+      await OldCloth.find(query)
+        .populate("seller", "name email")
+        .sort(sortQuery);
+
+    res.render(
+      "oldClothes/old-clothes",
+      {
+        cloths,
+        filters: req.query,
+      }
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Old Clothes Error:",
+      error
+    );
+
+    res.status(500).render(
+      "oldClothes/old-clothes",
+      {
+        cloths: [],
+        filters: req.query,
+        error: "Unable to load old clothes",
+      }
+    );
+  }
+
+});
+
 
 router.get(
   "/:id",
-
-  async (req, res) => {
-
-    try {
-
-      const cloth =
-        await OldCloth.findById(
-          req.params.id
-        )
-
-          .populate(
-            "seller",
-            "name email"
-          );
-
-      if (!cloth) {
-
-        return res.redirect(
-          "/old-clothes"
-        );
-
-      }
-
-      res.render(
-        "oldClothes/singleOldCloth",
-        {
-          cloth,
-        }
-      );
-
-    } catch (error) {
-
-      console.error(
-        "Single Cloth Error:",
-        error
-      );
-
-      res.redirect(
-        "/old-clothes"
-      );
-
-    }
-
-  }
+  getSingleOldCloth
 );
-
-// ======================================================
-// DELETE OLD CLOTH
-// ======================================================
 
 router.delete(
   "/:id",
-
   auth,
-
-  async (req, res) => {
-
-    try {
-
-      const cloth =
-        await OldCloth.findById(
-          req.params.id
-        );
-
-      // ================= NOT FOUND =================
-      if (!cloth) {
-
-        return res.status(404).send(
-          "Cloth not found"
-        );
-
-      }
-
-      // ================= OWNER CHECK =================
-      if (
-        cloth.seller.toString() !==
-        req.user._id.toString()
-      ) {
-
-        return res.status(403).send(
-          "Unauthorized"
-        );
-
-      }
-
-      // ================= DELETE =================
-      await OldCloth.findByIdAndDelete(
-        req.params.id
-      );
-
-      console.log(
-        "Old Cloth Deleted"
-      );
-
-      res.redirect(
-        "/old-clothes/seller/dashboard"
-      );
-
-    } catch (error) {
-
-      console.error(
-        "Delete Cloth Error:",
-        error
-      );
-
-      res.status(500).send(
-        "Server Error"
-      );
-    }
-  }
+  deleteOldCloth
 );
 
 module.exports = router;

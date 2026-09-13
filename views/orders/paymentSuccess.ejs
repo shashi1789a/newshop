@@ -1,74 +1,997 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Payment Successful — Reciclaja</title>
+
   <%- include('../partials/head') %>
+
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/5471644867.js" crossorigin="anonymous"></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,700&display=swap" rel="stylesheet" />
+
+  <style>
+
+    /* =====================================================
+       DESIGN TOKENS
+    ===================================================== */
+
+    :root {
+      --forest: #0d3b2e;
+      --forest-2: #14523f;
+      --forest-3: #1e6b52;
+      --forest-soft: #2d8a6a;
+      --forest-deep: #072a20;
+
+      --emerald: #10b981;
+      --emerald-soft: #34d399;
+
+      --mango: #f59e0b;
+      --mango-soft: #fbbf24;
+      --mango-deep: #d97706;
+
+      --coral: #f97362;
+      --coral-soft: #fb9585;
+      --coral-deep: #e05a44;
+
+      --blush: #fef3e7;
+      --blush-2: #fde8d0;
+
+      --mint: #ecfdf5;
+      --mint-2: #d1fae5;
+
+      --sky: #e8f4ff;
+      --sky-2: #d0e6ff;
+
+      --bg: #fbfaf7;
+      --surface: #ffffff;
+      --surface-2: #f7f4ee;
+      --surface-3: #efeae0;
+
+      --text: #10261d;
+      --text-muted: #556b5f;
+      --text-light: #8a9a90;
+
+      --border: #e6e0d4;
+      --border-soft: #f0ebe0;
+
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius: 16px;
+      --radius-sm: 10px;
+
+      --shadow-sm: 0 2px 8px rgba(13, 59, 46, 0.05);
+      --shadow-md: 0 8px 28px rgba(13, 59, 46, 0.08);
+      --shadow-lg: 0 20px 48px rgba(13, 59, 46, 0.12);
+      --shadow-glow: 0 12px 40px rgba(16, 185, 129, 0.18);
+      --shadow-mango: 0 12px 40px rgba(245, 158, 11, 0.22);
+
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    /* =====================================================
+       RESET
+    ===================================================== */
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    a { text-decoration: none; color: inherit; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+
+    /* =====================================================
+       PAGE BACKGROUND
+    ===================================================== */
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 12% 15%, rgba(245, 158, 11, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 88% 85%, rgba(16, 185, 129, 0.06) 0%, transparent 40%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* =====================================================
+       SCROLL PROGRESS BAR
+    ===================================================== */
+
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--emerald) 0%, var(--mango) 50%, var(--coral) 100%);
+      z-index: 9999;
+      transition: width 0.1s linear;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
+    }
+
+    /* =====================================================
+       SCROLL REVEAL
+    ===================================================== */
+
+    [data-reveal] {
+      opacity: 0;
+      transition:
+        opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: opacity, transform;
+    }
+
+    [data-reveal="down"] { transform: translateY(-40px); }
+    [data-reveal="up"] { transform: translateY(40px); }
+    [data-reveal="zoom"] { transform: scale(0.88); }
+    [data-reveal="zoom-up"] { transform: scale(0.94) translateY(30px); }
+
+    [data-reveal].is-revealed {
+      opacity: 1;
+      transform: translate(0, 0) scale(1);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      [data-reveal] {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+    }
+
+    /* =====================================================
+       PAGE WRAPPER
+    ===================================================== */
+
+    .payment-success-container {
+      min-height: calc(100vh - 100px);
+      padding: 60px 0 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .payment-success-container::before {
+      content: "";
+      position: absolute;
+      top: -150px;
+      right: -150px;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, transparent 70%);
+      filter: blur(70px);
+      pointer-events: none;
+      animation: pulseGlow 6s ease-in-out infinite;
+    }
+
+    .payment-success-container::after {
+      content: "";
+      position: absolute;
+      bottom: -150px;
+      left: -150px;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(251, 191, 36, 0.12) 0%, transparent 70%);
+      filter: blur(70px);
+      pointer-events: none;
+      animation: pulseGlow 8s ease-in-out infinite reverse;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.7; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.1); }
+    }
+
+    /* Floating decorations */
+
+    .success-float {
+      position: absolute;
+      color: var(--mango);
+      opacity: 0.09;
+      pointer-events: none;
+      animation: floatY 9s ease-in-out infinite;
+      z-index: 1;
+    }
+
+    .success-float.f1 { top: 12%; left: 8%; font-size: 70px; animation-delay: 0s; }
+    .success-float.f2 { top: 68%; right: 10%; font-size: 58px; animation-delay: 2s; }
+    .success-float.f3 { bottom: 15%; left: 14%; font-size: 52px; animation-delay: 4s; }
+    .success-float.f4 { top: 30%; right: 14%; font-size: 44px; animation-delay: 1s; }
+
+    @keyframes floatY {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-22px) rotate(8deg); }
+    }
+
+    /* =====================================================
+       SUCCESS CARD
+    ===================================================== */
+
+    .success-card {
+      width: 92%;
+      max-width: 640px;
+      background: var(--surface);
+      border-radius: var(--radius-xl);
+      padding: 48px 44px 44px;
+      box-shadow: 0 24px 80px rgba(13, 59, 46, 0.14);
+      border: 1px solid var(--border-soft);
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+      z-index: 2;
+    }
+
+    .success-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--mango) 0%, var(--coral) 50%, var(--emerald) 100%);
+    }
+
+    .success-card::after {
+      content: "";
+      position: absolute;
+      top: -80px;
+      right: -80px;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      border: 1px solid rgba(16, 185, 129, 0.08);
+      pointer-events: none;
+    }
+
+    /* =====================================================
+       ANIMATED SUCCESS ICON
+    ===================================================== */
+
+    .success-icon-wrap {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      margin: 0 auto 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .success-icon-wrap::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 2px dashed rgba(16, 185, 129, 0.35);
+      animation: spinSlow 24s linear infinite;
+    }
+
+    @keyframes spinSlow {
+      to { transform: rotate(360deg); }
+    }
+
+    .success-icon-wrap::after {
+      content: "";
+      position: absolute;
+      inset: -20px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, transparent 70%);
+      filter: blur(20px);
+      z-index: -1;
+      animation: glowPulse 4s ease-in-out infinite;
+    }
+
+    @keyframes glowPulse {
+      0%, 100% { opacity: 0.6; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.1); }
+    }
+
+    .success-icon {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--emerald) 0%, var(--forest-3) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 46px;
+      color: #ffffff;
+      box-shadow:
+        0 20px 48px rgba(16, 185, 129, 0.4),
+        inset 0 -4px 12px rgba(0, 0, 0, 0.08);
+      animation: iconBounce 2.4s ease-in-out infinite;
+      position: relative;
+      z-index: 2;
+    }
+
+    @keyframes iconBounce {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-6px) scale(1.03); }
+    }
+
+    /* Confetti-like sparkles */
+
+    .sparkle {
+      position: absolute;
+      font-size: 22px;
+      opacity: 0;
+      animation: sparkleFloat 3s ease-in-out infinite;
+    }
+
+    .sparkle.s1 { top: 6%; left: 8%; animation-delay: 0s; color: var(--mango); }
+    .sparkle.s2 { top: 12%; right: 10%; animation-delay: 0.6s; color: var(--coral); }
+    .sparkle.s3 { bottom: 10%; left: 12%; animation-delay: 1.2s; color: var(--emerald); }
+    .sparkle.s4 { bottom: 16%; right: 8%; animation-delay: 1.8s; color: var(--mango-deep); }
+
+    @keyframes sparkleFloat {
+      0% { opacity: 0; transform: translateY(0) scale(0.6); }
+      40% { opacity: 1; transform: translateY(-8px) scale(1); }
+      100% { opacity: 0; transform: translateY(-20px) scale(0.8); }
+    }
+
+    /* =====================================================
+       HEADING
+    ===================================================== */
+
+    .success-card h1 {
+      font-family: var(--font-serif);
+      font-size: 42px;
+      font-weight: 500;
+      color: var(--forest);
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .success-card h1 em {
+      font-style: italic;
+      background: linear-gradient(120deg, var(--mango-deep) 0%, var(--coral) 60%, var(--mango) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .success-card > p {
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.7;
+      max-width: 460px;
+      margin: 0 auto 32px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* =====================================================
+       ORDER DETAILS
+    ===================================================== */
+
+    .order-details {
+      background:
+        radial-gradient(circle at 90% 10%, rgba(16, 185, 129, 0.06) 0%, transparent 60%),
+        linear-gradient(135deg, var(--surface-2) 0%, #ffffff 100%);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius);
+      padding: 28px 28px 24px;
+      text-align: left;
+      margin-bottom: 32px;
+      position: relative;
+      overflow: hidden;
+      z-index: 2;
+    }
+
+    .order-details::before {
+      content: "📦";
+      position: absolute;
+      font-size: 140px;
+      opacity: 0.04;
+      right: -30px;
+      bottom: -50px;
+      transform: rotate(-12deg);
+      pointer-events: none;
+    }
+
+    .order-details h2 {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--forest);
+      letter-spacing: -0.4px;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px dashed var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .order-details h2::before {
+      content: "";
+      width: 5px;
+      height: 20px;
+      background: linear-gradient(180deg, var(--mango) 0%, var(--coral) 100%);
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .order-details p {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 13px 0;
+      border-bottom: 1px dashed var(--border);
+      font-size: 13.5px;
+      margin: 0;
+      position: relative;
+      z-index: 2;
+      flex-wrap: wrap;
+    }
+
+    .order-details p:last-of-type {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .order-details p:first-of-type {
+      padding-top: 0;
+    }
+
+    .order-details strong {
+      color: var(--text-light);
+      font-weight: 800;
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .order-details strong i {
+      color: var(--mango-deep);
+      font-size: 11px;
+      width: 14px;
+      text-align: center;
+    }
+
+    .order-details p > span,
+    .order-details .detail-value {
+      color: var(--forest);
+      font-weight: 700;
+      font-size: 14px;
+      text-align: right;
+      word-break: break-word;
+      letter-spacing: -0.1px;
+      max-width: 60%;
+    }
+
+    /* Status pill for payment status */
+
+    .detail-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 13px;
+      border-radius: 30px;
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border: 1px solid transparent;
+    }
+
+    .detail-pill::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 8px currentColor;
+    }
+
+    .detail-pill.success {
+      background: linear-gradient(135deg, var(--mint) 0%, var(--mint-2) 100%);
+      color: var(--forest-3);
+      border-color: rgba(16, 185, 129, 0.22);
+    }
+
+    .detail-pill.warning {
+      background: linear-gradient(135deg, var(--blush) 0%, var(--blush-2) 100%);
+      color: var(--mango-deep);
+      border-color: rgba(245, 158, 11, 0.25);
+    }
+
+    .detail-pill.info {
+      background: linear-gradient(135deg, var(--sky) 0%, var(--sky-2) 100%);
+      color: #2b7de0;
+      border-color: rgba(43, 125, 224, 0.22);
+    }
+
+    /* =====================================================
+       BUTTONS
+    ===================================================== */
+
+    .success-buttons {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 2;
+    }
+
+    .success-buttons .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex: 1;
+      min-width: 200px;
+      padding: 15px 28px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+      border: none;
+      cursor: pointer;
+    }
+
+    .success-buttons .btn:not(.secondary-btn) {
+      background: linear-gradient(135deg, var(--forest) 0%, var(--forest-3) 100%);
+      color: #ffffff;
+      box-shadow: 0 10px 28px rgba(13, 59, 46, 0.25);
+    }
+
+    .success-buttons .btn:not(.secondary-btn)::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 0.35), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .success-buttons .btn:not(.secondary-btn):hover::before { left: 100%; }
+
+    .success-buttons .btn:not(.secondary-btn):hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 36px rgba(13, 59, 46, 0.35);
+      gap: 14px;
+    }
+
+    .secondary-btn {
+      background: #ffffff;
+      color: var(--forest);
+      border: 2px solid var(--forest);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .secondary-btn:hover {
+      background: var(--forest);
+      color: #ffffff;
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(13, 59, 46, 0.22);
+      gap: 14px;
+    }
+
+    /* =====================================================
+       RESPONSIVE
+    ===================================================== */
+
+    @media (max-width: 700px) {
+
+      .payment-success-container {
+        padding: 40px 0 60px;
+      }
+
+      .success-card {
+        padding: 38px 28px 34px;
+        border-radius: var(--radius-lg);
+      }
+
+      .success-card h1 {
+        font-size: 32px;
+        letter-spacing: -1px;
+      }
+
+      .success-card > p {
+        font-size: 14px;
+      }
+
+      .success-icon-wrap {
+        width: 120px;
+        height: 120px;
+        margin-bottom: 24px;
+      }
+
+      .success-icon {
+        width: 86px;
+        height: 86px;
+        font-size: 38px;
+      }
+
+      .order-details {
+        padding: 22px 20px 18px;
+      }
+
+      .order-details h2 {
+        font-size: 17px;
+      }
+
+      .order-details p {
+        font-size: 12.5px;
+      }
+
+      .order-details .detail-value {
+        font-size: 13px;
+      }
+
+      .success-float { display: none; }
+
+    }
+
+    @media (max-width: 500px) {
+
+      .success-card {
+        width: 94%;
+        padding: 32px 22px 28px;
+      }
+
+      .success-card h1 {
+        font-size: 26px;
+        letter-spacing: -0.8px;
+      }
+
+      .success-card > p {
+        font-size: 13.5px;
+        margin-bottom: 26px;
+      }
+
+      .success-icon-wrap {
+        width: 100px;
+        height: 100px;
+      }
+
+      .success-icon {
+        width: 74px;
+        height: 74px;
+        font-size: 32px;
+      }
+
+      .sparkle { font-size: 18px; }
+
+      .order-details {
+        padding: 20px 16px;
+      }
+
+      .order-details p {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+        padding: 11px 0;
+      }
+
+      .order-details p > span,
+      .order-details .detail-value {
+        max-width: 100%;
+        text-align: left;
+      }
+
+      .success-buttons {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .success-buttons .btn {
+        min-width: 0;
+        width: 100%;
+        padding: 14px 22px;
+        font-size: 12.5px;
+      }
+
+    }
+
+  </style>
+
 </head>
+
 <body>
 
-<%- include('../partials/navbar') %>
+  <!-- Scroll progress -->
+  <div class="scroll-progress" id="scrollProgress"></div>
 
-<div class="payment-success-container">
 
-  <div class="success-card">
+  <!-- =====================================================
+       NAVBAR
+  ====================================================== -->
 
-    <div class="success-icon">
-      <i class="fa-solid fa-circle-check"></i>
-    </div>
+  <%- include('../partials/navbar') %>
 
-    <h1>Payment Successful</h1>
 
-    <p>
-      Your order has been placed successfully.
-    </p>
+  <!-- =====================================================
+       PAYMENT SUCCESS
+  ====================================================== -->
 
-    <div class="order-details">
+  <div class="payment-success-container">
 
-      <h2>Order Details</h2>
+    <!-- Floating decorations -->
+    <i class="fas fa-check-circle success-float f1"></i>
+    <i class="fas fa-leaf success-float f2"></i>
+    <i class="fas fa-recycle success-float f3"></i>
+    <i class="fas fa-star success-float f4"></i>
 
-      <p>
-        <strong>Order ID:</strong>
-        <%= order._id %>
+
+    <div class="success-card" data-reveal="zoom-up">
+
+
+      <!-- =================================================
+           ANIMATED SUCCESS ICON
+      ================================================== -->
+
+      <div class="success-icon-wrap">
+
+        <span class="sparkle s1">✦</span>
+        <span class="sparkle s2">✦</span>
+        <span class="sparkle s3">✦</span>
+        <span class="sparkle s4">✦</span>
+
+        <div class="success-icon">
+          <i class="fas fa-check"></i>
+        </div>
+
+      </div>
+
+
+      <!-- =================================================
+           HEADING
+      ================================================== -->
+
+      <h1 data-reveal="up" data-delay="80">
+        Payment <em>Successful!</em>
+      </h1>
+
+      <p data-reveal="up" data-delay="140">
+        Your order has been placed successfully. A confirmation has been
+        sent to your email — get ready for your sustainable fashion to arrive.
       </p>
 
-      <p>
-        <strong>Total Amount:</strong>
-        ₹ <%= order.totalAmount %>
-      </p>
 
-      <p>
-        <strong>Payment Method:</strong>
-        <%= order.paymentMethod %>
-      </p>
+      <!-- =================================================
+           ORDER DETAILS
+      ================================================== -->
 
-      <p>
-        <strong>Payment Status:</strong>
-        <%= order.paymentStatus %>
-      </p>
+      <div class="order-details" data-reveal="up" data-delay="200">
 
-      <p>
-        <strong>Order Status:</strong>
-        <%= order.orderStatus %>
-      </p>
+        <h2>
+          Order Details
+        </h2>
 
-    </div>
 
-    <div class="success-buttons">
+        <!-- ORDER ID -->
 
-      <a href="/orders/userOrders" class="btn">
-        View Orders
-      </a>
+        <p>
 
-      <a href="/shop" class="btn secondary-btn">
-        Continue Shopping
-      </a>
+          <strong>
+            <i class="fas fa-hashtag"></i>
+            Order ID
+          </strong>
+
+          <span class="detail-value">
+            <%= order._id %>
+          </span>
+
+        </p>
+
+
+        <!-- TOTAL AMOUNT -->
+
+        <p>
+
+          <strong>
+            <i class="fas fa-rupee-sign"></i>
+            Total Amount
+          </strong>
+
+          <span class="detail-value">
+            ₹ <%= Number(order.totalAmount || 0).toLocaleString("en-IN") %>
+          </span>
+
+        </p>
+
+
+        <!-- PAYMENT METHOD -->
+
+        <p>
+
+          <strong>
+            <i class="fas fa-wallet"></i>
+            Payment Method
+          </strong>
+
+          <span class="detail-value">
+            <%= order.paymentMethod %>
+          </span>
+
+        </p>
+
+
+        <!-- PAYMENT STATUS -->
+
+        <p>
+
+          <strong>
+            <i class="fas fa-shield-alt"></i>
+            Payment Status
+          </strong>
+
+          <span
+            class="detail-pill <%= 
+              (order.paymentStatus || '').toLowerCase() === 'completed'
+                ? 'success'
+                : (order.paymentStatus || '').toLowerCase() === 'pending'
+                ? 'warning'
+                : 'info'
+            %>"
+          >
+            <%= order.paymentStatus %>
+          </span>
+
+        </p>
+
+
+        <!-- ORDER STATUS -->
+
+        <p>
+
+          <strong>
+            <i class="fas fa-box"></i>
+            Order Status
+          </strong>
+
+          <span class="detail-value">
+            <%= order.orderStatus %>
+          </span>
+
+        </p>
+
+
+      </div>
+
+
+      <!-- =================================================
+           BUTTONS
+      ================================================== -->
+
+      <div class="success-buttons" data-reveal="up" data-delay="280">
+
+        <a href="/orders/userOrders" class="btn">
+          <i class="fas fa-box-open"></i>
+          View Orders
+        </a>
+
+        <a href="/shop" class="btn secondary-btn">
+          <i class="fas fa-shopping-bag"></i>
+          Continue Shopping
+        </a>
+
+      </div>
+
 
     </div>
 
   </div>
 
-</div>
 
-<%- include('../partials/footer') %>
+  <!-- =====================================================
+       FOOTER PARTIAL
+  ====================================================== -->
+
+  <%- include('../partials/footer') %>
+
+
+  <!-- =====================================================
+       SCRIPT
+  ====================================================== -->
+
+  <script>
+
+    /* =====================================================
+       SCROLL PROGRESS
+    ===================================================== */
+
+    const progressBar = document.getElementById('scrollProgress');
+
+    function updateProgress() {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progressBar.style.width = progress + '%';
+    }
+
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    window.addEventListener('resize', updateProgress);
+    updateProgress();
+
+
+    /* =====================================================
+       SCROLL REVEAL
+    ===================================================== */
+
+    const revealEls = document.querySelectorAll('[data-reveal]');
+
+    if ('IntersectionObserver' in window) {
+
+      const revealObserver = new IntersectionObserver((entries, observer) => {
+
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const el = entry.target;
+            const delay = parseInt(el.dataset.delay || 0, 10);
+
+            setTimeout(() => {
+              el.classList.add('is-revealed');
+            }, delay);
+
+            observer.unobserve(el);
+          }
+        });
+
+      }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -60px 0px'
+      });
+
+      revealEls.forEach(el => revealObserver.observe(el));
+
+    } else {
+
+      revealEls.forEach(el => el.classList.add('is-revealed'));
+
+    }
+
+
+    console.log("Reciclaja — Payment Success page loaded ✓");
+
+  </script>
 
 </body>
+
 </html>

@@ -6,19 +6,11 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../models/User");
 
-// ======================================================
-// ADMIN REGISTER PAGE
-// ======================================================
-
 router.get("/adregister", (req, res) => {
 
   res.render("admin/adregister");
 
 });
-
-// ======================================================
-// ADMIN REGISTER
-// ======================================================
 
 router.post("/adregister", async (req, res) => {
 
@@ -30,8 +22,6 @@ router.post("/adregister", async (req, res) => {
       password,
       confirmPassword,
     } = req.body;
-
-    // ================= VALIDATION =================
 
     if (
       !name ||
@@ -56,8 +46,6 @@ router.post("/adregister", async (req, res) => {
 
     }
 
-    // ================= CHECK EXISTING ADMIN =================
-
     const existingAdmin =
       await User.findOne({
         email,
@@ -70,8 +58,6 @@ router.post("/adregister", async (req, res) => {
         .send("Admin already exists");
 
     }
-
-    // ================= CREATE ADMIN =================
 
     const newAdmin =
       new User({
@@ -109,19 +95,11 @@ router.post("/adregister", async (req, res) => {
 
 });
 
-// ======================================================
-// ADMIN LOGIN PAGE
-// ======================================================
-
 router.get("/adlogin", (req, res) => {
 
   res.render("admin/adlogin");
 
 });
-
-// ======================================================
-// ADMIN LOGIN
-// ======================================================
 
 router.post("/adlogin", async (req, res) => {
 
@@ -131,8 +109,6 @@ router.post("/adlogin", async (req, res) => {
       email,
       password,
     } = req.body;
-
-    // ================= VALIDATION =================
 
     if (
       !email ||
@@ -146,8 +122,6 @@ router.post("/adlogin", async (req, res) => {
         );
 
     }
-
-    // ================= FIND USER =================
 
     const user =
       await User.findOne({
@@ -164,8 +138,6 @@ router.post("/adlogin", async (req, res) => {
 
     }
 
-    // ================= ADMIN CHECK =================
-
     if (
       user.role !== "admin"
     ) {
@@ -177,8 +149,6 @@ router.post("/adlogin", async (req, res) => {
         );
 
     }
-
-    // ================= PASSWORD CHECK =================
 
     const isMatch =
       await user.comparePassword(
@@ -195,8 +165,6 @@ router.post("/adlogin", async (req, res) => {
 
     }
 
-    // ================= JWT TOKEN =================
-
     const token = jwt.sign(
 
       {
@@ -211,8 +179,6 @@ router.post("/adlogin", async (req, res) => {
       }
 
     );
-
-    // ================= COOKIE =================
 
     res.cookie(
       "token",
@@ -238,8 +204,6 @@ router.post("/adlogin", async (req, res) => {
       `Admin logged in: ${email}`
     );
 
-    // ================= REDIRECT =================
-
     res.redirect(
       "/admin/dashboard"
     );
@@ -258,10 +222,6 @@ router.post("/adlogin", async (req, res) => {
   }
 
 });
-
-// ======================================================
-// ADMIN LOGOUT
-// ======================================================
 
 router.get(
   "/adlogout",

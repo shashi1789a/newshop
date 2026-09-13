@@ -2,113 +2,88 @@ const express = require("express");
 
 const router = express.Router();
 
-const { auth } = require(
-  "../middleware/auth"
-);
+const { auth } = require("../middleware/auth");
 
 const User = require("../models/User");
+const Product = require("../models/product.model");
 
-const Product = require("../models/Product");
+router.get("/", auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
 
-// ======================================================
-// VIEW WISHLIST
-// ======================================================
-
-router.get(
-  "/",
-
-  auth,
-
-  async (req, res) => {
-
-    try {
-
-      const user =
-        await User.findById(
-          req.user._id
-        );
-
-      const wishlistProducts =
-        await Product.find({
-
-          _id: {
-            $in: user.wishlist,
-          },
-
-        });
-
-      res.render(
-        "wishlist/wishlist",
-        {
-          wishlist:
-            wishlistProducts,
-        }
-      );
-
-    } catch (error) {
-
-      console.error(
-        "Wishlist Error:",
-        error
-      );
-
-      res.redirect("/");
+    if (!user) {
+      return res.status(404).send("User not found");
     }
-  }
-);
 
-// ======================================================
-// ADD TO WISHLIST
-// ======================================================
+    const wishlistIds = user.wishlist || [];
+
+    const wishlistProducts = await Product.find({
+      _id: {
+        $in: wishlistIds,
+      },
+    });
+
+    return res.render("wishlist/wishlist", {
+      wishlist: wishlistProducts,
+      user,
+    });
+
+  } catch (error) {
+    console.error("Wishlist Error:", error);
+
+    return res.status(500).send(
+      "Unable to load wishlist"
+    );
+  }
+});
 
 router.get(
   "/add/:productId",
-
   auth,
-
   async (req, res) => {
 
     try {
 
-      const user =
-        await User.findById(
-          req.user._id
-        );
+      const { productId } = req.params;
 
-      const product =
-        await Product.findById(
-          req.params.productId
-        );
+      const user = await User.findById(
+        req.user._id
+      );
 
-      // ================= PRODUCT CHECK =================
+      if (!user) {
+        return res.status(404).send(
+          "User not found"
+        );
+      }
+
+      const product = await Product.findById(
+        productId
+      );
+
       if (!product) {
-
         return res.status(404).send(
           "Product not found"
         );
       }
 
-      const productId =
-        req.params.productId;
+      if (!Array.isArray(user.wishlist)) {
+        user.wishlist = [];
+      }
 
-      // ================= AVOID DUPLICATE =================
       const alreadyExists =
         user.wishlist.some(
           (id) =>
-            id.toString() ===
-            productId
+            id.toString() === productId
         );
 
       if (!alreadyExists) {
 
-        user.wishlist.push(
-          productId
-        );
+        user.wishlist.push(productId);
 
         await user.save();
       }
 
-      res.redirect("/wishlist");
+      return res.redirect("/wishlist");
 
     } catch (error) {
 
@@ -117,39 +92,42 @@ router.get(
         error
       );
 
-      res.redirect("/");
+      return res.status(500).send(
+        "Unable to add product to wishlist"
+      );
     }
   }
 );
 
-// ======================================================
-// REMOVE FROM WISHLIST
-// ======================================================
-
 router.get(
   "/remove/:productId",
-
   auth,
-
   async (req, res) => {
 
     try {
 
-      const user =
-        await User.findById(
-          req.user._id
-        );
+      const { productId } = req.params;
 
-      user.wishlist =
-        user.wishlist.filter(
-          (id) =>
-            id.toString() !==
-            req.params.productId
+      const user = await User.findById(
+        req.user._id
+      );
+
+      if (!user) {
+        return res.status(404).send(
+          "User not found"
         );
+      }
+
+      user.wishlist = (
+        user.wishlist || []
+      ).filter(
+        (id) =>
+          id.toString() !== productId
+      );
 
       await user.save();
 
-      res.redirect(
+      return res.redirect(
         "/wishlist"
       );
 
@@ -160,67 +138,76 @@ router.get(
         error
       );
 
-      res.redirect(
-        "/wishlist"
+      return res.status(500).send(
+        "Unable to remove product"
       );
     }
   }
 );
 
-// ======================================================
-// MOVE TO CART
-// ======================================================
-
 router.get(
   "/move-to-cart/:productId",
-
   auth,
-
   async (req, res) => {
 
     try {
 
-      const user =
-        await User.findById(
-          req.user._id
-        );
+      const { productId } = req.params;
 
-      const product =
-        await Product.findById(
-          req.params.productId
-        );
+      const user = await User.findById(
+        req.user._id
+      );
 
-      // ================= PRODUCT CHECK =================
+      if (!user) {
+        return res.status(404).send(
+          "User not found"
+        );
+      }
+
+      const product = await Product.findById(
+        productId
+      );
+
       if (!product) {
-
         return res.status(404).send(
           "Product not found"
         );
       }
 
-      const productId =
-        req.params.productId;
-
-      // ================= REMOVE FROM WISHLIST =================
-      user.wishlist =
-        user.wishlist.filter(
-          (id) =>
-            id.toString() !==
-            productId
+      if (
+        product.stock !== undefined &&
+        product.stock <= 0
+      ) {
+        return res.status(400).send(
+          "Product is out of stock"
         );
+      }
 
-      // ================= CHECK CART =================
+      user.wishlist = (
+        user.wishlist || []
+      ).filter(
+        (id) =>
+          id.toString() !== productId
+      );
+
+      if (!Array.isArray(user.cart)) {
+        user.cart = [];
+      }
+
       const existingCartItem =
         user.cart.find(
           (item) =>
+            item.product &&
             item.product.toString() ===
-            productId
+              productId
         );
 
-      // ================= UPDATE CART =================
       if (existingCartItem) {
 
-        existingCartItem.quantity += 1;
+        existingCartItem.quantity =
+          Number(
+            existingCartItem.quantity || 0
+          ) + 1;
 
       } else {
 
@@ -230,9 +217,10 @@ router.get(
         });
       }
 
+
       await user.save();
 
-      res.redirect(
+      return res.redirect(
         "/cart"
       );
 
@@ -243,36 +231,35 @@ router.get(
         error
       );
 
-      res.redirect(
+      return res.redirect(
         "/wishlist"
       );
     }
   }
 );
 
-// ======================================================
-// CLEAR WISHLIST
-// ======================================================
-
 router.get(
   "/clear",
-
   auth,
-
   async (req, res) => {
 
     try {
 
-      const user =
-        await User.findById(
-          req.user._id
+      const user = await User.findById(
+        req.user._id
+      );
+
+      if (!user) {
+        return res.status(404).send(
+          "User not found"
         );
+      }
 
       user.wishlist = [];
 
       await user.save();
 
-      res.redirect(
+      return res.redirect(
         "/wishlist"
       );
 
@@ -283,11 +270,13 @@ router.get(
         error
       );
 
-      res.redirect(
-        "/wishlist"
+      return res.status(500).send(
+        "Unable to clear wishlist"
       );
     }
   }
 );
 
+
 module.exports = router;
+

@@ -4,7 +4,909 @@
 
   <%- include('../partials/head') %>
 
-  <title>Login</title>
+  <title>Login — Reciclaja</title>
+
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/5471644867.js" crossorigin="anonymous"></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,700&display=swap" rel="stylesheet" />
+
+<style>
+
+  /* =====================================================
+     DESIGN TOKENS
+  ===================================================== */
+
+  :root {
+    --forest: #0d3b2e;
+    --forest-2: #14523f;
+    --forest-3: #1e6b52;
+    --forest-soft: #2d8a6a;
+    --forest-deep: #072a20;
+
+    --emerald: #10b981;
+    --emerald-soft: #34d399;
+
+    --mango: #f59e0b;
+    --mango-soft: #fbbf24;
+    --mango-deep: #d97706;
+
+    --coral: #f97362;
+    --coral-soft: #fb9585;
+    --coral-deep: #e05a44;
+
+    --blush: #fef3e7;
+    --blush-2: #fde8d0;
+
+    --mint: #ecfdf5;
+    --mint-2: #d1fae5;
+
+    --bg: #fbfaf7;
+    --surface: #ffffff;
+    --surface-2: #f7f4ee;
+
+    --text: #10261d;
+    --text-muted: #556b5f;
+    --text-light: #8a9a90;
+
+    --border: #e6e0d4;
+    --border-soft: #f0ebe0;
+
+    --radius-xl: 32px;
+    --radius-lg: 24px;
+    --radius: 16px;
+    --radius-sm: 10px;
+
+    --shadow-sm: 0 2px 8px rgba(13, 59, 46, 0.05);
+    --shadow-md: 0 8px 28px rgba(13, 59, 46, 0.08);
+    --shadow-lg: 0 20px 48px rgba(13, 59, 46, 0.12);
+    --shadow-mango: 0 12px 40px rgba(245, 158, 11, 0.25);
+
+    --font-serif: 'Playfair Display', Georgia, serif;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  /* =====================================================
+     RESET
+  ===================================================== */
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  a { text-decoration: none; color: inherit; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+
+  /* =====================================================
+     PAGE WRAPPER
+  ===================================================== */
+
+  .auth-page {
+    min-height: calc(100vh - 100px);
+    padding: 50px 0 70px;
+    background:
+      radial-gradient(circle at 10% 20%, rgba(245, 158, 11, 0.06) 0%, transparent 40%),
+      radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.06) 0%, transparent 40%),
+      linear-gradient(160deg, #fffdf9 0%, #f5efe4 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .auth-page::before {
+    content: "";
+    position: absolute;
+    top: -100px;
+    left: -100px;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(251, 191, 36, 0.12) 0%, transparent 70%);
+    pointer-events: none;
+    filter: blur(60px);
+  }
+
+  .auth-page::after {
+    content: "";
+    position: absolute;
+    bottom: -120px;
+    right: -120px;
+    width: 450px;
+    height: 450px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+    filter: blur(60px);
+  }
+
+  /* Floating decorations */
+
+  .auth-float {
+    position: absolute;
+    color: var(--mango);
+    opacity: 0.09;
+    pointer-events: none;
+    animation: floatY 9s ease-in-out infinite;
+    z-index: 1;
+  }
+
+  .auth-float.f1 { top: 12%; left: 6%; font-size: 72px; animation-delay: 0s; }
+  .auth-float.f2 { top: 65%; right: 8%; font-size: 60px; animation-delay: 2s; }
+  .auth-float.f3 { bottom: 15%; left: 12%; font-size: 54px; animation-delay: 4s; }
+  .auth-float.f4 { top: 30%; right: 12%; font-size: 46px; animation-delay: 1s; }
+
+  @keyframes floatY {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-22px) rotate(8deg); }
+  }
+
+  /* =====================================================
+     AUTH CONTAINER
+  ===================================================== */
+
+  .auth-container {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+    z-index: 5;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    background: #ffffff;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(13, 59, 46, 0.14);
+    border: 1px solid var(--border-soft);
+  }
+
+  /* =====================================================
+     LEFT — BRAND PANEL
+  ===================================================== */
+
+  .auth-brand-panel {
+    background:
+      radial-gradient(circle at 20% 20%, rgba(251, 191, 36, 0.18) 0%, transparent 45%),
+      radial-gradient(circle at 80% 80%, rgba(16, 185, 129, 0.15) 0%, transparent 45%),
+      linear-gradient(135deg, var(--forest) 0%, var(--forest-2) 55%, var(--forest-3) 100%);
+    padding: 56px 44px;
+    color: #ffffff;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .auth-brand-panel::before {
+    content: "";
+    position: absolute;
+    top: -60px;
+    right: -60px;
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    border: 1px solid rgba(251, 191, 36, 0.15);
+    pointer-events: none;
+  }
+
+  .auth-brand-panel::after {
+    content: "";
+    position: absolute;
+    bottom: -80px;
+    left: -80px;
+    width: 340px;
+    height: 340px;
+    border-radius: 50%;
+    border: 1px solid rgba(16, 185, 129, 0.15);
+    pointer-events: none;
+  }
+
+  .brand-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(251, 191, 36, 0.15);
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    color: var(--mango-soft);
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 10.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 22px;
+    width: fit-content;
+    position: relative;
+    z-index: 2;
+  }
+
+  .brand-eyebrow i {
+    font-size: 11px;
+  }
+
+  .brand-title {
+    font-family: var(--font-serif);
+    font-size: 42px;
+    font-weight: 500;
+    letter-spacing: -1.4px;
+    line-height: 1.1;
+    color: #ffffff;
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .brand-title em {
+    font-style: italic;
+    background: linear-gradient(120deg, var(--mango-soft) 0%, var(--coral-soft) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .brand-desc {
+    font-size: 14.5px;
+    color: #b8d4c8;
+    line-height: 1.7;
+    margin-bottom: 30px;
+    max-width: 380px;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Brand feature list */
+
+  .brand-features {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    position: relative;
+    z-index: 2;
+    margin-bottom: 34px;
+  }
+
+  .brand-feature {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13.5px;
+    color: #dceee6;
+    font-weight: 500;
+  }
+
+  .brand-feature i {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(251, 191, 36, 0.14);
+    border: 1px solid rgba(251, 191, 36, 0.22);
+    color: var(--mango-soft);
+    border-radius: 10px;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+
+  /* Brand stat pill */
+
+  .brand-stats {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding-top: 26px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    z-index: 2;
+    flex-wrap: wrap;
+  }
+
+  .brand-stat strong {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--mango-soft);
+    letter-spacing: -0.6px;
+    line-height: 1;
+  }
+
+  .brand-stat span {
+    display: block;
+    font-size: 10.5px;
+    color: #8fb5a5;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    font-weight: 700;
+    margin-top: 5px;
+  }
+
+  /* =====================================================
+     RIGHT — FORM PANEL
+  ===================================================== */
+
+  .auth-form-panel {
+    padding: 52px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: #ffffff;
+    position: relative;
+  }
+
+  .auth-form-panel::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--mango) 0%, var(--coral) 50%, var(--emerald) 100%);
+  }
+
+  .form-header {
+    margin-bottom: 28px;
+  }
+
+  .form-header h2 {
+    font-family: var(--font-serif);
+    font-size: 32px;
+    color: var(--forest);
+    font-weight: 600;
+    letter-spacing: -0.8px;
+    margin-bottom: 8px;
+    line-height: 1.15;
+  }
+
+  .form-header p {
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* =====================================================
+     ERROR BOX
+  ===================================================== */
+
+  .error-box {
+    background: rgba(249, 115, 98, 0.07);
+    border: 1px solid rgba(249, 115, 98, 0.28);
+    border-left: 4px solid var(--coral);
+    color: var(--coral-deep);
+    padding: 14px 18px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 22px;
+    font-size: 13px;
+    font-weight: 500;
+    animation: shakeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  @keyframes shakeIn {
+    0% { transform: translateX(-8px); opacity: 0; }
+    30% { transform: translateX(4px); }
+    60% { transform: translateX(-3px); }
+    100% { transform: translateX(0); opacity: 1; }
+  }
+
+  .error-box p {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .error-box p::before {
+    content: "⚠";
+    font-size: 13px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* =====================================================
+     FORM INPUTS
+  ===================================================== */
+
+  .input-group {
+    margin-bottom: 18px;
+    position: relative;
+  }
+
+  .input-group label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--forest);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  .input-group label i {
+    font-size: 11px;
+    color: var(--mango-deep);
+  }
+
+  .input-wrap {
+    position: relative;
+  }
+
+  .input-wrap input {
+    width: 100%;
+    padding: 14px 16px 14px 46px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    color: var(--text);
+    background: var(--surface-2);
+    outline: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: inherit;
+  }
+
+  .input-wrap input::placeholder {
+    color: var(--text-light);
+  }
+
+  .input-wrap input:focus {
+    border-color: var(--mango);
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.12);
+  }
+
+  .input-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-light);
+    font-size: 15px;
+    transition: color 0.3s ease;
+    pointer-events: none;
+  }
+
+  .input-wrap input:focus ~ .input-icon {
+    color: var(--mango-deep);
+  }
+
+  /* Show/hide password toggle */
+
+  .toggle-password {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--text-light);
+    font-size: 15px;
+    padding: 6px;
+    transition: color 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+  }
+
+  .toggle-password:hover {
+    color: var(--mango-deep);
+    background: rgba(245, 158, 11, 0.08);
+  }
+
+  /* Forgot password row */
+
+  .form-extras {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .remember-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-muted);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .remember-check input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border);
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.25s ease;
+    background: var(--surface-2);
+    flex-shrink: 0;
+  }
+
+  .remember-check input[type="checkbox"]:checked {
+    background: linear-gradient(135deg, var(--mango) 0%, var(--mango-soft) 100%);
+    border-color: var(--mango);
+  }
+
+  .remember-check input[type="checkbox"]:checked::after {
+    content: "✓";
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--forest);
+    font-size: 12px;
+    font-weight: 900;
+  }
+
+  .forgot-link {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--forest-3);
+    transition: all 0.25s ease;
+    position: relative;
+  }
+
+  .forgot-link::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--coral);
+    transition: width 0.3s ease;
+  }
+
+  .forgot-link:hover {
+    color: var(--coral);
+  }
+
+  .forgot-link:hover::after {
+    width: 100%;
+  }
+
+  /* =====================================================
+     LOGIN BUTTON
+  ===================================================== */
+
+  .auth-submit-btn {
+    width: 100%;
+    padding: 16px 30px;
+    background: linear-gradient(135deg, var(--forest) 0%, var(--forest-3) 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 28px rgba(13, 59, 46, 0.25);
+    font-family: inherit;
+  }
+
+  .auth-submit-btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(251, 191, 36, 0.35),
+      transparent
+    );
+    transition: left 0.6s ease;
+  }
+
+  .auth-submit-btn:hover::before {
+    left: 100%;
+  }
+
+  .auth-submit-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 36px rgba(13, 59, 46, 0.35);
+    gap: 14px;
+  }
+
+  .auth-submit-btn:active {
+    transform: translateY(-1px);
+  }
+
+  .auth-submit-btn i {
+    transition: transform 0.3s ease;
+  }
+
+  .auth-submit-btn:hover i {
+    transform: translateX(4px);
+  }
+
+  /* =====================================================
+     DIVIDER
+  ===================================================== */
+
+  .form-divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 26px 0 20px;
+    color: var(--text-light);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .form-divider::before,
+  .form-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* =====================================================
+     SOCIAL LOGIN
+  ===================================================== */
+
+  .social-login {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .social-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 12px 14px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: #ffffff;
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: inherit;
+  }
+
+  .social-btn i {
+    font-size: 15px;
+  }
+
+  .social-btn.google:hover {
+    border-color: #db4437;
+    background: rgba(219, 68, 55, 0.04);
+    transform: translateY(-2px);
+  }
+
+  .social-btn.google i { color: #db4437; }
+
+  .social-btn.facebook:hover {
+    border-color: #1877f2;
+    background: rgba(24, 119, 242, 0.04);
+    transform: translateY(-2px);
+  }
+
+  .social-btn.facebook i { color: #1877f2; }
+
+  /* =====================================================
+     REGISTER LINK
+  ===================================================== */
+
+  .auth-footer-text {
+    text-align: center;
+    margin: 0;
+    font-size: 14px;
+    color: var(--text-muted);
+    padding-top: 4px;
+  }
+
+  .auth-footer-text a {
+    color: var(--forest);
+    font-weight: 800;
+    margin-left: 4px;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .auth-footer-text a::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1.5px;
+    background: linear-gradient(90deg, var(--mango) 0%, var(--coral) 100%);
+    transition: width 0.3s ease;
+  }
+
+  .auth-footer-text a:hover {
+    color: var(--mango-deep);
+  }
+
+  .auth-footer-text a:hover::after {
+    width: 100%;
+  }
+
+  /* =====================================================
+     TRUST FOOTER
+  ===================================================== */
+
+  .trust-strip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin-top: 26px;
+    padding-top: 20px;
+    border-top: 1px dashed var(--border);
+    flex-wrap: wrap;
+  }
+
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text-light);
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  .trust-item i {
+    color: var(--emerald);
+    font-size: 12px;
+  }
+
+  /* =====================================================
+     RESPONSIVE
+  ===================================================== */
+
+  @media (max-width: 950px) {
+
+    .auth-container {
+      grid-template-columns: 1fr;
+      max-width: 560px;
+    }
+
+    .auth-brand-panel {
+      padding: 40px 32px;
+    }
+
+    .brand-title {
+      font-size: 32px;
+    }
+
+    .brand-desc {
+      font-size: 13.5px;
+    }
+
+    .brand-features {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .brand-feature {
+      font-size: 12.5px;
+    }
+
+    .brand-stats {
+      gap: 20px;
+    }
+
+    .brand-stat strong {
+      font-size: 20px;
+    }
+
+    .auth-form-panel {
+      padding: 40px 32px;
+    }
+
+  }
+
+  @media (max-width: 600px) {
+
+    .auth-page {
+      padding: 30px 0 50px;
+    }
+
+    .auth-container {
+      border-radius: 20px;
+      margin: 0 14px;
+    }
+
+    .auth-brand-panel {
+      padding: 32px 24px;
+    }
+
+    .brand-title {
+      font-size: 26px;
+    }
+
+    .brand-features {
+      grid-template-columns: 1fr;
+    }
+
+    .auth-float { display: none; }
+
+    .auth-form-panel {
+      padding: 32px 24px;
+    }
+
+    .form-header h2 {
+      font-size: 26px;
+    }
+
+    .social-login {
+      grid-template-columns: 1fr;
+    }
+
+    .trust-strip {
+      gap: 12px;
+    }
+
+  }
+
+  @media (max-width: 420px) {
+
+    .auth-form-panel {
+      padding: 28px 20px;
+    }
+
+    .form-header h2 {
+      font-size: 24px;
+    }
+
+    .brand-stat strong {
+      font-size: 18px;
+    }
+
+  }
+
+</style>
+
 
 </head>
 
@@ -12,56 +914,309 @@
 
   <%- include('../partials/navbar') %>
 
-  <div class="auth-container">
 
-    <form action="/auth/login" method="POST" class="auth-form">
+  <!-- =====================================================
+       LOGIN PAGE
+  ====================================================== -->
 
-      <h2>Login</h2>
+  <div class="auth-page">
 
-      <!-- ERRORS -->
-      <% if (errors && errors.length > 0) { %>
+    <!-- Floating decorations -->
+    <i class="fas fa-tshirt auth-float f1"></i>
+    <i class="fas fa-recycle auth-float f2"></i>
+    <i class="fas fa-leaf auth-float f3"></i>
+    <i class="fas fa-heart auth-float f4"></i>
 
-        <div class="error-box">
 
-          <% errors.forEach(error => { %>
-            <p><%= error.msg %></p>
-          <% }) %>
+    <div class="auth-container">
+
+      <!-- =====================================================
+           LEFT — BRAND PANEL
+      ====================================================== -->
+
+      <div class="auth-brand-panel">
+
+        <span class="brand-eyebrow">
+          <i class="fas fa-award"></i>
+          Welcome Back
+        </span>
+
+        <h2 class="brand-title">
+          Login to <em>Reciclaja.</em>
+        </h2>
+
+        <p class="brand-desc">
+          Your wardrobe awaits. Sign in to track orders, manage your wishlist,
+          and keep shopping sustainably.
+        </p>
+
+        <div class="brand-features">
+
+          <div class="brand-feature">
+            <i class="fas fa-bolt"></i>
+            <span>Fast checkout & saved addresses</span>
+          </div>
+
+          <div class="brand-feature">
+            <i class="fas fa-heart"></i>
+            <span>Sync wishlists across devices</span>
+          </div>
+
+          <div class="brand-feature">
+            <i class="fas fa-tag"></i>
+            <span>Exclusive member-only deals</span>
+          </div>
+
+          <div class="brand-feature">
+            <i class="fas fa-shipping-fast"></i>
+            <span>Real-time order tracking</span>
+          </div>
 
         </div>
 
-      <% } %>
+        <div class="brand-stats">
 
-      <!-- EMAIL -->
-      <input
-        type="email"
-        name="email"
-        placeholder="Enter Email"
-        value="<%= oldInput?.email || '' %>"
-        required
-      >
+          <div class="brand-stat">
+            <strong>25K+</strong>
+            <span>Happy Shoppers</span>
+          </div>
 
-      <!-- PASSWORD -->
-      <input
-        type="password"
-        name="password"
-        placeholder="Enter Password"
-        required
-      >
+          <div class="brand-stat">
+            <strong>15K+</strong>
+            <span>Items Sold</span>
+          </div>
 
-      <button type="submit">
-        Login
-      </button>
+          <div class="brand-stat">
+            <strong>4.9★</strong>
+            <span>Avg Rating</span>
+          </div>
 
-      <p>
-        Don't have account?
-        <a href="/auth/register">
-          Register
-        </a>
-      </p>
+        </div>
 
-    </form>
+      </div>
+
+
+      <!-- =====================================================
+           RIGHT — FORM PANEL
+      ====================================================== -->
+
+      <div class="auth-form-panel">
+
+        <div class="form-header">
+          <h2>Sign In</h2>
+          <p>Welcome back! Enter your details to continue.</p>
+        </div>
+
+
+        <!-- ERRORS -->
+        <% if (errors && errors.length > 0) { %>
+
+          <div class="error-box">
+            <% errors.forEach(error => { %>
+              <p><%= error.msg %></p>
+            <% }) %>
+          </div>
+
+        <% } %>
+
+
+        <form action="/auth/login" method="POST">
+
+
+          <!-- EMAIL -->
+          <div class="input-group">
+
+            <label for="email">
+              <i class="fas fa-envelope"></i>
+              Email Address
+            </label>
+
+            <div class="input-wrap">
+
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="you@example.com"
+                value="<%= oldInput?.email || '' %>"
+                required
+                autocomplete="email"
+              >
+
+              <i class="fas fa-envelope input-icon"></i>
+
+            </div>
+
+          </div>
+
+
+          <!-- PASSWORD -->
+          <div class="input-group">
+
+            <label for="password">
+              <i class="fas fa-lock"></i>
+              Password
+            </label>
+
+            <div class="input-wrap">
+
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Enter your password"
+                required
+                autocomplete="current-password"
+              >
+
+              <i class="fas fa-lock input-icon"></i>
+
+              <button
+                type="button"
+                class="toggle-password"
+                onclick="togglePassword()"
+                aria-label="Show password"
+              >
+                <i class="far fa-eye" id="eyeIcon"></i>
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- REMEMBER + FORGOT -->
+          <div class="form-extras">
+
+            <label class="remember-check">
+              <input type="checkbox" name="remember" />
+              <span>Remember me</span>
+            </label>
+
+            <a href="#" class="forgot-link">
+              Forgot password?
+            </a>
+
+          </div>
+
+
+          <!-- SUBMIT -->
+          <button type="submit" class="auth-submit-btn">
+            Sign In
+            <i class="fas fa-arrow-right"></i>
+          </button>
+
+        </form>
+
+
+        <!-- DIVIDER -->
+        <div class="form-divider">
+          Or continue with
+        </div>
+
+
+        <!-- SOCIAL LOGIN -->
+        <div class="social-login">
+
+          <button type="button" class="social-btn google">
+            <i class="fab fa-google"></i>
+            Google
+          </button>
+
+          <button type="button" class="social-btn facebook">
+            <i class="fab fa-facebook-f"></i>
+            Facebook
+          </button>
+
+        </div>
+
+
+        <!-- REGISTER LINK -->
+        <p class="auth-footer-text">
+          Don't have an account?
+          <a href="/auth/register">
+            Create one
+            <i class="fas fa-arrow-right" style="font-size:10px;"></i>
+          </a>
+        </p>
+
+
+        <!-- TRUST STRIP -->
+        <div class="trust-strip">
+
+          <div class="trust-item">
+            <i class="fas fa-shield-alt"></i>
+            <span>Secure Login</span>
+          </div>
+
+          <div class="trust-item">
+            <i class="fas fa-lock"></i>
+            <span>Encrypted</span>
+          </div>
+
+          <div class="trust-item">
+            <i class="fas fa-leaf"></i>
+            <span>Sustainable</span>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
 
   </div>
+
+
+  <!-- =====================================================
+       PASSWORD TOGGLE SCRIPT
+  ====================================================== -->
+
+  <script>
+
+    function togglePassword() {
+
+      const input = document.getElementById("password");
+      const icon = document.getElementById("eyeIcon");
+
+      if (!input || !icon) return;
+
+      if (input.type === "password") {
+        input.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+      } else {
+        input.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+      }
+
+    }
+
+
+    // Input focus lift effect
+
+    document.querySelectorAll(".input-group").forEach(group => {
+
+      const input = group.querySelector("input");
+
+      if (!input) return;
+
+      input.addEventListener("focus", () => {
+        group.style.transform = "translateY(-2px)";
+        group.style.transition = "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)";
+      });
+
+      input.addEventListener("blur", () => {
+        group.style.transform = "translateY(0)";
+      });
+
+    });
+
+
+    console.log("Reciclaja — Login page loaded | Welcome back 🌿");
+
+  </script>
 
 </body>
 </html>

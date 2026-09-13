@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Payment Failed | ThreadCycle</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f6f8;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 80px auto;
+      padding: 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 45px 30px;
+      text-align: center;
+      box-shadow: 0 8px 30px rgba(0,0,0,.08);
+    }
+
+    .icon {
+      font-size: 70px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      margin-bottom: 12px;
+    }
+
+    p {
+      color: #777;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 25px;
+    }
+
+    a {
+      text-decoration: none;
+      padding: 13px 20px;
+      border-radius: 8px;
+    }
+
+    .primary {
+      background: #111;
+      color: white;
+    }
+
+    .secondary {
+      border: 1px solid #ddd;
+      color: #111;
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+<%- include('../partials/navbar') %>
+
+<div class="container">
+
+  <div class="card">
+
+
+    <div class="icon">
+      ❌
+    </div>
+
+
+    <h1>
+      Payment Failed
+    </h1>
+
+
+    <p>
+      We could not complete your payment.
+    </p>
+
+
+    <p>
+      Please try again.
+    </p>
+
+
+    <div class="buttons">
+
+
+      <a
+        href="/payment/checkout/<%= order._id %>"
+        class="primary"
+      >
+        Try Again
+      </a>
+
+
+      <a
+        href="/orders/<%= order._id %>"
+        class="secondary"
+      >
+        View Order
+      </a>
+
+
+    </div>
+
+
+  </div>
+
+</div>
+
+
+</body>
+
+</html>

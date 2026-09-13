@@ -45,23 +45,28 @@ const userSchema = new mongoose.Schema(
       default: "user",
     },
 
-    // ================= CART =================
     cart: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "ClothProduct",
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
+        quantity: {
+          type: Number,
+          default: 1,
+          min: 1,
+        },
       },
     ],
 
-    // ================= WISHLIST =================
     wishlist: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "ClothProduct",
+        ref: "Product",
       },
     ],
 
-    // ================= MY PRODUCTS =================
     uploadedProducts: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -69,7 +74,66 @@ const userSchema = new mongoose.Schema(
       },
     ],
 
-    // ================= SELLER DETAILS =================
+    sellerDetails: {
+
+      businessName: {
+        type: String,
+        trim: true,
+      },
+
+      businessType: {
+        type: String,
+        enum: [
+          "INDIVIDUAL",
+          "PROPRIETORSHIP",
+          "PARTNERSHIP",
+          "PRIVATE_LIMITED",
+          "LLP",
+        ],
+      },
+
+      gstNumber: {
+        type: String,
+        trim: true,
+        uppercase: true,
+      },
+
+      panNumber: {
+        type: String,
+        trim: true,
+        uppercase: true,
+      },
+
+      pickupAddress: {
+        street: String,
+        city: String,
+        state: String,
+        zipCode: String,
+        country: {
+          type: String,
+          default: "India",
+        },
+      },
+
+      payout: {
+        accountHolderName: String,
+        bankName: String,
+        accountNumber: String,
+        ifscCode: String,
+        upiId: String,
+      },
+    },
+
+    sellerStatus: {
+      type: String,
+      enum: ["pending", "approved", "rejected"],
+    },
+
+    sellerRejectionReason: {
+      type: String,
+      default: "",
+    },
+
     totalProductsSold: {
       type: Number,
       default: 0,
@@ -85,19 +149,16 @@ const userSchema = new mongoose.Schema(
       default: 0,
     },
 
-    // ================= DONATION =================
     donatedClothes: {
       type: Number,
       default: 0,
     },
 
-    // ================= ECO IMPACT =================
     sustainabilityScore: {
       type: Number,
       default: 0,
     },
 
-    // ================= ACCOUNT STATUS =================
     isVerified: {
       type: Boolean,
       default: false,
@@ -108,7 +169,6 @@ const userSchema = new mongoose.Schema(
       default: false,
     },
 
-    // ================= USER RATINGS =================
     ratings: {
       type: Number,
       default: 0,
@@ -118,19 +178,24 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-
-    // ================= CREATED DATE =================
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
   },
   {
     timestamps: true,
   }
 );
 
-// ================= PASSWORD HASH =================
+userSchema.pre("save", function (next) {
+
+  if (
+    this.role === "seller" &&
+    !this.sellerStatus
+  ) {
+    this.sellerStatus = "pending";
+  }
+
+  next();
+});
+
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     return next();
@@ -141,7 +206,6 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-// ================= COMPARE PASSWORD =================
 userSchema.methods.comparePassword = async function (
   candidatePassword
 ) {

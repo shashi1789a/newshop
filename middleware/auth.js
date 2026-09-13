@@ -1,32 +1,25 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
-// ======================================================
-// AUTH MIDDLEWARE
-// ======================================================
 const auth = async (req, res, next) => {
   try {
     const token = req.cookies.token;
 
-    // ================= CHECK TOKEN =================
     if (!token) {
       return res.redirect("/auth/login");
     }
 
-    // ================= VERIFY TOKEN =================
     const decoded = jwt.verify(
       token,
       process.env.JWT_SECRET
     );
 
-    // ================= FIND USER =================
     const user = await User.findById(decoded.userId);
 
     if (!user) {
       return res.redirect("/auth/login");
     }
 
-    // ================= BLOCKED USER =================
     if (user.isBlocked) {
       return res.status(403).json({
         success: false,
@@ -34,9 +27,10 @@ const auth = async (req, res, next) => {
       });
     }
 
-    // ================= SAVE USER =================
     req.user = user;
     req.token = token;
+
+    res.locals.user = user;
 
     next();
   } catch (error) {
@@ -46,9 +40,6 @@ const auth = async (req, res, next) => {
   }
 };
 
-// ======================================================
-// ADMIN AUTH
-// ======================================================
 const adminAuth = async (req, res, next) => {
   try {
     const token = req.cookies.token;
@@ -68,7 +59,6 @@ const adminAuth = async (req, res, next) => {
       return res.redirect("/admin/login");
     }
 
-    // ================= ADMIN CHECK =================
     if (user.role !== "admin") {
       return res.status(403).json({
         success: false,
@@ -79,6 +69,8 @@ const adminAuth = async (req, res, next) => {
     req.user = user;
     req.token = token;
 
+    res.locals.user = user;
+
     next();
   } catch (error) {
     console.error("Admin Auth Error:", error);
@@ -87,9 +79,6 @@ const adminAuth = async (req, res, next) => {
   }
 };
 
-// ======================================================
-// SELLER AUTH
-// ======================================================
 const sellerAuth = async (req, res, next) => {
   try {
     const token = req.cookies.token;
@@ -109,7 +98,6 @@ const sellerAuth = async (req, res, next) => {
       return res.redirect("/auth/login");
     }
 
-    // ================= SELLER CHECK =================
     if (
       user.role !== "seller" &&
       user.role !== "admin"
@@ -123,6 +111,8 @@ const sellerAuth = async (req, res, next) => {
     req.user = user;
     req.token = token;
 
+    res.locals.user = user;
+
     next();
   } catch (error) {
     console.error("Seller Auth Error:", error);
@@ -131,14 +121,12 @@ const sellerAuth = async (req, res, next) => {
   }
 };
 
-// ======================================================
-// OPTIONAL LOGIN CHECK
-// ======================================================
 const optionalAuth = async (req, res, next) => {
   try {
     const token = req.cookies.token;
 
     if (!token) {
+      res.locals.user = null;
       return next();
     }
 
@@ -151,10 +139,15 @@ const optionalAuth = async (req, res, next) => {
 
     if (user) {
       req.user = user;
+      res.locals.user = user;
+    } else {
+      res.locals.user = null;
     }
 
     next();
   } catch (error) {
+
+    res.locals.user = null;
     next();
   }
 };

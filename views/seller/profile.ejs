@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Seller Profile — Reciclaja</title>
+
+  <%- include('../partials/head') %>
+
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/5471644867.js" crossorigin="anonymous"></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,700&display=swap" rel="stylesheet" />
+
+  <style>
+
+    /* =====================================================
+       DESIGN TOKENS
+    ===================================================== */
+
+    :root {
+      --forest: #0d3b2e;
+      --forest-2: #14523f;
+      --forest-3: #1e6b52;
+      --forest-soft: #2d8a6a;
+      --forest-deep: #072a20;
+
+      --emerald: #10b981;
+      --emerald-soft: #34d399;
+
+      --mango: #f59e0b;
+      --mango-soft: #fbbf24;
+      --mango-deep: #d97706;
+
+      --coral: #f97362;
+      --coral-soft: #fb9585;
+      --coral-deep: #e05a44;
+
+      --blush: #fef3e7;
+      --blush-2: #fde8d0;
+
+      --mint: #ecfdf5;
+      --mint-2: #d1fae5;
+
+      --sky: #e8f4ff;
+      --sky-2: #d0e6ff;
+
+      --bg: #fbfaf7;
+      --surface: #ffffff;
+      --surface-2: #f7f4ee;
+      --surface-3: #efeae0;
+
+      --text: #10261d;
+      --text-muted: #556b5f;
+      --text-light: #8a9a90;
+
+      --border: #e6e0d4;
+      --border-soft: #f0ebe0;
+
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius: 16px;
+      --radius-sm: 10px;
+
+      --shadow-sm: 0 2px 8px rgba(13, 59, 46, 0.05);
+      --shadow-md: 0 8px 28px rgba(13, 59, 46, 0.08);
+      --shadow-lg: 0 20px 48px rgba(13, 59, 46, 0.12);
+      --shadow-glow: 0 12px 40px rgba(16, 185, 129, 0.18);
+      --shadow-mango: 0 12px 40px rgba(245, 158, 11, 0.22);
+
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    /* =====================================================
+       RESET
+    ===================================================== */
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    a { text-decoration: none; color: inherit; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    img { display: block; max-width: 100%; }
+    button { font-family: inherit; cursor: pointer; }
+    input { font-family: inherit; }
+
+    /* =====================================================
+       PAGE BACKGROUND
+    ===================================================== */
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 12% 15%, rgba(245, 158, 11, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 88% 85%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* =====================================================
+       SCROLL PROGRESS BAR
+    ===================================================== */
+
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--emerald) 0%, var(--mango) 50%, var(--coral) 100%);
+      z-index: 9999;
+      transition: width 0.1s linear;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
+    }
+
+    /* =====================================================
+       SCROLL REVEAL
+    ===================================================== */
+
+    [data-reveal] {
+      opacity: 0;
+      transition:
+        opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: opacity, transform;
+    }
+
+    [data-reveal="up"] { transform: translateY(40px); }
+    [data-reveal="down"] { transform: translateY(-40px); }
+    [data-reveal="zoom-up"] { transform: scale(0.94) translateY(30px); }
+
+    [data-reveal].is-revealed {
+      opacity: 1;
+      transform: translate(0, 0) scale(1);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      [data-reveal] {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+    }
+
+    /* =====================================================
+       CONTAINER
+    ===================================================== */
+
+    .container {
+      width: 94%;
+      max-width: 1050px;
+      margin: 45px auto 80px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* =====================================================
+       PAGE HEADER
+    ===================================================== */
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 34px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      gap: 20px;
+      flex-wrap: wrap;
+      position: relative;
+    }
+
+    .page-header::after {
+      content: "";
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 90px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--mango) 0%, var(--coral) 100%);
+      border-radius: 3px;
+    }
+
+    .page-header-text {
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .page-header-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(13, 59, 46, 0.06);
+      border: 1px solid rgba(13, 59, 46, 0.08);
+      color: var(--forest-3);
+      padding: 7px 15px;
+      border-radius: 30px;
+      font-size: 10.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 14px;
+    }
+
+    .page-header-eyebrow::before {
+      content: "👤";
+      font-size: 12px;
+    }
+
+    .page-header h1 {
+      font-family: var(--font-serif);
+      font-size: 40px;
+      font-weight: 500;
+      letter-spacing: -1.5px;
+      color: var(--forest);
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+
+    .page-header h1 em {
+      font-style: italic;
+      background: linear-gradient(120deg, var(--mango-deep) 0%, var(--coral) 60%, var(--mango) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .page-header p {
+      color: var(--text-muted);
+      font-size: 14.5px;
+      max-width: 520px;
+      line-height: 1.65;
+    }
+
+    /* =====================================================
+       BACK BUTTON
+    ===================================================== */
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      background: linear-gradient(135deg, var(--forest) 0%, var(--forest-3) 100%);
+      color: #ffffff;
+      padding: 13px 24px;
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 10px 28px rgba(13, 59, 46, 0.25);
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .back-btn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 0.35), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .back-btn:hover::before { left: 100%; }
+
+    .back-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 36px rgba(13, 59, 46, 0.35);
+      gap: 14px;
+    }
+
+    .back-btn i {
+      transition: transform 0.3s ease;
+    }
+
+    .back-btn:hover i {
+      transform: translateX(-3px);
+    }
+
+    /* =====================================================
+       PROFILE CARD
+    ===================================================== */
+
+    .profile-card {
+      background: var(--surface);
+      border-radius: var(--radius-xl);
+      padding: 42px 44px;
+      box-shadow: 0 20px 60px rgba(13, 59, 46, 0.08);
+      border: 1px solid var(--border-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .profile-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--mango) 0%, var(--coral) 50%, var(--emerald) 100%);
+    }
+
+    .profile-card::after {
+      content: "";
+      position: absolute;
+      top: -80px;
+      right: -80px;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* =====================================================
+       PROFILE TOP
+    ===================================================== */
+
+    .profile-top {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      padding-bottom: 34px;
+      border-bottom: 1px dashed var(--border);
+      margin-bottom: 34px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, var(--forest) 0%, var(--forest-3) 100%);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-serif);
+      font-size: 40px;
+      font-weight: 700;
+      flex-shrink: 0;
+      box-shadow: 0 12px 32px rgba(13, 59, 46, 0.28);
+      transition: transform 0.35s ease;
+      position: relative;
+    }
+
+    .avatar::after {
+      content: "";
+      position: absolute;
+      inset: -4px;
+      border-radius: 28px;
+      border: 2px dashed rgba(251, 191, 36, 0.35);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+
+    .profile-card:hover .avatar {
+      transform: scale(1.04) rotate(-3deg);
+    }
+
+    .profile-card:hover .avatar::after {
+      opacity: 1;
+    }
+
+    .profile-top-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .profile-top h2 {
+      font-family: var(--font-serif);
+      font-size: 30px;
+      font-weight: 600;
+      color: var(--forest);
+      letter-spacing: -0.8px;
+      margin-bottom: 10px;
+      line-height: 1.2;
+      word-break: break-word;
+    }
+
+    .role {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, var(--blush) 0%, var(--blush-2) 100%);
+      color: var(--mango-deep);
+      padding: 7px 15px;
+      border-radius: 30px;
+      font-size: 10.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      border: 1px solid rgba(245, 158, 11, 0.22);
+    }
+
+    .role::before {
+      content: "●";
+      font-size: 8px;
+      color: var(--mango);
+      text-shadow: 0 0 6px var(--mango);
+    }
+
+    /* =====================================================
+       PROFILE DETAILS
+    ===================================================== */
+
+    .profile-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .detail-box {
+      background: var(--surface-2);
+      padding: 20px 22px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-soft);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .detail-box::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 3px;
+      height: 100%;
+      background: linear-gradient(180deg, var(--mango) 0%, var(--emerald) 100%);
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: transform 0.35s ease;
+    }
+
+    .detail-box:hover::before {
+      transform: scaleY(1);
+    }
+
+    .detail-box:hover {
+      background: #ffffff;
+      border-color: var(--mango);
+      transform: translateX(3px);
+      box-shadow: var(--shadow-mango);
+    }
+
+    .detail-box label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-light);
+      font-size: 10.5px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      font-weight: 800;
+    }
+
+    .detail-box label i {
+      color: var(--mango-deep);
+      font-size: 10px;
+    }
+
+    .detail-box p {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--forest);
+      word-break: break-word;
+      letter-spacing: -0.1px;
+    }
+
+    /* =====================================================
+       ACTIONS
+    ===================================================== */
+
+    .actions {
+      margin-top: 32px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 2;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border: none;
+      text-decoration: none;
+      padding: 14px 24px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--forest) 0%, var(--forest-3) 100%);
+      color: #ffffff;
+      box-shadow: 0 10px 28px rgba(13, 59, 46, 0.25);
+    }
+
+    .btn-primary::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 0.35), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .btn-primary:hover::before { left: 100%; }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 36px rgba(13, 59, 46, 0.35);
+      gap: 14px;
+    }
+
+    .btn-secondary {
+      background: #ffffff;
+      color: var(--forest);
+      border: 2px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--forest);
+      background: var(--forest);
+      color: #ffffff;
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(13, 59, 46, 0.22);
+      gap: 14px;
+    }
+
+    /* =====================================================
+       EDIT FORM
+    ===================================================== */
+
+    .edit-form {
+      display: none;
+      margin-top: 34px;
+      padding-top: 32px;
+      border-top: 1px dashed var(--border);
+      position: relative;
+      z-index: 2;
+      animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes slideDown {
+      0% { opacity: 0; transform: translateY(-12px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .edit-form.show {
+      display: block;
+    }
+
+    .edit-form h2 {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--forest);
+      letter-spacing: -0.5px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .edit-form h2::before {
+      content: "";
+      width: 5px;
+      height: 22px;
+      background: linear-gradient(180deg, var(--mango) 0%, var(--coral) 100%);
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 8px;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--forest);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .form-group label i {
+      color: var(--mango-deep);
+      font-size: 10px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      color: var(--text);
+      background: var(--surface-2);
+      outline: none;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .form-group input::placeholder {
+      color: var(--text-light);
+    }
+
+    .form-group input:focus {
+      border-color: var(--mango);
+      background: #ffffff;
+      box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.12);
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 26px;
+    }
+
+    /* =====================================================
+       RESPONSIVE
+    ===================================================== */
+
+    @media (max-width: 900px) {
+
+      .container {
+        width: 94%;
+        margin: 32px auto 60px;
+      }
+
+      .profile-card {
+        padding: 34px 30px;
+      }
+
+      .page-header h1 {
+        font-size: 34px;
+      }
+
+      .profile-top h2 {
+        font-size: 26px;
+      }
+
+    }
+
+    @media (max-width: 700px) {
+
+      .profile-details {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-top {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+      }
+
+      .profile-top-text {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .page-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 18px;
+      }
+
+      .back-btn {
+        justify-content: center;
+        width: 100%;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+    }
+
+    @media (max-width: 500px) {
+
+      .container {
+        width: 94%;
+        margin: 24px auto 60px;
+      }
+
+      .profile-card {
+        padding: 28px 22px;
+        border-radius: var(--radius-lg);
+      }
+
+      .page-header h1 {
+        font-size: 26px;
+        letter-spacing: -1px;
+      }
+
+      .page-header-eyebrow {
+        font-size: 10px;
+        padding: 6px 12px;
+        letter-spacing: 1.5px;
+      }
+
+      .page-header p {
+        font-size: 13px;
+      }
+
+      .avatar {
+        width: 84px;
+        height: 84px;
+        font-size: 34px;
+        border-radius: 20px;
+      }
+
+      .profile-top h2 {
+        font-size: 22px;
+      }
+
+      .role {
+        font-size: 9.5px;
+        padding: 6px 12px;
+      }
+
+      .detail-box {
+        padding: 16px 18px;
+      }
+
+      .detail-box p {
+        font-size: 14px;
+      }
+
+      .edit-form h2 {
+        font-size: 19px;
+      }
+
+      .form-group input {
+        padding: 12px 14px;
+        font-size: 13.5px;
+      }
+
+      .btn {
+        padding: 13px 20px;
+        font-size: 12.5px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+  <!-- Scroll progress -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+
+  <!-- =====================================================
+       NAVBAR
+  ====================================================== -->
+
+  <%- include('../partials/navbar') %>
+
+
+  <!-- =====================================================
+       MAIN
+  ====================================================== -->
+
+  <div class="container">
+
+
+    <!-- =================================================
+         PAGE HEADER
+    ================================================== -->
+
+    <div class="page-header" data-reveal="down">
+
+      <div class="page-header-text">
+
+        <span class="page-header-eyebrow">
+          Account Settings
+        </span>
+
+        <h1>
+          Seller <em>Profile.</em>
+        </h1>
+
+        <p>
+          Manage your account information, update your details, and quickly
+          access your products and orders.
+        </p>
+
+      </div>
+
+
+      <a href="/seller/dashboard" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        Dashboard
+      </a>
+
+    </div>
+
+
+    <!-- =================================================
+         PROFILE CARD
+    ================================================== -->
+
+    <%
+      const currentUser =
+        typeof user !== "undefined" && user ? user : {};
+
+      const userName =
+        currentUser.name ||
+        currentUser.username ||
+        "Seller";
+
+      const userEmail =
+        currentUser.email ||
+        "Not available";
+
+      const userPhone =
+        currentUser.phone ||
+        currentUser.mobile ||
+        "Not available";
+
+      const userRole =
+        currentUser.role ||
+        "seller";
+
+      const firstLetter =
+        String(userName).charAt(0).toUpperCase();
+    %>
+
+
+    <div class="profile-card" data-reveal="zoom-up" data-delay="120">
+
+
+      <!-- =============================================
+           PROFILE TOP
+      ============================================== -->
+
+      <div class="profile-top">
+
+        <div class="avatar">
+          <%= firstLetter %>
+        </div>
+
+
+        <div class="profile-top-text">
+
+          <h2>
+            <%= userName %>
+          </h2>
+
+          <span class="role">
+            <%= userRole %>
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- =============================================
+           PROFILE DETAILS
+      ============================================== -->
+
+      <div class="profile-details">
+
+
+        <!-- FULL NAME -->
+
+        <div class="detail-box">
+
+          <label>
+            <i class="fas fa-user"></i>
+            Full Name
+          </label>
+
+          <p>
+            <%= userName %>
+          </p>
+
+        </div>
+
+
+        <!-- EMAIL -->
+
+        <div class="detail-box">
+
+          <label>
+            <i class="fas fa-envelope"></i>
+            Email Address
+          </label>
+
+          <p>
+            <%= userEmail %>
+          </p>
+
+        </div>
+
+
+        <!-- PHONE -->
+
+        <div class="detail-box">
+
+          <label>
+            <i class="fas fa-phone"></i>
+            Phone Number
+          </label>
+
+          <p>
+            <%= userPhone %>
+          </p>
+
+        </div>
+
+
+        <!-- ROLE -->
+
+        <div class="detail-box">
+
+          <label>
+            <i class="fas fa-shield-alt"></i>
+            Account Role
+          </label>
+
+          <p>
+            <%= userRole %>
+          </p>
+
+        </div>
+
+
+      </div>
+
+
+      <!-- =============================================
+           ACTIONS
+      ============================================== -->
+
+      <div class="actions">
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          onclick="showEditForm()"
+        >
+          <i class="fas fa-pen"></i>
+          Edit Profile
+        </button>
+
+        <a
+          href="/seller/products"
+          class="btn btn-secondary"
+        >
+          <i class="fas fa-tshirt"></i>
+          My Products
+        </a>
+
+        <a
+          href="/seller/orders"
+          class="btn btn-secondary"
+        >
+          <i class="fas fa-shopping-bag"></i>
+          My Orders
+        </a>
+
+      </div>
+
+
+      <!-- =============================================
+           EDIT PROFILE FORM
+      ============================================== -->
+
+      <div
+        class="edit-form"
+        id="editForm"
+      >
+
+        <h2>
+          Edit Profile
+        </h2>
+
+
+        <form
+          action="/seller/profile"
+          method="POST"
+        >
+
+          <input
+            type="hidden"
+            name="_method"
+            value="PUT"
+          >
+
+
+          <!-- NAME -->
+
+          <div class="form-group">
+
+            <label>
+              <i class="fas fa-user"></i>
+              Name
+            </label>
+
+            <input
+              type="text"
+              name="name"
+              value="<%= userName %>"
+              placeholder="Enter your full name"
+              required
+            >
+
+          </div>
+
+
+          <!-- EMAIL -->
+
+          <div class="form-group">
+
+            <label>
+              <i class="fas fa-envelope"></i>
+              Email
+            </label>
+
+            <input
+              type="email"
+              name="email"
+              value="<%= userEmail %>"
+              placeholder="you@example.com"
+              required
+            >
+
+          </div>
+
+
+          <!-- PHONE -->
+
+          <div class="form-group">
+
+            <label>
+              <i class="fas fa-phone"></i>
+              Phone
+            </label>
+
+            <input
+              type="text"
+              name="phone"
+              value="<%= currentUser.phone || currentUser.mobile || '' %>"
+              placeholder="10-digit mobile number"
+            >
+
+          </div>
+
+
+          <!-- ACTIONS -->
+
+          <div class="form-actions">
+
+            <button
+              type="submit"
+              class="btn btn-primary"
+            >
+              <i class="fas fa-check"></i>
+              Save Changes
+            </button>
+
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onclick="hideEditForm()"
+            >
+              <i class="fas fa-times"></i>
+              Cancel
+            </button>
+
+          </div>
+
+
+        </form>
+
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+
+  <!-- =====================================================
+       FOOTER PARTIAL
+  ====================================================== -->
+
+  <%- include('../partials/footer') %>
+
+
+  <!-- =====================================================
+       SCRIPT
+  ====================================================== -->
+
+  <script>
+
+    /* =====================================================
+       SCROLL PROGRESS
+    ===================================================== */
+
+    const progressBar = document.getElementById('scrollProgress');
+
+    function updateProgress() {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progressBar.style.width = progress + '%';
+    }
+
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    window.addEventListener('resize', updateProgress);
+    updateProgress();
+
+
+    /* =====================================================
+       SCROLL REVEAL
+    ===================================================== */
+
+    const revealEls = document.querySelectorAll('[data-reveal]');
+
+    if ('IntersectionObserver' in window) {
+
+      const revealObserver = new IntersectionObserver((entries, observer) => {
+
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const el = entry.target;
+            const delay = parseInt(el.dataset.delay || 0, 10);
+
+            setTimeout(() => {
+              el.classList.add('is-revealed');
+            }, delay);
+
+            observer.unobserve(el);
+          }
+        });
+
+      }, {
+        threshold: 0.08,
+        rootMargin: '0px 0px -60px 0px'
+      });
+
+      revealEls.forEach(el => revealObserver.observe(el));
+
+    } else {
+
+      revealEls.forEach(el => el.classList.add('is-revealed'));
+
+    }
+
+
+    /* =====================================================
+       EDIT FORM
+    ===================================================== */
+
+    function showEditForm() {
+
+      const form = document.getElementById("editForm");
+
+      form.classList.add("show");
+
+      setTimeout(() => {
+        form.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 100);
+
+    }
+
+
+    function hideEditForm() {
+
+      document
+        .getElementById("editForm")
+        .classList.remove("show");
+
+    }
+
+
+    console.log("Reciclaja — Seller Profile page loaded 👤");
+
+  </script>
+
+</body>
+
+</html>
