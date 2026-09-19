@@ -1,5 +1,6 @@
 const express = require("express");
 const dotenv = require("dotenv");
+const passport = require("passport");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 const session = require("express-session");
@@ -12,6 +13,7 @@ const { MongoStore } = require("connect-mongo");
 const { optionalAuth } = require("./middleware/auth");
 
 dotenv.config();
+require("./config/passport");
 
 const app = express();
 

@@ -1,5 +1,5 @@
 const express = require("express");
-
+const passport = require("passport");
 const router = express.Router();
 
 const {
@@ -11,57 +11,67 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../models/User");
 
+const googleController =
+  require("../controllers/google.controller");
+
 router.get(
   "/register",
   (req, res) => {
-
-    res.render(
-      "auth/register",
-      {
-        errors: [],
-        oldInput: {},
-      }
-    );
-
+    res.render("auth/register", {
+      errors: [],
+      oldInput: {},
+    });
   }
 );
 
 const registerValidationRules = [
-
   body("name")
+    .trim()
     .notEmpty()
     .withMessage("Name is required"),
 
   body("email")
+    .trim()
     .isEmail()
     .withMessage("Please enter valid email"),
 
   body("password")
     .isLength({ min: 6 })
-    .withMessage("Password must be at least 6 characters"),
+    .withMessage(
+      "Password must be at least 6 characters"
+    ),
 
   body("confirmPassword")
     .custom((value, { req }) => {
       if (value !== req.body.password) {
-        throw new Error("Passwords do not match");
+        throw new Error(
+          "Passwords do not match"
+        );
       }
+
       return true;
     }),
 
   body("role")
     .isIn(["user", "seller"])
-    .withMessage("Please select account type"),
+    .withMessage(
+      "Please select account type"
+    ),
 
   body("phone")
     .if(body("role").equals("seller"))
     .notEmpty()
-    .withMessage("Phone number is required for sellers"),
+    .withMessage(
+      "Phone number is required for sellers"
+    ),
 
   body("businessName")
     .if(body("role").equals("seller"))
     .trim()
     .notEmpty()
-    .withMessage("Business name is required"),
+    .withMessage(
+      "Business name is required"
+    ),
 
   body("businessType")
     .if(body("role").equals("seller"))
@@ -72,66 +82,79 @@ const registerValidationRules = [
       "PRIVATE_LIMITED",
       "LLP",
     ])
-    .withMessage("Please select a valid business type"),
+    .withMessage(
+      "Please select a valid business type"
+    ),
 
   body("panNumber")
     .if(body("role").equals("seller"))
     .trim()
     .notEmpty()
-    .withMessage("PAN number is required for sellers"),
+    .withMessage(
+      "PAN number is required for sellers"
+    ),
 
   body("pickupStreet")
     .if(body("role").equals("seller"))
     .trim()
     .notEmpty()
-    .withMessage("Pickup address is required"),
+    .withMessage(
+      "Pickup address is required"
+    ),
 
   body("pickupCity")
     .if(body("role").equals("seller"))
     .trim()
     .notEmpty()
-    .withMessage("City is required"),
+    .withMessage(
+      "City is required"
+    ),
 
   body("pickupState")
     .if(body("role").equals("seller"))
     .trim()
     .notEmpty()
-    .withMessage("State is required"),
+    .withMessage(
+      "State is required"
+    ),
 
   body("pickupZipCode")
     .if(body("role").equals("seller"))
     .trim()
     .notEmpty()
-    .withMessage("ZIP code is required"),
+    .withMessage(
+      "ZIP code is required"
+    ),
 
   body("accountHolderName")
     .if(body("role").equals("seller"))
     .trim()
     .notEmpty()
-    .withMessage("Account holder name is required"),
+    .withMessage(
+      "Account holder name is required"
+    ),
 
   body("accountNumber")
     .if(body("role").equals("seller"))
     .trim()
     .notEmpty()
-    .withMessage("Bank account number is required"),
+    .withMessage(
+      "Bank account number is required"
+    ),
 
   body("ifscCode")
     .if(body("role").equals("seller"))
     .trim()
     .notEmpty()
-    .withMessage("IFSC code is required"),
-
+    .withMessage(
+      "IFSC code is required"
+    ),
 ];
 
 router.post(
-
   "/register",
-
   registerValidationRules,
-
   async (req, res) => {
-
     const errors = validationResult(req);
 
     const {
@@ -144,12 +167,10 @@ router.post(
       businessType,
       gstNumber,
       panNumber,
-
       pickupStreet,
       pickupCity,
       pickupState,
       pickupZipCode,
-
       accountHolderName,
       bankName,
       accountNumber,
@@ -158,52 +179,49 @@ router.post(
     } = req.body;
 
     if (!errors.isEmpty()) {
-
       return res
         .status(400)
         .render("auth/register", {
-
           errors: errors.array(),
           oldInput: req.body,
-
         });
-
     }
 
     try {
+      const normalizedEmail =
+        email.trim().toLowerCase();
 
-      let user = await User.findOne({ email });
+      let user = await User.findOne({
+        email: normalizedEmail,
+      });
 
       if (user) {
-
         return res
           .status(400)
           .render("auth/register", {
-
             errors: [
-              { msg: "User already exists" },
+              {
+                msg: "User already exists",
+              },
             ],
-
             oldInput: req.body,
-
           });
-
       }
+
       const newUserData = {
-        name,
-        email,
+        name: name.trim(),
+        email: normalizedEmail,
         password,
         role,
         phone: phone || undefined,
       };
 
       if (role === "seller") {
-
         newUserData.sellerDetails = {
-
           businessName,
           businessType,
-          gstNumber: gstNumber || undefined,
+          gstNumber:
+            gstNumber || undefined,
           panNumber,
 
           pickupAddress: {
@@ -216,216 +234,263 @@ router.post(
 
           payout: {
             accountHolderName,
-            bankName: bankName || undefined,
+            bankName:
+              bankName || undefined,
             accountNumber,
             ifscCode,
-            upiId: upiId || undefined,
+            upiId:
+              upiId || undefined,
           },
-
         };
       }
+
       user = new User(newUserData);
 
       await user.save();
 
       console.log(
-        `${role === "seller" ? "Seller" : "User"} Registered: ${email}`
+        `${
+          role === "seller"
+            ? "Seller"
+            : "User"
+        } Registered: ${normalizedEmail}`
       );
 
-
       if (role === "seller") {
-
-        return res.render("auth/seller-pending", {
-          name: user.name,
-        });
+        return res.render(
+          "auth/seller-pending",
+          {
+            name: user.name,
+          }
+        );
       }
 
-      res.redirect("/auth/login");
-
+      return res.redirect(
+        "/auth/login"
+      );
     } catch (error) {
+      console.error(
+        "Registration Error:",
+        error
+      );
 
-      console.error(error);
-
-      res
+      return res
         .status(500)
         .render("auth/register", {
-
           errors: [
-            { msg: "Server Error" },
+            {
+              msg: "Server Error",
+            },
           ],
-
           oldInput: req.body,
-
         });
-
     }
-
   }
 );
 
 router.get(
   "/login",
   (req, res) => {
-
-    res.render(
-      "auth/login",
-      {
-        errors: [],
-        oldInput: {},
-      }
-    );
-
+    res.render("auth/login", {
+      errors: [],
+      oldInput: {},
+    });
   }
 );
 
 router.post(
-
   "/login",
 
   [
-
     body("email")
+      .trim()
       .isEmail()
-      .withMessage("Please enter valid email"),
+      .withMessage(
+        "Please enter valid email"
+      ),
 
     body("password")
       .notEmpty()
-      .withMessage("Password is required"),
-
+      .withMessage(
+        "Password is required"
+      ),
   ],
 
   async (req, res) => {
+    const errors =
+      validationResult(req);
 
-    const errors = validationResult(req);
-
-    const { email, password } = req.body;
-
+    const {
+      email,
+      password,
+    } = req.body;
 
     if (!errors.isEmpty()) {
-
       return res
         .status(400)
         .render("auth/login", {
-
           errors: errors.array(),
-
-          oldInput: { email },
-
+          oldInput: {
+            email,
+          },
         });
-
     }
 
     try {
+      const normalizedEmail =
+        email.trim().toLowerCase();
 
-
-      const user = await User.findOne({ email });
+      const user = await User.findOne({
+        email: normalizedEmail,
+      });
 
       if (!user) {
-
         return res
           .status(400)
           .render("auth/login", {
-
             errors: [
-              { msg: "Invalid credentials" },
+              {
+                msg:
+                  "Invalid credentials",
+              },
             ],
-
-            oldInput: { email },
-
+            oldInput: {
+              email,
+            },
           });
-
       }
 
-      const isMatch = await user.comparePassword(password);
+      const isMatch =
+        await user.comparePassword(
+          password
+        );
 
       if (!isMatch) {
-
         return res
           .status(400)
           .render("auth/login", {
-
             errors: [
-              { msg: "Invalid credentials" },
+              {
+                msg:
+                  "Invalid credentials",
+              },
             ],
-
-            oldInput: { email },
-
+            oldInput: {
+              email,
+            },
           });
-
       }
 
       if (user.isBlocked) {
-
         return res
           .status(403)
           .render("auth/login", {
-
             errors: [
-              { msg: "Your account has been blocked. Contact support." },
+              {
+                msg:
+                  "Your account has been blocked. Contact support.",
+              },
             ],
-
-            oldInput: { email },
-
+            oldInput: {
+              email,
+            },
           });
+      }
 
+      if (!process.env.JWT_SECRET) {
+        throw new Error(
+          "JWT_SECRET is not configured"
+        );
       }
 
       const token = jwt.sign(
-
         {
-          userId: user._id,
+          userId:
+            user._id.toString(),
           role: user.role,
         },
-
         process.env.JWT_SECRET,
-
         {
           expiresIn: "1d",
         }
-
       );
 
-      res.cookie("token", token, {
+      const isProduction =
+        process.env.NODE_ENV ===
+        "production";
 
-        httpOnly: true,
-        secure: false,
-        sameSite: "lax",
-        maxAge: 24 * 60 * 60 * 1000,
+      res.cookie(
+        "token",
+        token,
+        {
+          httpOnly: true,
+          secure: isProduction,
+          sameSite: "lax",
+          maxAge:
+            24 *
+            60 *
+            60 *
+            1000,
+          path: "/",
+        }
+      );
 
-      });
-
-      res.redirect("/");
-
+      return res.redirect("/");
     } catch (error) {
+      console.error(
+        "Login Error:",
+        error
+      );
 
-      console.error(error);
-
-      res
+      return res
         .status(500)
         .render("auth/login", {
-
           errors: [
-            { msg: "Server Error" },
+            {
+              msg:
+                "Server Error",
+            },
           ],
-
-          oldInput: { email },
-
+          oldInput: {
+            email,
+          },
         });
-
     }
-
   }
 );
 
 router.get(
+  "/google",
+  passport.authenticate(
+    "google",
+    {
+      scope: [
+        "profile",
+        "email",
+      ],
+      session: false,
+    }
+  )
+);
+
+router.get(
+  "/google/callback",
+
+  passport.authenticate(
+    "google",
+    {
+      failureRedirect:
+        "/auth/login?error=google_auth_failed",
+      session: false,
+    }
+  ),
+
+  googleController.googleCallback
+);
+
+router.get(
   "/logout",
-  (req, res) => {
-
-    res.clearCookie("token");
-
-    res.redirect("/auth/login");
-
-  }
+  googleController.logout
 );
 
 module.exports = router;

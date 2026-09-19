@@ -6,17 +6,11 @@
 
   <title>Login — Reciclaja</title>
 
-  <!-- Font Awesome -->
   <script src="https://kit.fontawesome.com/5471644867.js" crossorigin="anonymous"></script>
 
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,700&display=swap" rel="stylesheet" />
 
 <style>
-
-  /* =====================================================
-     DESIGN TOKENS
-  ===================================================== */
 
   :root {
     --forest: #0d3b2e;
@@ -67,17 +61,15 @@
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
-  /* =====================================================
-     RESET
-  ===================================================== */
-
   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
   }
 
-  html { scroll-behavior: smooth; }
+  html {
+    scroll-behavior: smooth;
+  }
 
   body {
     font-family: var(--font-sans);
@@ -89,11 +81,11 @@
     overflow-x: hidden;
   }
 
-  a { text-decoration: none; color: inherit; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-
-  /* =====================================================
-     PAGE WRAPPER
-  ===================================================== */
+  a {
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
 
   .auth-page {
     min-height: calc(100vh - 100px);
@@ -132,8 +124,6 @@
     filter: blur(60px);
   }
 
-  /* Floating decorations */
-
   .auth-float {
     position: absolute;
     color: var(--mango);
@@ -143,19 +133,43 @@
     z-index: 1;
   }
 
-  .auth-float.f1 { top: 12%; left: 6%; font-size: 72px; animation-delay: 0s; }
-  .auth-float.f2 { top: 65%; right: 8%; font-size: 60px; animation-delay: 2s; }
-  .auth-float.f3 { bottom: 15%; left: 12%; font-size: 54px; animation-delay: 4s; }
-  .auth-float.f4 { top: 30%; right: 12%; font-size: 46px; animation-delay: 1s; }
-
-  @keyframes floatY {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-22px) rotate(8deg); }
+  .auth-float.f1 {
+    top: 12%;
+    left: 6%;
+    font-size: 72px;
+    animation-delay: 0s;
   }
 
-  /* =====================================================
-     AUTH CONTAINER
-  ===================================================== */
+  .auth-float.f2 {
+    top: 65%;
+    right: 8%;
+    font-size: 60px;
+    animation-delay: 2s;
+  }
+
+  .auth-float.f3 {
+    bottom: 15%;
+    left: 12%;
+    font-size: 54px;
+    animation-delay: 4s;
+  }
+
+  .auth-float.f4 {
+    top: 30%;
+    right: 12%;
+    font-size: 46px;
+    animation-delay: 1s;
+  }
+
+  @keyframes floatY {
+    0%, 100% {
+      transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+      transform: translateY(-22px) rotate(8deg);
+    }
+  }
 
   .auth-container {
     max-width: 1080px;
@@ -172,10 +186,6 @@
     box-shadow: 0 30px 80px rgba(13, 59, 46, 0.14);
     border: 1px solid var(--border-soft);
   }
-
-  /* =====================================================
-     LEFT — BRAND PANEL
-  ===================================================== */
 
   .auth-brand-panel {
     background:
@@ -268,8 +278,6 @@
     z-index: 2;
   }
 
-  /* Brand feature list */
-
   .brand-features {
     display: flex;
     flex-direction: column;
@@ -302,8 +310,6 @@
     flex-shrink: 0;
   }
 
-  /* Brand stat pill */
-
   .brand-stats {
     display: flex;
     align-items: center;
@@ -334,10 +340,6 @@
     font-weight: 700;
     margin-top: 5px;
   }
-
-  /* =====================================================
-     RIGHT — FORM PANEL
-  ===================================================== */
 
   .auth-form-panel {
     padding: 52px 48px;
@@ -378,10 +380,6 @@
     line-height: 1.6;
   }
 
-  /* =====================================================
-     ERROR BOX
-  ===================================================== */
-
   .error-box {
     background: rgba(249, 115, 98, 0.07);
     border: 1px solid rgba(249, 115, 98, 0.28);
@@ -399,10 +397,23 @@
   }
 
   @keyframes shakeIn {
-    0% { transform: translateX(-8px); opacity: 0; }
-    30% { transform: translateX(4px); }
-    60% { transform: translateX(-3px); }
-    100% { transform: translateX(0); opacity: 1; }
+    0% {
+      transform: translateX(-8px);
+      opacity: 0;
+    }
+
+    30% {
+      transform: translateX(4px);
+    }
+
+    60% {
+      transform: translateX(-3px);
+    }
+
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
   }
 
   .error-box p {
@@ -419,10 +430,6 @@
     flex-shrink: 0;
     margin-top: 1px;
   }
-
-  /* =====================================================
-     FORM INPUTS
-  ===================================================== */
 
   .input-group {
     margin-bottom: 18px;
@@ -488,8 +495,6 @@
     color: var(--mango-deep);
   }
 
-  /* Show/hide password toggle */
-
   .toggle-password {
     position: absolute;
     right: 14px;
@@ -512,8 +517,6 @@
     color: var(--mango-deep);
     background: rgba(245, 158, 11, 0.08);
   }
-
-  /* Forgot password row */
 
   .form-extras {
     display: flex;
@@ -592,10 +595,6 @@
     width: 100%;
   }
 
-  /* =====================================================
-     LOGIN BUTTON
-  ===================================================== */
-
   .auth-submit-btn {
     width: 100%;
     padding: 16px 30px;
@@ -656,10 +655,6 @@
     transform: translateX(4px);
   }
 
-  /* =====================================================
-     DIVIDER
-  ===================================================== */
-
   .form-divider {
     display: flex;
     align-items: center;
@@ -680,10 +675,6 @@
     background: var(--border);
   }
 
-  /* =====================================================
-     SOCIAL LOGIN
-  ===================================================== */
-
   .social-login {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -697,6 +688,7 @@
     justify-content: center;
     gap: 9px;
     padding: 12px 14px;
+    min-height: 48px;
     border: 2px solid var(--border);
     border-radius: var(--radius-sm);
     background: #ffffff;
@@ -718,7 +710,9 @@
     transform: translateY(-2px);
   }
 
-  .social-btn.google i { color: #db4437; }
+  .social-btn.google i {
+    color: #db4437;
+  }
 
   .social-btn.facebook:hover {
     border-color: #1877f2;
@@ -726,11 +720,9 @@
     transform: translateY(-2px);
   }
 
-  .social-btn.facebook i { color: #1877f2; }
-
-  /* =====================================================
-     REGISTER LINK
-  ===================================================== */
+  .social-btn.facebook i {
+    color: #1877f2;
+  }
 
   .auth-footer-text {
     text-align: center;
@@ -769,10 +761,6 @@
     width: 100%;
   }
 
-  /* =====================================================
-     TRUST FOOTER
-  ===================================================== */
-
   .trust-strip {
     display: flex;
     align-items: center;
@@ -798,10 +786,6 @@
     color: var(--emerald);
     font-size: 12px;
   }
-
-  /* =====================================================
-     RESPONSIVE
-  ===================================================== */
 
   @media (max-width: 950px) {
 
@@ -843,7 +827,6 @@
     .auth-form-panel {
       padding: 40px 32px;
     }
-
   }
 
   @media (max-width: 600px) {
@@ -869,7 +852,9 @@
       grid-template-columns: 1fr;
     }
 
-    .auth-float { display: none; }
+    .auth-float {
+      display: none;
+    }
 
     .auth-form-panel {
       padding: 32px 24px;
@@ -886,7 +871,6 @@
     .trust-strip {
       gap: 12px;
     }
-
   }
 
   @media (max-width: 420px) {
@@ -902,11 +886,9 @@
     .brand-stat strong {
       font-size: 18px;
     }
-
   }
 
 </style>
-
 
 </head>
 
@@ -914,25 +896,14 @@
 
   <%- include('../partials/navbar') %>
 
-
-  <!-- =====================================================
-       LOGIN PAGE
-  ====================================================== -->
-
   <div class="auth-page">
 
-    <!-- Floating decorations -->
     <i class="fas fa-tshirt auth-float f1"></i>
     <i class="fas fa-recycle auth-float f2"></i>
     <i class="fas fa-leaf auth-float f3"></i>
     <i class="fas fa-heart auth-float f4"></i>
 
-
     <div class="auth-container">
-
-      <!-- =====================================================
-           LEFT — BRAND PANEL
-      ====================================================== -->
 
       <div class="auth-brand-panel">
 
@@ -995,11 +966,6 @@
 
       </div>
 
-
-      <!-- =====================================================
-           RIGHT — FORM PANEL
-      ====================================================== -->
-
       <div class="auth-form-panel">
 
         <div class="form-header">
@@ -1007,8 +973,6 @@
           <p>Welcome back! Enter your details to continue.</p>
         </div>
 
-
-        <!-- ERRORS -->
         <% if (errors && errors.length > 0) { %>
 
           <div class="error-box">
@@ -1019,11 +983,16 @@
 
         <% } %>
 
+        <% if (typeof googleError !== "undefined" && googleError) { %>
+
+          <div class="error-box">
+            <p><%= googleError %></p>
+          </div>
+
+        <% } %>
 
         <form action="/auth/login" method="POST">
 
-
-          <!-- EMAIL -->
           <div class="input-group">
 
             <label for="email">
@@ -1049,8 +1018,6 @@
 
           </div>
 
-
-          <!-- PASSWORD -->
           <div class="input-group">
 
             <label for="password">
@@ -1084,8 +1051,6 @@
 
           </div>
 
-
-          <!-- REMEMBER + FORGOT -->
           <div class="form-extras">
 
             <label class="remember-check">
@@ -1099,8 +1064,6 @@
 
           </div>
 
-
-          <!-- SUBMIT -->
           <button type="submit" class="auth-submit-btn">
             Sign In
             <i class="fas fa-arrow-right"></i>
@@ -1108,40 +1071,41 @@
 
         </form>
 
-
-        <!-- DIVIDER -->
         <div class="form-divider">
           Or continue with
         </div>
 
-
-        <!-- SOCIAL LOGIN -->
         <div class="social-login">
 
-          <button type="button" class="social-btn google">
+          <a
+            href="/auth/google"
+            class="social-btn google"
+            aria-label="Continue with Google"
+          >
             <i class="fab fa-google"></i>
-            Google
-          </button>
+            Continue with Google
+          </a>
 
-          <button type="button" class="social-btn facebook">
+          <button
+            type="button"
+            class="social-btn facebook"
+            aria-label="Continue with Facebook"
+          >
             <i class="fab fa-facebook-f"></i>
             Facebook
           </button>
 
         </div>
 
-
-        <!-- REGISTER LINK -->
         <p class="auth-footer-text">
           Don't have an account?
+
           <a href="/auth/register">
             Create one
             <i class="fas fa-arrow-right" style="font-size:10px;"></i>
           </a>
         </p>
 
-
-        <!-- TRUST STRIP -->
         <div class="trust-strip">
 
           <div class="trust-item">
@@ -1166,12 +1130,7 @@
     </div>
 
   </div>
-
-
-  <!-- =====================================================
-       PASSWORD TOGGLE SCRIPT
-  ====================================================== -->
-
+<%- include('../partials/footer') %>
   <script>
 
     function togglePassword() {
@@ -1182,19 +1141,22 @@
       if (!input || !icon) return;
 
       if (input.type === "password") {
+
         input.type = "text";
+
         icon.classList.remove("fa-eye");
         icon.classList.add("fa-eye-slash");
+
       } else {
+
         input.type = "password";
+
         icon.classList.remove("fa-eye-slash");
         icon.classList.add("fa-eye");
+
       }
 
     }
-
-
-    // Input focus lift effect
 
     document.querySelectorAll(".input-group").forEach(group => {
 
@@ -1203,18 +1165,24 @@
       if (!input) return;
 
       input.addEventListener("focus", () => {
+
         group.style.transform = "translateY(-2px)";
-        group.style.transition = "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)";
+        group.style.transition =
+          "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)";
+
       });
 
       input.addEventListener("blur", () => {
+
         group.style.transform = "translateY(0)";
+
       });
 
     });
 
-
-    console.log("Reciclaja — Login page loaded | Welcome back 🌿");
+    console.log(
+      "Reciclaja — Login page loaded | Welcome back 🌿"
+    );
 
   </script>
 
